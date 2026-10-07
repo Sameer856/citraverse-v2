@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-07T06:30:03.680519+00:00",
+  "port": "COM7",
+  "baud": 115200,
+  "serial": "8N1",
+  "dtr": false,
+  "rts": false,
+  "queries": [
+    {
+      "command": "mmwc version",
+      "reply_hex": "6d6d77632076657273696f6e0d0a4d4d572076657273696f6e3a56352e332e312e30204020202020313465360d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc version\r\nMMW version:V5.3.1.0 @    14e6\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc mode get",
+      "reply_hex": "6d6d7763206d6f6465206765740d0a747872785f6d6f64653d325434522834292c20776f726b5f6d6f64653d32444646542832290d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc mode get\r\ntxrx_mode=2T4R(4), work_mode=2DFFT(2)\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc freq get",
+      "reply_hex": "6d6d77632066726571206765740d0a4672657153746172743d35383030304d487a2c204d61783d37303030304d487a0d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc freq get\r\nFreqStart=58000MHz, Max=70000MHz\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc range get",
+      "reply_hex": "6d6d77632072616e6765206765740d0a72616e67653d32303438306d6d2c207265736f6c3d38306d6d0d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc range get\r\nrange=20480mm, resol=80mm\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc veloc get",
+      "reply_hex": "6d6d77632076656c6f63206765740d0a76656c6f633d333230306d6d2f732c207265736f6c3d3230306d6d2f730d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc veloc get\r\nveloc=3200mm/s, resol=200mm/s\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc frame get",
+      "reply_hex": "6d6d7763206672616d65206765740d0a706572696f643d35306d732c206672616d655f6e756d3d2d360d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc frame get\r\nperiod=50ms, frame_num=-6\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc dop_fft get",
+      "reply_hex": "6d6d776320646f705f666674206765740d0a646f70206666743d310d0a000d0a436f6d6d616e6420537563636573730d0a0d0a707369633a2f2420",
+      "reply": "mmwc dop_fft get\r\ndop fft=1\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ "
+    }
+  ]
+}

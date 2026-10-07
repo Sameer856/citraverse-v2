@@ -115,8 +115,20 @@ After the rate test, `stop`, `frame 50 4294967290`, `report points 0`, readback 
 - `analyze_vendor_spi.py`: standard-library decoder/summary of callback payloads; not a wire-protocol or logic-analyzer decoder.
 
 ```powershell
-powershell.exe -NoProfile -File hardware/radar_validation/capture_vendor_spi.ps1 -Library ../resources/hif_library/HifMsgDataCollectionLib.dll -Output new-spi-capture.json -Seconds 10
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File hardware/radar_validation/capture_vendor_spi.ps1 -Library ../resources/hif_library/HifMsgDataCollectionLib.dll -Output new-spi-capture.json -Seconds 10
 python hardware/radar_validation/analyze_vendor_spi.py hardware/radar_validation/spi_41ms_reporting_capture.json
 ```
 
 Still required: physical module/board identification and continuity mapping; instrumented CS/CLK/MOSI/MISO/PA6/NRST and analog 3.3 V traces; actual mode/clock/poll/read timing and maximum transfer size; radar-only idle/average/peak/inrush current; cold-boot and NRST time to first valid frame; and long-duration, high-payload SPI throughput. The CH347 host interface alone does not supply this measurement evidence.
+
+## USB-only validation scope
+
+The operator confirmed that only the dev kit is attached by USB-C; no logic analyzer or oscilloscope is available. Continue host-level frame delivery, payload parsing and software control tests with this setup. Actual bus waveform/timing, radar-only current and rail-referenced cold-boot/NRST latency remain unmeasured and must not be inferred from USB callback timing. Electrical sign-off remains blocked; this does not block software development or USB streaming checks.
+
+The collector may require a process-local PowerShell execution-policy override as shown above. No persistent execution-policy change is needed. The USB-only follow-up reads the current configuration and collects without changing radar settings.
+
+### 60-second USB-only result — 2026-10-07 06:30 UTC
+
+`usb_only_readback.json` confirms the same 50 ms, 2T4R/2DFFT configuration. `spi_usb_only_60s.json` contains 1202 consecutive point frames (45337–46538) in 60.0978371 seconds: 20.0007 FPS over the session, 20.0285 FPS first-to-last. No callback drops or frame-index gaps were observed. All payloads parsed and matched their declared DWORD lengths; payloads ranged from 56 to 812 bytes, containing 3059 motion points and 26352 presence points. `spi_usb_only_summary.json` records the capture hash and reproducible statistics. This extends the 20 FPS observation to one minute; the earlier 24.40 FPS observation remains a separate 30-second test.
+
+The library again printed thread-abort messages at teardown while stop/close returned true; that known library lifecycle issue remains open. No radar configuration, physical reset or power change was made. Parser success and contiguous callbacks do not establish wire-level error counts or electrical integrity.

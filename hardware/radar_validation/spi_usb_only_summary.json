@@ -1,0 +1,24 @@
+[
+  {
+    "source": "spi_usb_only_60s.json",
+    "sha256": "2107b36545cf7f4f521a6878b21870b1a233d484d288cdf67a3e090d9715b7d7",
+    "api_error": null,
+    "callbacks": 1202,
+    "point_frames": 1202,
+    "duration_s": 60.0978371,
+    "fps_count_over_session": 20.00071979295907,
+    "fps_first_to_last": 20.02846683847389,
+    "nonconsecutive_transitions": 0,
+    "transition_deltas": [],
+    "max_callback_payload_bytes": 812,
+    "min_callback_payload_bytes": 56,
+    "point_counts": {
+      "motion": 3059,
+      "presence": 26352
+    },
+    "dropped_callbacks": 0,
+    "first_frame": 45337,
+    "last_frame": 46538,
+    "limitations": "Vendor library has stripped HIF/transport framing. No electrical timing, SPI transfer size, wire checksum/error counters or independent frame-ready trace. Callback time is host time."
+  }
+]
