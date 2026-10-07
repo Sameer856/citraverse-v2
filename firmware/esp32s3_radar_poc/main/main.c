@@ -7,6 +7,8 @@
 #include "esp_timer.h"
 #include "esp_system.h"
 #include "driver/gpio.h"
+#include "driver/uart.h"
+#include "esp_spiffs.h"
 #include "host_driver.h"
 #include "host_mmw_api.h"
 #include "radar_payload.h"
@@ -44,9 +46,53 @@ static bool checked(int result,const char *operation) {
     if(result==HOST_ERRCODE_SUCCESS) return true;
     ESP_LOGE(TAG,"%s failed: %d",operation,result);return false;
 }
+static bool programmer_gate(DEV_HANDLE dev) {
+    /* CH343 uses UART0. PB0 is only an input on GPIO18 during programming. */
+    gpio_set_direction(18,GPIO_MODE_INPUT);
+    gpio_set_pull_mode(18,GPIO_FLOATING);
+    gpio_set_direction(8,GPIO_MODE_INPUT);
+    gpio_set_pull_mode(8,GPIO_FLOATING);
+    ESP_ERROR_CHECK(uart_driver_install(UART_NUM_0,1024,0,0,NULL,0));
+    char line[40];size_t used=0;
+    ESP_LOGI(TAG,"READY: send FLASH_RADAR to program P2512, or RUN to use installed firmware");
+    for(;;) {
+        uint8_t c;
+        if(uart_read_bytes(UART_NUM_0,&c,1,pdMS_TO_TICKS(100))!=1) continue;
+        if(c!='\r' && c!='\n') {
+            if(used<sizeof(line)-1) line[used++]=(char)c;
+            continue;
+        }
+        line[used]=0;used=0;
+        if(!strcmp(line,"RUN")) break;
+        if(strcmp(line,"FLASH_RADAR")) continue;
+        esp_vfs_spiffs_conf_t conf={.base_path="/radar",.partition_label="radar_image",
+            .max_files=2,.format_if_mount_failed=false};
+        if(esp_vfs_spiffs_register(&conf)!=ESP_OK) {
+            ESP_LOGE(TAG,"Image mount failed; radar not programmed");continue;
+        }
+        int result=Host_BurnMode_Enter(dev);
+        ESP_LOGI(TAG,"burn_enter=%d",result);
+        if(result==HOST_ERRCODE_SUCCESS) {
+            result=Host_Burn_Image(dev,"/radar/radar.img");
+            ESP_LOGI(TAG,"burn_image=%d",result);
+            Host_BurnMode_Exit(dev);
+        }
+        gpio_set_direction(8,GPIO_MODE_INPUT);
+        gpio_set_pull_mode(8,GPIO_FLOATING);
+        esp_vfs_spiffs_unregister("radar_image");
+        if(result!=HOST_ERRCODE_SUCCESS) {
+            ESP_LOGE(TAG,"Programming failed; waiting for an explicit command");continue;
+        }
+        ESP_LOGI(TAG,"Programming API succeeded; verifying running radar next");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        break;
+    }
+    uart_driver_delete(UART_NUM_0);
+    return true;
+}
 void app_main(void) {
     ESP_LOGI(TAG,"SPI2 mode 0 requested %d Hz: CS10 CLK12 MOSI11 MISO13 Notify7",CONFIG_RADAR_SPI_HZ);
-    ESP_LOGW(TAG,"GPIO9 is driven by vendor reset handling: leave NRST disconnected for initial bring-up. GPIO8/UPD also unconnected.");
+    ESP_LOGI(TAG,"NRST=GPIO9; PB0=GPIO18 RX plus GPIO8 UPD (released after burn)");
     DEV_HANDLE dev=DEV_HANDLE_INVALID;DevHw_t hw;HifCfg_t hif={0};
     if(!checked(Host_Driver_Init(),"driver init")) return;
     DevHw_Set_DefaultParam(&hw,LLC_BUS_TYPE_SPI,LLC_BUS_PARAM_SPI,0,CONFIG_RADAR_SPI_HZ,8,9,7,10);
@@ -55,6 +101,7 @@ void app_main(void) {
        !checked(Mmw_FE_Heartbeat_Handle_Set(dev,report,NULL),"heartbeat callback") ||
        !checked(Mmw_FF_Startup_Handle_Set(dev,report,NULL),"startup callback")) return;
     if(!checked(Host_Device_Open(dev),"device open")) return;
+    if(!programmer_gate(dev)) return;
 #if CONFIG_RADAR_AUTO_CONFIGURE
     esp_err_t config_result=radar_configure();
     if(config_result!=ESP_OK) ESP_LOGE(TAG,"Configuration aborted (%s); no further configuration/start commands sent",esp_err_to_name(config_result));

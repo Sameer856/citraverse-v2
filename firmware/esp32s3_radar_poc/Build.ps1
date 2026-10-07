@@ -1,9 +1,10 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)][string]$HostSample,
     [string]$IdfPath = 'C:\Espressif\frameworks\esp-idf-v5.5.5',
     [string]$ToolsPath = 'C:\Espressif',
     [ValidateSet('build','menuconfig','flash','monitor')][string]$Action = 'build',
-    [string]$Port
+    [string]$Port,
+    [string]$RadarImage
 )
 $ErrorActionPreference='Stop'
 $radarCandidates=@(
@@ -23,6 +24,7 @@ $env:PYTHONPATH=$null
 $env:PYTHONNOUSERSITE='1'
 $env:CCACHE_ENABLE='0'
 $env:RADAR_HOST_DRIVER=(Resolve-Path $radarDriver).Path
+if($RadarImage){$env:RADAR_IMAGE=(Resolve-Path $RadarImage).Path}
 $radarBins=@((Split-Path $radarPython))
 foreach($tool in @(@('cmake','cmake.exe'),@('ninja','ninja.exe'),@('xtensa-esp-elf','xtensa-esp-elf-gcc.exe'))) {
     $binary=Get-ChildItem (Join-Path $ToolsPath ('tools\'+$tool[0])) -Recurse -Filter $tool[1] | Sort-Object FullName -Descending | Select-Object -First 1
@@ -43,6 +45,7 @@ $env:GIT_CONFIG_COUNT=[string]$radarGitCount
 Push-Location $PSScriptRoot
 try {
     $radarArgs=@((Join-Path $IdfPath 'tools\idf.py'),'-DIDF_TARGET=esp32s3',('-DCMAKE_MAKE_PROGRAM='+$radarNinja.Replace('\','/')))
+    if($RadarImage){$radarArgs+=('-DRADAR_IMAGE='+$env:RADAR_IMAGE.Replace('\','/'))}
     if($Port){$radarArgs+=@('-p',$Port)}
     $radarArgs+=$Action
     & $radarPython @radarArgs

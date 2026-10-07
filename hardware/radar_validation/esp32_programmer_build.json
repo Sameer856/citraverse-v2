@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-07",
+  "idf": "5.5.5",
+  "esp32_upload": "incomplete; ROM loader restored and verified bootloader, next erase failed",
+  "radar_upload": "not attempted",
+  "files": {
+    "citraverse_radar_poc.bin": {
+      "bytes": 310512,
+      "sha256": "7e65aa46f5d709244f8d03e0668519bf2a056377e9f49424da6ae3e7cab125b5"
+    },
+    "bootloader/bootloader.bin": {
+      "bytes": 20832,
+      "sha256": "acd6fa43a5d97659c9bc72d5bc74d871895212e722897bc405dbaea49a7c7b0e"
+    },
+    "partition_table/partition-table.bin": {
+      "bytes": 3072,
+      "sha256": "db528515f43271faa6f349bbaeea53fa371cb68d731b645a0e1f3ed36a8b3ec5"
+    },
+    "radar_image.bin": {
+      "bytes": 1048576,
+      "sha256": "400acb9320d707f69a086faafb541fb98b0885246ff544e6d7033ac80f97ffd8"
+    }
+  }
+}

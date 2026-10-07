@@ -1,0 +1,43 @@
+esptool.py --chip esp32s3 --port COM8 --baud 115200 --no-stub --before default_reset --after hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x0 bootloader/bootloader.bin 0x10000 citraverse_radar_poc.bin 0x8000 partition_table/partition-table.bin 0x110000 radar_image.bin
+esptool.py v4.12.0
+Serial port COM8
+Connecting...
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: 74:4d:bd:76:8c:58
+Enabling default SPI flash mode...
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x0005bfff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x00110000 to 0x0020ffff...
+Erasing flash...
+SHA digest in image updated
+Took 0.23s to erase flash block
+Writing at 0x00000000... (4 %)
+Writing at 0x00000400... (9 %)
+Writing at 0x00000800... (14 %)
+Writing at 0x00000c00... (19 %)
+Writing at 0x00001000... (23 %)
+Writing at 0x00001400... (28 %)
+Writing at 0x00001800... (33 %)
+Writing at 0x00001c00... (38 %)
+Writing at 0x00002000... (42 %)
+Writing at 0x00002400... (47 %)
+Writing at 0x00002800... (52 %)
+Writing at 0x00002c00... (57 %)
+Writing at 0x00003000... (61 %)
+Writing at 0x00003400... (66 %)
+Writing at 0x00003800... (71 %)
+Writing at 0x00003c00... (76 %)
+Writing at 0x00004000... (80 %)
+Writing at 0x00004400... (85 %)
+Writing at 0x00004800... (90 %)
+Writing at 0x00004c00... (95 %)
+Writing at 0x00005000... (100 %)
+Wrote 21504 bytes at 0x00000000 in 2.1 seconds (82.1 kbit/s)...
+Hash of data verified.
+Erasing flash...
+
+A fatal error occurred: Invalid head of packet (0x45): Possible serial noise or corruption.

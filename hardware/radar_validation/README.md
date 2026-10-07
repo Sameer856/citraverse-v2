@@ -2,7 +2,7 @@
 
 Validation date: 2026-10-07. Branch: `radar-bringup`.
 **Status: live UART and short SPI point-cloud validation; physical hardware sign-off BLOCKED.**
-No KiCad files changed. The initial UART run below made no configuration changes. The later SPI follow-up temporarily changed frame period and explicitly selected SPI point reporting; see its transcript and restoration notes. No flashing or physical reset was performed.
+No KiCad files changed. The initial UART run below made no configuration changes. The later SPI follow-up temporarily changed frame period and explicitly selected SPI point reporting; see its transcript and restoration notes. No flashing or physical reset was performed during those original dev-kit tests. The later bare-module/ESP32 attempt below includes ESP32 flashing and resets.
 
 ## Initial UART evidence and results
 
@@ -132,3 +132,20 @@ The collector may require a process-local PowerShell execution-policy override a
 `usb_only_readback.json` confirms the same 50 ms, 2T4R/2DFFT configuration. `spi_usb_only_60s.json` contains 1202 consecutive point frames (45337–46538) in 60.0978371 seconds: 20.0007 FPS over the session, 20.0285 FPS first-to-last. No callback drops or frame-index gaps were observed. All payloads parsed and matched their declared DWORD lengths; payloads ranged from 56 to 812 bytes, containing 3059 motion points and 26352 presence points. `spi_usb_only_summary.json` records the capture hash and reproducible statistics. This extends the 20 FPS observation to one minute; the earlier 24.40 FPS observation remains a separate 30-second test.
 
 The library again printed thread-abort messages at teardown while stop/close returned true; that known library lifecycle issue remains open. No radar configuration, physical reset or power change was made. Parser success and contiguous callbacks do not establish wire-level error counts or electrical integrity.
+
+
+## Bare-module ESP32 programming attempt (2026-10-07)
+
+The user moved to a new bare, reportedly unflashed MRS6240-P2512 and reports wiring complete. The radar is powered from the ESP32 board 3.3 V output; a multimeter voltage check is user-reported. No current/transient measurement or independent pin-orientation/identity verification is available. PB0 connects to GPIO18 (UART RX input) and GPIO8 (UPD); NRST connects to GPIO9. See the firmware README for the full mapping.
+
+COM8 enumerates CH343, VID:PID 1A86:55D3. esptool identifies ESP32-S3 revision v0.2, 16 MB flash, 8 MB embedded PSRAM, MAC 74:4d:bd:76:8c:58. The ESP-IDF 5.5.5 programmer/receiver builds successfully (application 0x4bcf0 bytes). It waits for explicit `FLASH_RADAR` or `RUN`, never automatically flashing on reset. It packages the external vendor `radar_analysis_mrs6240_p2512.img`, 290624 bytes, SHA256 `8650c4119d2b7eafb749c83bb127f07b3d9c56d739a0d0546be91b16bccd0af5`.
+
+**Live outcome: ESP32 application upload incomplete; no radar programming attempted.**
+
+- A 0x210000-byte ESP32 backup stalled at 460800 baud; a 115200 retry also failed to finish and was interrupted. No complete backup exists. A separate 4096-byte boot-sector read succeeded and remains in ignored local build storage.
+- Stub-based ESP32 flashing at 115200 failed during the first write with `Invalid head of packet (0x45)`; subsequent boot output reported `invalid header: 0xffffffff`.
+- A ROM-loader retry (`--no-stub`, 115200) successfully restored the ESP32 bootloader and verified its hash, then failed during the next erase with the same error. The rest of the application/partition/image upload did not complete. Evidence: `esp32-flash.txt`, `esp32-flash-rom.txt`, `esp32_flash_failure_console.txt`.
+- The console capture hit a Windows stdout encoding exception after saving raw bytes. The capture utility now emits UTF-8 and preserves the binary transcript.
+- Requested next isolation step: power off, disconnect the radar power and signal wires, reconnect the ESP32 USB alone, and retry ESP32 flashing. A reset/power/USB/wiring fault is suspected, not proven. No brownout measurement exists.
+
+The vendor burn sequence toggles UPD/NRST to synchronize with the radar bootloader, downloads the image, then resets and releases UPD. SPI full-flash readback comparison is disabled/unsupported in this selected vendor path; success must additionally be checked through UART version and valid SPI frames. Neither has been reached on this bare module. Prior CH347 FPS results apply only to the earlier dev kit. Bare-module current, SPI timing, handshake, maximum payload, 24 FPS, cold boot and NRST recovery remain unresolved.
