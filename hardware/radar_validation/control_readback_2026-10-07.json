@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-07T04:39:30.778669+00:00",
+  "port": "COM6",
+  "baud": 115200,
+  "serial": "8N1",
+  "dtr": false,
+  "rts": false,
+  "queries": [],
+  "error": "COM6 open failed: PermissionError(13, Access is denied, Windows error 5)"
+}

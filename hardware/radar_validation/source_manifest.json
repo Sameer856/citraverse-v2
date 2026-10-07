@@ -1,0 +1,45 @@
+{
+  "path_base": "parent mmWave workspace (sources outside this repository)",
+  "sources": [
+    {
+      "path": "resources/text/RS6x_7x_HIF_Reference_Manual_V1.2.txt",
+      "sha256": "fdf5a2a55416fc25d485b39afa75c85554e83409683c33203a6b5e557b372a75"
+    },
+    {
+      "path": "resources/text/RS6x_7x_mmWave_Radar_Evaluation_Quick_Start_Guide_V1.5.txt",
+      "sha256": "2cfa09bccdb9d1cfeb574f4a8991646ea612b707ca02e9f88051bf201cde769b"
+    },
+    {
+      "path": "resources/host_source/HostSample_V1.0.1/ESP32/ESP32S3Host/README.en.md",
+      "sha256": "20a382a12bd78cc76e9c838b3bc4615048554d1c6516817c07f1de5edfe11cdd"
+    },
+    {
+      "path": "resources/host_source/HostSample_V1.0.1/ESP32/ESP32S3Host/host_driver/porting/esp32/hal_com_spi.c",
+      "sha256": "d045e810dbeec4fc60ac68a8ae6967ca4d573b7fd38cb031bf14e6b37a117cba"
+    },
+    {
+      "path": "resources/sdk/RS6x_7x_mmWave_sdk_V2.1.2/Software_Kit/02_SDK/psdf_sdk/subsys/mmw/mmw_cmd/src/mmw_shell.c",
+      "sha256": "73d0aae298dacd16e17a70c755b97384e8ddf1662a6f31132e09a48d846089f8"
+    },
+    {
+      "path": "resources/sdk/RS6x_7x_mmWave_sdk_V2.1.2/Software_Kit/02_SDK/psdf_sdk/subsys/mmw/mmw_cmd/inc/mmw_report.h",
+      "sha256": "1663a31aad194765eae0f0eb3f9414839d1d1da0ccc623b9569a4a445f59895c"
+    },
+    {
+      "path": "resources/new_tool/RadarAnalysisTool_V1.2.0.13_En/lua/demoScript/MRS624x-PosePointCloudDemo.lua",
+      "sha256": "0f7c77bf5b1a1e3484c19fc78509b3ac50f2c28f38be9cc0be6c17ea4e40c203"
+    },
+    {
+      "path": "resources/new_tool/RadarAnalysisTool_V1.2.0.13_En/RadarAnalysisTool.exe",
+      "sha256": "fc357ed41cd5e895bad9eb0e61341298c6b2c6abb5b344c9e0f4b57ebdfe3f5b"
+    },
+    {
+      "path": "live_tracker/protocol.py",
+      "sha256": "9d84e6ebc523c2510dd1fa3fa0627269abade593dd2b62f658ef3a33df97ce63"
+    },
+    {
+      "path": "live_tracker/control.py",
+      "sha256": "87cb925defdee38fc4286400c3f4d98890f33feb3a8d127f838b1e54a08fd35a"
+    }
+  ]
+}
