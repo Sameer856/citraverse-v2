@@ -22,6 +22,13 @@ static int64_t last_frame_us;
 static httpd_handle_t server;
 extern const unsigned char page_start[] asm("_binary_viewer_html_start");
 extern const unsigned char page_end[] asm("_binary_viewer_html_end");
+extern const unsigned char fall_start[] asm("_binary_fall_js_start");
+extern const unsigned char fall_end[] asm("_binary_fall_js_end");
+static esp_err_t fall_script(httpd_req_t *req) {
+    httpd_resp_set_type(req,"application/javascript");
+    httpd_resp_set_hdr(req,"Cache-Control","no-store");
+    return httpd_resp_send(req,(const char*)fall_start,fall_end-fall_start-1);
+}
 static esp_err_t settings_init(void) { return nvs_flash_init(); }
 esp_err_t radar_wifi_provision(const char *text) {
     cJSON *j=cJSON_Parse(text);
@@ -56,6 +63,7 @@ static esp_err_t socket_open(httpd_handle_t handle,int fd) {
 }
 static esp_err_t page(httpd_req_t *req) {
     httpd_resp_set_type(req,"text/html");
+    httpd_resp_set_hdr(req,"Cache-Control","no-store");
     return httpd_resp_send(req,(const char*)page_start,page_end-page_start-1);
 }
 static esp_err_t status(httpd_req_t *req) {
@@ -122,9 +130,11 @@ esp_err_t radar_wifi_start(void) {
     config.open_fn=socket_open;config.lru_purge_enable=true;config.send_wait_timeout=2;config.recv_wait_timeout=2;
     err=httpd_start(&server,&config);if(err!=ESP_OK) return err;
     httpd_uri_t home={.uri="/",.method=HTTP_GET,.handler=page};
+    httpd_uri_t detector={.uri="/fall.js",.method=HTTP_GET,.handler=fall_script};
     httpd_uri_t health={.uri="/api/status",.method=HTTP_GET,.handler=status};
     httpd_uri_t stream={.uri="/ws",.method=HTTP_GET,.handler=ws,.is_websocket=true};
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&home));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server,&detector));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&health));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&stream));
     ESP_ERROR_CHECK(esp_wifi_start());

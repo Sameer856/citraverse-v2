@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-07",
+  "mount_height_m": 0.762,
+  "mount": "table, facing forward; user reported",
+  "axis_verified": false,
+  "app_bytes": 879584,
+  "app_sha256": "1B05009A073579A3CD09D148FF9FF26CD3D7E98BE613427D2AD1676EC10FC628",
+  "serial_samples": 60,
+  "reported_fps_mean": 20.04946666666667,
+  "first_frames": 512,
+  "last_frames": 1707,
+  "invalid": 0,
+  "duplicates": 0,
+  "nonconsecutive": 0,
+  "reset_error_lines": 0,
+  "browser_demo": "DEMO / Suspected fall; SYNTHETIC event, 0.65 m drop, 0.40 m low height; acknowledgement cleared",
+  "browser_live": "Returned to live; armed at 0.762 m; coherent 24-point cluster with 1.38 m upper-height estimate; about 20 FPS",
+  "real_falls_tested": false,
+  "accuracy_validated": false
+}

@@ -74,3 +74,9 @@ With the user-reported external 3.3 V radar supply, the existing firmware passed
 The earlier shared-supply failures remain in the validation README. This is a short bench result, not a power-margin or long-run qualification. The viewer is latest-frame delivery: the extended test skipped 110 preview indices and reported four nonblocking frame-copy drops. A lossless recorder needs a separate transport/queue design.
 
 TCP_NODELAY avoids buffering small messages. The current world-safe country setting uses channels 1-11 and ignores router country information; the tested router uses channel 6. This was an experimental mitigation for a captured Wi-Fi beacon/regdomain hang; the tests do not isolate its effect from the later supply correction. Wi-Fi power saving is disabled for latency. The observed DHCP address is http://192.168.1.10/.
+
+## Experimental 3D fall-candidate viewer
+
+The embedded viewer now includes mounting calibration, a dominant-cluster box and trail, temporal height-drop detection, a latched suspected-fall indicator, acknowledgement, and a clearly labelled synthetic demo. See [FALL_PROTOTYPE.md](FALL_PROTOTYPE.md) for setup, thresholds and limitations. The current table setup defaults to 0.762 m height and forward-facing, zero tilt. Raw Z-up orientation remains an assumption.
+
+Monitoring runs in the browser and must be explicitly armed after reload. It requires an open, connected tab and does not send external notifications. This is an experimental point-cloud heuristic, not a validated safety alarm. Node synthetic state-transition tests and the live demo passed; no real fall accuracy has been measured.
