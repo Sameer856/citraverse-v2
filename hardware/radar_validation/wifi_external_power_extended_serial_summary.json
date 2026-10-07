@@ -1,0 +1,43 @@
+{
+  "capture_seconds": 125,
+  "stats_samples": 124,
+  "brownout_mentions": 0,
+  "reset_lines": [],
+  "watchdog_mentions": 0,
+  "panic_mentions": 0,
+  "first": {
+    "kind": "radar_stats",
+    "frames": 2415,
+    "fps": 20.792,
+    "invalid": 0,
+    "nonconsecutive": 0,
+    "duplicates": 0,
+    "last_index": 2414,
+    "motion_points": 0,
+    "presence_points": 23879,
+    "max_payload_bytes": 380,
+    "first_frame_host_us": 11987671,
+    "age_ms": 2,
+    "notify_level": 0,
+    "free_heap": 223664
+  },
+  "last": {
+    "kind": "radar_stats",
+    "frames": 4904,
+    "fps": 19.761,
+    "invalid": 0,
+    "nonconsecutive": 0,
+    "duplicates": 0,
+    "last_index": 4903,
+    "motion_points": 0,
+    "presence_points": 45276,
+    "max_payload_bytes": 380,
+    "first_frame_host_us": 11987671,
+    "age_ms": 50,
+    "notify_level": 0,
+    "free_heap": 219808
+  },
+  "mean_reported_radar_fps": 20.038064516129023,
+  "min_heap": 212820,
+  "max_heap": 223740
+}

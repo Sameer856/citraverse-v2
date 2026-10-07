@@ -1,7 +1,7 @@
 # MRS6240-P2512 radar validation
 
 Validation date: 2026-10-07. Branch: `radar-bringup`.
-**Status: live UART and short SPI point-cloud validation; physical hardware sign-off BLOCKED.**
+**Status: UART/SPI and Wi-Fi PoC passed short bench tests with external radar power; electrical sign-off remains pending.**
 No KiCad files changed. The initial UART run below made no configuration changes. The later SPI follow-up temporarily changed frame period and explicitly selected SPI point reporting; see its transcript and restoration notes. No flashing or physical reset was performed during those original dev-kit tests. The later bare-module/ESP32 attempt below includes ESP32 flashing and resets.
 
 ## Initial UART evidence and results
@@ -208,3 +208,14 @@ A passive console check found repeated task-watchdog reports with CPU0 running `
 A targeted experimental update enables TCP_NODELAY on accepted sockets, reduces browser request scheduling from 50 ms to 20 ms, and disables automatic AP country adoption using the IDF-supported world-safe country code 01. The associated router was observed on channel 6, within that channel set. This targets transport delay and the observed country/beacon path, but does not prove a driver root cause. The build and parser checks passed and the application flash digest verified. The updated host still reset repeatedly and its HTTP request timed out before the planned stream soak. **Neither stability nor improved FPS is validated.** See `wifi_stall_mitigation_summary.json` and `wifi_stall_mitigation_console.txt`. A fresh supply confirmation was requested. No radar flash or KiCad edits.
 
 The user reconfirmed radar power from the ESP32 3.3 V pin. The final mitigation capture also contains two explicit brownout messages, alongside watchdog resets. Power correction is required before further acceptance testing; this does not establish that every Wi-Fi watchdog has the same cause. The mitigation remains experimental and its FPS benefit unmeasured.
+
+
+## External 3.3 V radar supply: Wi-Fi retest PASS (short bench test)
+
+The user reported connecting a separate external 3.3 V supply. No firmware was changed or flashed during this retest; the installed TCP_NODELAY/world-safe-channel mitigation build remained in place. The initial 90-second reset/boot capture had one intentional power-on boot, no subsequent reset/brownout/watchdog/panic messages, and mean reported radar acquisition 20.04 FPS. Radar invalid, duplicate and nonconsecutive counters remained zero.
+
+A 60.031-second WebSocket test decoded 1114 unique frames (18.56 FPS), without an error. An additional 120.016-second test decoded 2295 unique frames (19.12 FPS) and 47044 point records, also without error. The browser was opened during the extended test and visibly showed live points and 19.6 viewer FPS. This extended observation ran beyond the earlier ~193-second Wi-Fi watchdog hang time. HTTP and WebSocket service stayed responsive during the passing tests.
+
+The simultaneous 125-second serial follow-up showed no reset, brownout, watchdog or panic messages and zero radar sequence/format errors. Preview delivery remains intentionally lossy: the 120-second test had 110 skipped frame indices, 3188 duplicate latest-frame snapshots, and the device's nonblocking viewer-copy-drop count rose from 0 to 4. These are preview delivery effects, not radar sequence errors. Largest callback tested over Wi-Fi was 392 bytes in the first run and 320 in the extended run; this does not establish maximum-load bandwidth or 24 FPS performance.
+
+Evidence: `wifi_external_power_boot.txt`, `wifi_external_power_boot_summary.json`, `wifi_external_power_stream.json`, `wifi_external_power_extended.json`, `wifi_external_power_extended_console.txt`, `wifi_external_power_extended_serial_summary.json`. The viewer remains at http://192.168.1.10/ (DHCP address may change). Separate power resolved the observed instability for these tests; current/inrush/transient margins and long-term reliability remain unmeasured. Earlier failures are retained as historical evidence, not the current bench result. KiCad unchanged.

@@ -1,0 +1,44 @@
+{
+  "power": "User reports separate external regulated 3.3 V radar supply",
+  "duration_seconds": 90,
+  "resets": [
+    "rst:0x1 (POWERON),boot:0x9 (SPI_FAST_FLASH_BOOT)"
+  ],
+  "brownout_mentions": 0,
+  "watchdog_mentions": 0,
+  "panic_mentions": 0,
+  "samples": 76,
+  "first": {
+    "kind": "radar_stats",
+    "frames": 26,
+    "fps": 20.085,
+    "invalid": 0,
+    "nonconsecutive": 0,
+    "duplicates": 0,
+    "last_index": 25,
+    "motion_points": 0,
+    "presence_points": 0,
+    "max_payload_bytes": 8,
+    "first_frame_host_us": 11987671,
+    "age_ms": 42,
+    "notify_level": 0,
+    "free_heap": 223236
+  },
+  "last": {
+    "kind": "radar_stats",
+    "frames": 1544,
+    "fps": 19.802,
+    "invalid": 0,
+    "nonconsecutive": 0,
+    "duplicates": 0,
+    "last_index": 1543,
+    "motion_points": 0,
+    "presence_points": 14976,
+    "max_payload_bytes": 380,
+    "first_frame_host_us": 11987671,
+    "age_ms": 36,
+    "notify_level": 0,
+    "free_heap": 219984
+  },
+  "mean_reported_radar_fps": 20.040131578947364
+}
