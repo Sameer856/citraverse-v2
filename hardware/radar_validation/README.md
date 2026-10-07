@@ -176,3 +176,14 @@ Removing the radar resolved the observed upload/reset failure in this run. This 
 ### Radar reconnected to ESP32 3.3 V — brownout recurs
 
 The user confirmed using the ESP32 board 3.3 V pin again. COM8 remained present; a 15-second passive capture was empty. One reset followed by a 12-second capture showed 175 `BROWNOUT_RST` occurrences and no programmer READY prompt. No radar configuration or programming command was sent. Evidence: `esp32_rewired_boot.txt`, `esp32_rewired_summary.json`. The earlier radar-disconnected test reached READY without brownouts. Shared-supply operation remains unusable in this wiring; investigate the radar supply and wiring before further programming. This does not isolate regulator capacity versus a wiring fault.
+
+
+### User-flashed radar: ESP32 UART + SPI streaming PASS
+
+The user reported flashing firmware and reconnecting the radar. COM8 booted the existing PoC and reached READY without observed brownouts. An immediate RUN sent `mmwc version` during radar startup and timed out; the captured banner identifies `mrs6240_p2512`, Radar Analysis Project, SDK V2.1.2 and firmware V5.3.1.0 @14e6. This is firmware identity, not independent physical module identification. No flashing was performed in this check.
+
+Repeating RUN eight seconds after READY succeeded. Every configuration command acknowledged, with 50 ms continuous frames, 2T4R/2DFFT and Doppler FFT 1 read back. SPI points then streamed at approximately 20 FPS. `capture_esp32.py` now accepts `--command-delay 8` for this startup workaround; the on-device application has not been changed. The first query was too early; firmware startup readiness handling remains a PoC improvement.
+
+A subsequent passive 60-second capture produced 60 statistics samples, 1195 additional frames between the first and last sample, and mean reported interval FPS 20.05. Invalid, duplicate and nonconsecutive counters remained zero. Both motion and presence points were received; largest reported payload-body size was 1028 bytes (excludes the 12-byte upload header). Free heap ranged from 355700 to 356508 bytes. No brownout/reset messages appeared in this capture. Evidence: `esp32_user_flashed_boot.txt`, `esp32_user_flashed_run.txt`, `esp32_user_flashed_delayed_run.txt`, `esp32_spi_stream_60s.txt`, `esp32_spi_stream_summary.json`.
+
+This demonstrates working UART control/replies and SPI reception through the current wiring. It does not independently measure electrical SPI clock/mode, current headroom or maximum throughput. The latest power arrangement was not reconfirmed in this check; earlier shared-supply brownout evidence remains relevant. The 24 FPS ESP32 test remains outstanding. The first-frame host timestamp includes the deliberate startup wait and is not a measured cold-boot latency.

@@ -11,6 +11,7 @@ p.add_argument('--command', choices=['RUN', 'FLASH_RADAR'])
 p.add_argument('--seconds', type=float, default=60)
 p.add_argument('--output', required=True)
 p.add_argument('--reset', action='store_true')
+p.add_argument('--command-delay', type=float, default=0.2)
 a = p.parse_args()
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 s = serial.Serial()
@@ -37,7 +38,7 @@ with s, Path(a.output).open('wb') as log:
         print(data.decode('utf-8', errors='replace'), end='', flush=True)
         seen.extend(data)
         if pending and b'READY: send FLASH_RADAR' in seen:
-            time.sleep(0.2)
+            time.sleep(a.command_delay)
             s.write((pending + '\r\n').encode('ascii'))
             s.flush()
             pending = None

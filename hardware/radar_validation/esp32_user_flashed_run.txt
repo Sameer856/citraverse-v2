@@ -1,0 +1,204 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x2b (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2eec
+entry 0x403c8924
+I (24) boot: ESP-IDF v5.5.5 2nd stage bootloader
+I (25) boot: compile time Oct  7 2026 14:13:19
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (28) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 16MB
+I (43) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (50) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (63) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (76) boot:  3 radar_image      Unknown data     01 82 00110000 00100000
+I (82) boot: End of partition table
+I (86) esp_image: segment 0: paddr=00010020 vaddr=3c030020 size=10074h ( 65652) map
+I (105) esp_image: segment 1: paddr=0002009c vaddr=3fc94600 size=03144h ( 12612) load
+I (108) esp_image: segment 2: paddr=000231e8 vaddr=40374000 size=0ce30h ( 52784) load
+I (121) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=284d8h (165080) map
+I (151) esp_image: segment 4: paddr=00058500 vaddr=40380e30 size=03798h ( 14232) load
+I (155) esp_image: segment 5: paddr=0005bca0 vaddr=50000000 size=00020h (    32) load
+I (162) boot: Loaded app from partition at offset 0x10000
+I (162) boot: Disabling RNG early entropy source...
+I (177) cpu_start: Multicore app
+I (185) cpu_start: GPIO 44 and 43 are used as console UART I/O pins
+I (186) cpu_start: Pro cpu start user code
+I (186) cpu_start: cpu freq: 160000000 Hz
+I (188) app_init: Application information:
+I (191) app_init: Project name:     citraverse_radar_poc
+I (197) app_init: App version:      d29ab70-dirty
+I (201) app_init: Compile time:     Oct  7 2026 14:12:30
+I (206) app_init: ELF file SHA256:  b3adf144a...
+I (210) app_init: ESP-IDF:          v5.5.5
+I (214) efuse_init: Min chip rev:     v0.0
+I (218) efuse_init: Max chip rev:     v0.99 
+I (222) efuse_init: Chip rev:         v0.2
+I (226) heap_init: Initializing. RAM available for dynamic allocation:
+I (232) heap_init: At 3FC98220 len 000514F0 (325 KiB): RAM
+I (237) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (242) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (248) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM
+I (254) spi_flash: detected chip: boya
+I (256) spi_flash: flash io: dio
+I (259) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (266) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (273) main_task: Started on CPU0
+I (273) main_task: Calling app_main()
+I (283) radar_poc: SPI2 mode 0 requested 8000000 Hz: CS10 CLK12 MOSI11 MISO13 Notify7
+I (283) radar_poc: NRST=GPIO9; PB0=GPIO18 RX plus GPIO8 UPD (released after burn)
+I (293) radar_poc: READY: send FLASH_RADAR to program P2512, or RUN to use installed firmware
+I (513) radar_control: > mmwc version
+E (4563) radar_control: No complete reply: 
+
+
+Welcome to use POSSUMIC Technology products
+-------------------------------------------
+board: mrs6240_p2512
+cpu freq: 255944000
+version: R0.0 M0.0.0 V2.1.2
+time: Sep  3 2026 16:17:20
+-------------------------------------------
+
+Radar Analysis Project
+-------------------------------------------
+	Current System: CPUF
+mmw_ctrl_open
+/-----POSSUMIC----/
+/--Firmware V5.3.1.0 @    14e6--/
+/-----Firmware Init End ----/
+MMW setup from App!
+Lsi Clk Freq: 1007000
+Msi Clk Freq: 31993000
+RefMIMO Calib Load 32!
+1ae2 fcf23237 f74e9075 57a2790 ffa81dd4 f9ff340c fde18000 50c297a
+min_freq:56500, max_freq:65500; start_idx:0, end_idx:256, chirp num:136
+ Clk: MSI
+Ref Clk Freq: 31993000
+DPLL Clk: Ref Clk
+mmw_ctrl_data_task init success
+
+psic:/$ 
+E (4623) radar_poc: Configuration aborted (ESP_ERR_TIMEOUT); no further configuration/start commands sent
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357848}
+W (5633) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (6643) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (7653) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (8663) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (9673) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (10683) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (11693) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (12703) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (13713) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (14723) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (15733) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (16743) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (17753) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (18763) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (19773) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (20783) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (21793) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (22803) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (23813) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (24823) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (25833) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (26843) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (27853) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (28863) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (29873) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (30883) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (31893) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (32903) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (33913) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (34923) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (35933) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (36943) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (37953) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (38963) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (39973) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (40983) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (41993) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (43003) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (44013) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (45023) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (46033) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (47043) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (48053) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (49063) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (50073) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (51083) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (52093) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (53103) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (54113) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (55123) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (56133) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (57143) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (58153) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (59163) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (60173) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
+{"kind":"radar_stats","frames":0,"fps":0.000,"invalid":0,"nonconsecutive":0,"duplicates":0,"last_index":0,"motion_points":0,"presence_points":0,"max_payload_bytes":0,"first_frame_host_us":0,"age_ms":-1,"notify_level":0,"free_heap":357828}
+W (61183) radar_poc: No recent frame: check radar power, SPI/report mode, common ground and PA6.
