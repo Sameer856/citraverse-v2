@@ -1,0 +1,87 @@
+[
+  {
+    "source": "spi_vendor_capture.json",
+    "sha256": "9114108113e7d940470ccb6f74baa518ce48329f742be56d8a32815aa6094104",
+    "api_error": null,
+    "callbacks": 200,
+    "point_frames": 200,
+    "duration_s": 10.089933499999999,
+    "fps_count_over_session": 19.821736188846042,
+    "fps_first_to_last": 20.05249642798533,
+    "nonconsecutive_transitions": 0,
+    "transition_deltas": [],
+    "max_callback_payload_bytes": 1304,
+    "min_callback_payload_bytes": 164,
+    "point_counts": {
+      "presence": 5416,
+      "motion": 2052
+    },
+    "dropped_callbacks": 0,
+    "first_frame": 16896,
+    "last_frame": 17095,
+    "limitations": "Vendor library has stripped HIF/transport framing. No electrical timing, SPI transfer size, wire checksum/error counters or independent frame-ready trace. Callback time is host time."
+  },
+  {
+    "source": "spi_41ms_capture.json",
+    "sha256": "465463006f81f487d88afc56ec5f6b17a7520a4a11177417dbee9ab5de89cf72",
+    "api_error": null,
+    "callbacks": 0,
+    "point_frames": 0,
+    "duration_s": 30.107646,
+    "fps_count_over_session": 0.0,
+    "fps_first_to_last": null,
+    "nonconsecutive_transitions": 0,
+    "transition_deltas": [],
+    "max_callback_payload_bytes": 0,
+    "min_callback_payload_bytes": 0,
+    "point_counts": {},
+    "dropped_callbacks": 0,
+    "first_frame": null,
+    "last_frame": null,
+    "limitations": "Vendor library has stripped HIF/transport framing. No electrical timing, SPI transfer size, wire checksum/error counters or independent frame-ready trace. Callback time is host time."
+  },
+  {
+    "source": "spi_41ms_reporting_capture.json",
+    "sha256": "2eb11881e14d08c3e3a6ef42f16d0c447751ca3db72c9dcf9753b8eabe783e00",
+    "api_error": null,
+    "callbacks": 734,
+    "point_frames": 734,
+    "duration_s": 30.084835199999997,
+    "fps_count_over_session": 24.397673948368514,
+    "fps_first_to_last": 24.49536940773181,
+    "nonconsecutive_transitions": 0,
+    "transition_deltas": [],
+    "max_callback_payload_bytes": 476,
+    "min_callback_payload_bytes": 8,
+    "point_counts": {
+      "presence": 16660,
+      "motion": 1
+    },
+    "dropped_callbacks": 0,
+    "first_frame": 20634,
+    "last_frame": 21367,
+    "limitations": "Vendor library has stripped HIF/transport framing. No electrical timing, SPI transfer size, wire checksum/error counters or independent frame-ready trace. Callback time is host time."
+  },
+  {
+    "source": "spi_restored_capture.json",
+    "sha256": "4c0dfa670faa69f7ba3aed7696135ee1a6b9a70ba58bbb73ac14bb3ce97cb7c6",
+    "api_error": null,
+    "callbacks": 100,
+    "point_frames": 100,
+    "duration_s": 5.085793,
+    "fps_count_over_session": 19.662617019607367,
+    "fps_first_to_last": 20.049562112500443,
+    "nonconsecutive_transitions": 0,
+    "transition_deltas": [],
+    "max_callback_payload_bytes": 380,
+    "min_callback_payload_bytes": 176,
+    "point_counts": {
+      "presence": 2016,
+      "motion": 2
+    },
+    "dropped_callbacks": 0,
+    "first_frame": 21489,
+    "last_frame": 21588,
+    "limitations": "Vendor library has stripped HIF/transport framing. No electrical timing, SPI transfer size, wire checksum/error counters or independent frame-ready trace. Callback time is host time."
+  }
+]

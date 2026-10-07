@@ -1,0 +1,13 @@
+{
+  "bridge": "CH347T",
+  "usb_vid": "1A86",
+  "usb_pid": "55DB",
+  "interfaces": {
+    "MI_02": "USB HighSpeed-SPI/I2C... CH347T",
+    "MI_00": "USB-HiSpeed-SERIAL-A CH347 (COM7)"
+  },
+  "separate_measurement_instruments_identified": false,
+  "physical_module_identity_confirmed": false,
+  "observation_date": "2026-10-07",
+  "source": "USB PnP enumeration at the start of the SPI reconnect session"
+}

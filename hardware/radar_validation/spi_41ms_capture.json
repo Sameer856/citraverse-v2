@@ -1,0 +1,33 @@
+﻿{
+    "utc_start":  "2026-10-07T05:48:12.6264148Z",
+    "library_version":  "1.0.0.1",
+    "library_sha256":  "9F28302958D21F51FA5D159C99248E97DFC237446BE869615C40C256A5D92F5F",
+    "requested_spi_frequency_mode":  3,
+    "documented_requested_clock_hz":  7500000,
+    "clock_measured":  false,
+    "calls":  [
+                  {
+                      "result":  true,
+                      "api":  "OpenSpiDevice(0,3)"
+                  },
+                  {
+                      "result":  true,
+                      "api":  "StartCollectingData"
+                  },
+                  {
+                      "result":  true,
+                      "api":  "StopCollectingData"
+                  },
+                  {
+                      "result":  true,
+                      "api":  "CloseSpiDevice(0)"
+                  }
+              ],
+    "error":  null,
+    "duration_s":  30.107646,
+    "callbacks":  [
+
+                  ],
+    "callback_count":  0,
+    "dropped_callbacks":  0
+}

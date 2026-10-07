@@ -40,6 +40,10 @@
     {
       "path": "live_tracker/control.py",
       "sha256": "87cb925defdee38fc4286400c3f4d98890f33feb3a8d127f838b1e54a08fd35a"
+    },
+    {
+      "path": "resources/hif_library/HifMsgDataCollectionLib.xml",
+      "sha256": "22e5e7ac2443b9808ad95ea337ece35b200682d82d3877a6060e8b27c0a4c90e"
     }
   ]
 }

@@ -56,3 +56,9 @@ Reassembled point block: uint8 type=4, uint8 flags, uint16 payload length in byt
 Each `uart_chunks.jsonl` record is `{elapsed_s, offset, length}`: host monotonic seconds since capture start, byte offset into the bin, and read length. USB reads do not define packet boundaries. `frame_arrivals.jsonl` records `{elapsed_s, frame, points}` when the original decoder completed a frame; timestamps are not sensor acquisition times. UTC start, serial settings, duration and raw SHA-256 are in `capture_summary.json`.
 
 For future captures retain firmware/image hash, board identity, switch/wiring state, exact configuration transcript, supply/instrument settings and error counters alongside the same raw evidence. Native vendor .dat exports may be serialized containers; do not label them UART byte streams or use unsafe object deserialization.
+
+## Live SPI follow-up correction
+
+On V5.3.1.0, explicit `mmwc comtype 1` followed by `mmwc report points 0` and `mmwc start` produced SPI point callbacks. `mmwc stop` disables point reporting in the SDK; reissue the report command before restarting. A 41 ms requested period produced 734 consecutive frames in a 30-second capture. Source-default 8 MHz and the vendor DLL selector-3 setting of 7.5 MHz are different host configurations; neither is an electrical measurement in this record.
+
+The vendor callback `payloadData` starts at the reassembled TL point blocks, without the 12-byte C3 upload header or HIF framing. `frameLen` in these captures equals payload bytes divided by four. Do not feed these payloads to the UART HIF stream parser or infer SPI transaction size from callback length. Use `analyze_vendor_spi.py` for these files. Base64 preserves callback bytes exactly, but transport bytes have already been stripped by the DLL.

@@ -1,0 +1,2 @@
+# Preserve captured JSON bytes and accept the Windows CRLF evidence format.
+spi*.json -text whitespace=cr-at-eol

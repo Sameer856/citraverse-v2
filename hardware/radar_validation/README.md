@@ -1,10 +1,10 @@
 # MRS6240-P2512 radar validation
 
 Validation date: 2026-10-07. Branch: `radar-bringup`.
-**Status: partial live UART validation; hardware sign-off BLOCKED.**
-No KiCad files changed. No firmware flashing, reset, configuration changes, or start/stop commands were performed in this run. The stream was already running and was left running; serial handles were closed.
+**Status: live UART and short SPI point-cloud validation; physical hardware sign-off BLOCKED.**
+No KiCad files changed. The initial UART run below made no configuration changes. The later SPI follow-up temporarily changed frame period and explicitly selected SPI point reporting; see its transcript and restoration notes. No flashing or physical reset was performed.
 
-## Evidence and results
+## Initial UART evidence and results
 
 | Item | Result | Evidence / limitation |
 |---|---|---|
@@ -69,3 +69,54 @@ The initial live decoder was the pre-existing workspace `live_tracker/protocol.p
 ## Bench boot/capture procedure (planned, not executed)
 
 Confirm kit identity and vendor-specified power/wiring first. Set switches for the selected interface using the evaluation guide, power the kit, enumerate ports, open one control owner and save version/configuration readback. Capture unmodified data plus monotonic timing before starting any new acquisition. Record every command and reply. For reset testing, instrument rails/NRST and follow confirmed vendor strap/timing requirements; record first output and first complete frame after each reset. Save instrument traces and raw captures with hashes, then compare vendor-tool and independent-parser counts. Update each open item with measured evidence and run conditions.
+
+## Follow-up bench preflight — 2026-10-07 04:59 UTC
+
+The requested physical SPI/current/reset validation is blocked before acquisition.
+`bench_preflight_2026-10-07.json` records zero enumerated serial ports; USB PnP inspection found no CH347 bridge or identifiable measurement instrument. No supported analyzer executable resolved on PATH and no checked analyzer application was running. Network/standalone instruments remain possible but have not been identified by the operator.
+
+No new SPI, current, cold-boot or NRST measurements were taken. Prior UART evidence above remains historical and does not establish current connectivity. Await module marking/dev-kit revision, instrument models/control endpoints, verified probe mapping, radar-only supply isolation and a power/reset control method. Do not substitute documented defaults or UART throughput for the requested physical measurements. KiCad remains unchanged.
+
+## SPI follow-up — 2026-10-07 05:46–05:51 UTC
+
+**Functional SPI point-cloud delivery exceeded 24 FPS for 30 seconds. Electrical timing, worst-case bandwidth, physical identity, current and reset sign-off remain unverified.**
+
+USB now enumerates CH347 `VID_1A86 PID_55DB`: MI_02 is `USB HighSpeed-SPI/I2C... CH347T`, and MI_00 is SERIAL-A **COM7**. All seven read-only radar commands succeeded on COM7 (`control_spi_mode_readback.json`). This confirms the host-side control/data interface mapping after switching the kit; it is not a continuity measurement of module pins. No separate analyzer/current instrument or remote power/reset controller was identified. Module marking and dev-kit revision are still awaiting operator confirmation.
+
+The readback is V5.3.1.0, 2T4R/2DFFT, 58 GHz start, range 20480/80 mm, velocity 3200/200 mm/s, Doppler FFT enabled. These range/velocity settings differ from the earlier UART run and were preserved. Initial frame readback was `period=50ms, frame_num=-6`; SDK getter formats uint32 as signed decimal, so the restoration setter used unsigned `4294967290` and verified the same `-6` readback. Why this unusual count was configured remains unresolved.
+
+The local vendor `HifMsgDataCollectionLib` (package V1.1, reported library version 1.0.0.1) opened SPI device 0 with frequency selector 3, documented as **7.5 MHz**. This is a requested setting, not a measured SCLK frequency or CPOL/CPHA result. DLL hash is embedded in every capture. The library handles polling and transport internally; its callbacks expose reassembled application payloads, not CS boundaries, MOSI/MISO traces or PA6 transitions.
+
+| Run | Completed point frames | Session seconds | Frames/session second | First-to-last FPS | Largest callback payload |
+|---|---:|---:|---:|---:|---:|
+| Initial 50 ms | 200 | 10.0899 | 19.8217 | 20.0525 | 1304 bytes |
+| 41 ms, reporting not re-enabled (failed) | 0 | 30.1076 | 0 | n/a | n/a |
+| 41 ms, explicit SPI point reporting | 734 | 30.0848 | **24.3977** | 24.4954 | 476 bytes |
+| Restored 50 ms | 100 | 5.0858 | 19.6626 | 20.0496 | 380 bytes |
+
+All nonempty runs had consecutive callback frame indices and zero collector drops. Every point payload passed the independent TL/Cartesian parser and matched its declared DWORD length. These checks cannot establish wire checksum/retry counts because the DLL does not expose them here. Host scheduling, USB buffering and collection start/stop overhead affect the two FPS estimates.
+
+The successful 41 ms run contained 16660 presence points and only 1 motion point, with payloads 8–476 bytes. It demonstrates at-least-24-FPS delivery for this scene/configuration for 30 seconds, **not** sustained worst-case datacube or crowded-scene throughput, exact 24.000 FPS, or a soak-test pass. Largest application payload observed across these runs was 1304 bytes; **maximum SPI transfer size and packet boundaries remain unknown**.
+
+### Commands, failures and restoration
+
+The successful sequence was `mmwc stop`, `mmwc comtype 1`, `mmwc frame 41 0`, `mmwc report points 0`, `mmwc frame get`, `mmwc start`. Every command acknowledged success. `spi_rate_test_reporting_control.json` preserves the full replies and capture-process output.
+
+An earlier attempt failed in the host harness before collection because its subprocess could not resolve Get-FileHash; a retry collected zero callbacks. Both transcripts are retained. SDK `cmd_mmw_stop` clears `gui_data_report`, explaining why stop/frame/start without `report points 0` is insufficient. Re-enabling reporting fixed reception; this is a source-supported explanation, not an electrical trace diagnosis. The vendor DLL emitted `Thread was being aborted` messages during teardown on some runs even though stop/close returned true; cleanup behavior remains an integration issue.
+
+After the rate test, `stop`, `frame 50 4294967290`, `report points 0`, readback and `start` succeeded. The 5-second restored capture confirmed point delivery near 20 FPS. Final intended state: original frame period/count, unchanged range/velocity, SPI point reporting enabled continuously; all host serial/SPI handles closed. Previous report-limit configuration was not queried, so this is not a claim that every internal setting was restored. No cold power cycle or physical NRST pulse was issued; software stop/start is not a reset-recovery test.
+
+### Evidence and reproduction
+
+- `spi_vendor_capture.json`, `spi_41ms_capture.json`, `spi_41ms_reporting_capture.json`, `spi_restored_capture.json`: unchanged callback payloads encoded as Base64, vendor frame index/length/timestamp, host elapsed time, calls and library identity.
+- `spi_capture_summary.json`: hashes, counts, FPS, payload-size bounds and limitations.
+- `spi_rate_test_control*.json`, `spi_rate_test_reporting_control.json`: failed attempts, successful commands and restoration evidence.
+- `capture_vendor_spi.ps1`: bounded collector for **Windows PowerShell 5.1** using the locally supplied vendor DLL. It requests device 0 / frequency selector 3, never supplies a configuration file or flashes firmware, and caps stored callbacks at 10000. Configure reporting separately; output must be a new filename. Do not use concurrently with another SPI owner.
+- `analyze_vendor_spi.py`: standard-library decoder/summary of callback payloads; not a wire-protocol or logic-analyzer decoder.
+
+```powershell
+powershell.exe -NoProfile -File hardware/radar_validation/capture_vendor_spi.ps1 -Library ../resources/hif_library/HifMsgDataCollectionLib.dll -Output new-spi-capture.json -Seconds 10
+python hardware/radar_validation/analyze_vendor_spi.py hardware/radar_validation/spi_41ms_reporting_capture.json
+```
+
+Still required: physical module/board identification and continuity mapping; instrumented CS/CLK/MOSI/MISO/PA6/NRST and analog 3.3 V traces; actual mode/clock/poll/read timing and maximum transfer size; radar-only idle/average/peak/inrush current; cold-boot and NRST time to first valid frame; and long-duration, high-payload SPI throughput. The CH347 host interface alone does not supply this measurement evidence.

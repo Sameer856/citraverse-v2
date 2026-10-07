@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-07T05:47:36.023212+00:00",
+  "purpose": "Temporary 41 ms period, nominal 24.3902 FPS; restore 50 ms and original unsigned frame count",
+  "transcript": [
+    "> mmwc stop",
+    "mmwc stop\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame 41 0",
+    "mmwc frame 41 0\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame get",
+    "mmwc frame get\r\nperiod=41ms, frame_num=0\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc start",
+    "mmwc start\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc stop",
+    "mmwc stop\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame 50 4294967290",
+    "mmwc frame 50 4294967290\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame get",
+    "mmwc frame get\r\nperiod=50ms, frame_num=-6\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc start",
+    "mmwc start\r\n\r\nCommand Success\r\n\r\npsic:/$ "
+  ],
+  "error": null,
+  "capture_process": {
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "C:\\Users\\msame\\OneDrive\\Documents\\mmWave\\citraverse-v2\\hardware\\radar_validation\\capture_vendor_spi.ps1 : The term \n'Get-FileHash' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the \nspelling of the name, or if a path was included, verify that the path is correct and try again.\n    + CategoryInfo          : ObjectNotFound: (Get-FileHash:String) [capture_vendor_spi.ps1], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException,capture_vendor_spi.ps1\n \n"
+  },
+  "restore": "success; 50 ms and original unsigned count restored; radar running"
+}

@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-07T05:48:11.126167+00:00",
+  "transcript": [
+    "> mmwc stop",
+    "mmwc stop\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame 41 0",
+    "mmwc frame 41 0\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame get",
+    "mmwc frame get\r\nperiod=41ms, frame_num=0\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc start",
+    "mmwc start\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc stop",
+    "mmwc stop\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame 50 4294967290",
+    "mmwc frame 50 4294967290\r\n\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc frame get",
+    "mmwc frame get\r\nperiod=50ms, frame_num=-6\r\n\u0000\r\nCommand Success\r\n\r\npsic:/$ ",
+    "> mmwc start",
+    "mmwc start\r\n\r\nCommand Success\r\n\r\npsic:/$ "
+  ],
+  "capture_process": {
+    "exit_code": 0,
+    "stdout": "{\n    \"utc_start\":  \"2026-10-07T05:48:12.6264148Z\",\n    \"library_version\":  \"1.0.0.1\",\n    \"calls\":  [\n                  {\n                      \"result\":  true,\n                      \"api\":  \"OpenSpiDevice(0,3)\"\n                  },\n                  {\n                      \"result\":  true,\n                      \"api\":  \"StartCollectingData\"\n                  },\n                  {\n                      \"result\":  true,\n                      \"api\":  \"StopCollectingData\"\n                  },\n                  {\n                      \"result\":  true,\n                      \"api\":  \"CloseSpiDevice(0)\"\n                  }\n              ],\n    \"error\":  null,\n    \"duration_s\":  30.107646,\n    \"callback_count\":  0,\n    \"dropped_callbacks\":  0\n}\n",
+    "stderr": ""
+  },
+  "restore": "success; original period/count restored; radar running"
+}

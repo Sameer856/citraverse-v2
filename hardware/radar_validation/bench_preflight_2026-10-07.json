@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-07T04:59:47.3812949Z",
+  "serial_ports": [],
+  "observation": "USB PnP enumeration found no CH347 radar bridge or identifiable logic analyzer/current instrument. No sigrok-cli or PulseView executable resolved on PATH; no Saleae/Logic/PulseView/WaveForms process found. Network or standalone instruments have not been identified by operator.",
+  "status": "blocked_pending_bench_connection_and_instrument_details",
+  "measurements_performed": [],
+  "required_operator_details": [
+    "Physical module marking and dev-kit revision",
+    "Analyzer model, control endpoint and channel mapping",
+    "Current instrument and radar-only supply isolation",
+    "Remote power/NRST control method"
+  ]
+}
