@@ -153,3 +153,7 @@ The vendor burn sequence toggles UPD/NRST to synchronize with the radar bootload
 ### Subsequent retry
 
 After the user requested another attempt, COM8 still identified the same ESP32-S3. A ROM-loader upload at 115200 baud failed during the first bootloader transfer with `Invalid head of packet (0x45)`. The subsequent five-second boot capture reports `rst:0x1 (POWERON)` and `invalid header: 0xffffffff`. The earlier successfully restored bootloader is therefore no longer a confirmed valid boot image after this retry. ESP32 recovery remains necessary; no radar programming command has run. Physical disconnection of the radar was not explicitly confirmed. Evidence: `esp32-flash-retry.txt`, `esp32_retry_boot.txt`. Next step is explicit confirmation of ESP32-only wiring, followed by cable/power/reset isolation if the fault persists.
+
+### Manual-download-mode attempt
+
+With wiring left soldered in place, the user performed a manual ESP32 BOOT/EN sequence. esptool was invoked with `--no-stub --before no_reset --after no_reset` at 115200. Connection failed with packet byte 0x69 before any erase/write. A passive three-second COM8 capture still showed repeated `invalid header: 0xffffffff`, so download mode was not maintained/observed. Evidence: `esp32-manual-boot.txt`, `esp32_manual_boot_console.txt`. Next check: hold ESP32 BOOT continuously through EN release and the host connection attempt. This does not require desoldering radar wiring and does not involve radar UPD.
