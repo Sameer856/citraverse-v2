@@ -31,12 +31,12 @@ ESP-IDF 5.5.5 is installed under `C:\Espressif`. Use the matching P2512 radar-an
 
 Add `-Action flash -Port COM8` to flash the ESP32. This writes the ESP bootloader, partition table, application and radar-image storage. `-RadarImage` may be omitted on later invocations only when the build cache already has the path. If an older `sdkconfig` exists, regenerate it from defaults to pick up UART0, 16 MB and custom partition settings. `-Action menuconfig` allows frame period and SPI speed changes.
 
-On every ESP32 boot the app waits for an explicit command:
+On every ESP32 boot the app accepts serial commands for eight seconds, then automatically runs the installed radar firmware:
 
 - `FLASH_RADAR` followed by CR/LF invokes the vendor bootloader synchronization and image download, exits programming mode, releases GPIO8, then attempts UART configuration and streaming.
 - `RUN` skips programming and attempts UART configuration and streaming.
 
-Reset alone never downloads an image. A failed programming attempt leaves the command gate open. API success is not sufficient acceptance: verify the running UART version and valid SPI frames. Do not resend `FLASH_RADAR` automatically on failure.
+Reset alone never downloads an image. Normal boot waits at least eight seconds before querying the radar. A failed programming attempt leaves the command gate open. API success is not sufficient acceptance: verify the running UART version and valid SPI frames. Do not resend `FLASH_RADAR` automatically on failure.
 
 `hardware/radar_validation/capture_esp32.py` captures the console for a bounded duration. With `--reset --command RUN` or `FLASH_RADAR`, it sends the command once only after observing the READY prompt. Logs may include vendor diagnostic text alongside JSON statistics.
 
@@ -47,3 +47,26 @@ Requested SPI2 mode 0 at 8 MHz; actual electrical timing is unmeasured. Auto-con
 Every second `radar_stats` reports frame count, FPS, malformed/unsupported frames, nonconsecutive indices, duplicates, point counts, largest payload, first frame host timestamp, age, Notify level and free heap. C3 payloads are bounded to 8192 bytes, including their 12-byte upload header. Empty point frames are valid; tracks/cubes are unsupported. This is a diagnostics receiver, not a lossless recorder or tracker. `first_frame_host_us` includes time spent waiting for a command and is not cold-boot latency.
 
 Accept streaming only after a 60-second capture with increasing counts, stable heap and no new invalid/duplicate/nonconsecutive counters; repeat with 41 ms frames for >=24 FPS. Prior CH347 evidence does not establish ESP32 performance. See `hardware/radar_validation/README.md` for live outcomes and unresolved issues. Earlier build/parser checks in `BUILD_VALIDATION.md` describe the pre-programmer revision.
+
+
+## Wi-Fi host and browser viewer
+
+The host joins an existing 2.4 GHz Wi-Fi network (station mode), matching the vendor sample network arrangement. Provision credentials once using `provision_wifi.py --port COM8 --output <local-console-log.txt>`; it prompts for the SSID and hides password entry. Credentials are stored in the ESP32 NVS namespace `radar_wifi`, not in source or the firmware binary. They survive application updates. This PoC does not enable flash encryption. Re-run provisioning to change networks.
+
+The console reports `Viewer: http://<device-ip>/` after DHCP. Open that URL from a device on the same LAN. The embedded page needs no internet dependencies and shows an orbitable 3D point cloud, motion/presence colors, frame index, viewer FPS and stream age. Drag to rotate; adjust view radius, pause or reset view. If frames stop, the page marks the stream stale and clears old points. Wi-Fi disconnects trigger reconnection; the browser also reconnects its WebSocket.
+
+Endpoints:
+
+- `/`: embedded viewer.
+- `/api/status`: latest valid frame count since Wi-Fi initialization, copy drops, frame age and free heap.
+- `/ws`: send text `next` to receive the latest validated C3 callback as binary, including its 12-byte little-endian frame index/word-length/offset header. Before the first frame, response is text `waiting`. The browser requests at 20 Hz with one outstanding request. Point blocks retain all coordinates, velocity and SNR; Cartesian flags 1/3 are required by the viewer. Coordinates and velocity divide signed int16 by 100 into metres and m/s; SNR divides by 100 into dB.
+
+This follows the reference's HTTP/WebSocket viewer architecture but uses a documented binary protocol rather than its JSON schema; it is not a drop-in endpoint for the unmodified vendor frontend. Latest-frame delivery bounds memory and latency; a slow client can skip frames. The acquisition callback never waits for a browser/socket, allocating no frame memory. A try-lock copy may be dropped; `/api/status` exposes that count. SPI continuity counters and viewer delivery are separate measurements.
+
+The server is read-only and intended for a trusted LAN: no HTTP authentication/TLS or remote flashing controls. Keep it off public networks. No router port forwarding is needed. Wi-Fi increases power demand; earlier brownout findings still apply. Current live validation is recorded in the radar validation README.
+
+Run `node tests/test_viewer.cjs` from this directory to exercise the actual browser decoder against 2236 recorded frames, signed coordinates, velocity/SNR and malformed/spherical rejection cases.
+
+### Wi-Fi validation status
+
+The firmware builds, flashes and verifies; the live HTTP page rendered radar points at `http://192.168.1.10/`. Sustained operation is **not accepted yet**: final testing recorded explicit brownouts and watchdog resets, and the WebSocket soak timed out. Correct the power/wiring issue before relying on this host. See `hardware/radar_validation/wifi_host_runtime_summary.json`. Wi-Fi power saving is disabled in this build for latency; that increases supply demand. The server permits up to six client sockets but has not passed a multi-client soak.

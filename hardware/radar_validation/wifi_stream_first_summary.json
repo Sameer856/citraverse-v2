@@ -1,0 +1,24 @@
+{
+  "elapsed_seconds": 20.108999999938533,
+  "binary_messages": 189,
+  "unique_frames": 187,
+  "unique_fps": 9.2993187130425,
+  "duplicate_snapshots": 2,
+  "skipped_preview_indices": 216,
+  "points_decoded": 5208,
+  "largest_callback_bytes": 704,
+  "status_before": {
+    "frames": 1040,
+    "viewer_copy_drops": 0,
+    "age_ms": 29,
+    "free_heap": 223080
+  },
+  "status_after": {
+    "frames": 1447,
+    "viewer_copy_drops": 0,
+    "age_ms": 32,
+    "free_heap": 222268
+  },
+  "first_index": 5443,
+  "last_index": 5845
+}

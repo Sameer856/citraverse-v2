@@ -1,0 +1,20 @@
+{
+  "acceptance": "BLOCKED: brownout resets during sustained Wi-Fi operation",
+  "capture_seconds": 90,
+  "explicit_brownout_messages": 2,
+  "reset_lines": [
+    "rst:0x1 (POWERON),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x3 (RTC_SW_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x3 (RTC_SW_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)"
+  ],
+  "stats_samples": 9,
+  "http_status_verified": 200,
+  "viewer_url": "http://192.168.1.10/",
+  "browser_point_rendering_verified": true,
+  "pause_control_verified": true,
+  "final_websocket_soak": "receive timeout; no passing 60-second Wi-Fi result",
+  "radar_firmware_flashed": false
+}

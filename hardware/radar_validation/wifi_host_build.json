@@ -1,0 +1,9 @@
+{
+  "app_bytes": 866640,
+  "app_sha256": "c71925d02340f83b1cb87104a3e09b216a72569691f101f4b60606af87b7318f",
+  "idf": "5.5.5",
+  "flash_verification": "separate verify_flash digest matched",
+  "browser_decoder_test": "2236 recorded frames plus malformed and spherical rejection",
+  "radar_firmware_flashed": false,
+  "credentials_in_firmware": false
+}
