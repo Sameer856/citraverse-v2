@@ -1,7 +1,7 @@
 {
   "date": "2026-10-07",
   "idf": "5.5.5",
-  "esp32_upload": "incomplete; ROM loader restored and verified bootloader, next erase failed",
+  "esp32_upload": "incomplete; latest retry failed during bootloader write; boot reports invalid header 0xffffffff",
   "radar_upload": "not attempted",
   "files": {
     "citraverse_radar_poc.bin": {
