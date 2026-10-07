@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Citraverse — Oct 16 Pilot Timeline</title>
+  <style>
+    :root { --ink:#172134; --muted:#667085; --line:#e4e9f2; --blue:#1864d9; --green:#147d56; --amber:#a86100; --red:#b42318; --bg:#f5f7fb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { max-width:1120px; margin:0 auto; padding:34px 24px 48px; }
+    .eyebrow { color:var(--blue); font-weight:800; letter-spacing:.1em; font-size:12px; text-transform:uppercase; }
+    h1 { font-size:34px; margin:8px 0 9px; letter-spacing:-.04em; }
+    .subtitle { margin:0; max-width:840px; color:var(--muted); line-height:1.55; }
+    .banner { margin:22px 0; padding:15px 17px; border-radius:12px; background:#fff3e0; border:1px solid #ffd9a0; color:#7a4600; font-weight:650; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0 28px; }
+    .stat { background:#fff; border:1px solid var(--line); border-radius:14px; padding:17px; box-shadow:0 2px 8px #1d29390a; }
+    .stat span { display:block; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.055em; }
+    .stat strong { display:block; font-size:24px; margin-top:7px; }
+    section { background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-top:16px; }
+    section h2 { font-size:17px; margin:0; padding:17px 19px; border-bottom:1px solid var(--line); }
+    .timeline { padding:10px 19px 18px; }
+    .item { cursor:pointer; display:grid; grid-template-columns:105px 22px 1fr auto; gap:12px; align-items:center; padding:13px 3px; border-bottom:1px solid #eef1f6; }
+    .item:last-child { border:0; }
+    .item:hover, .item.active { background:#f4f8ff; margin:0 -8px; padding-left:11px; padding-right:11px; border-radius:9px; }
+    .date { font-weight:800; font-size:14px; }
+    .dot { width:12px; height:12px; border-radius:50%; background:var(--blue); box-shadow:0 0 0 4px #e6efff; }
+    .item.warn .dot { background:#d97706; box-shadow:0 0 0 4px #fff0d6; }
+    .item.ok .dot { background:var(--green); box-shadow:0 0 0 4px #e0f4eb; }
+    .task { font-weight:700; }
+    .detail { display:none; grid-column:3 / 5; color:var(--muted); font-size:14px; line-height:1.45; padding:0 0 12px; }
+    .active + .detail { display:block; }
+    .tag { font-size:12px; font-weight:800; padding:5px 8px; border-radius:999px; background:#eef4ff; color:#175cd3; }
+    .tag.risk { background:#fff1f0; color:var(--red); }
+    .gates { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; padding:17px 19px 20px; }
+    .gate { border-left:4px solid var(--blue); background:#f8fbff; border-radius:8px; padding:12px 13px; }
+    .gate b { display:block; margin-bottom:4px; }
+    .gate span { color:var(--muted); font-size:13px; line-height:1.45; }
+    footer { color:var(--muted); font-size:12px; margin-top:16px; text-align:center; }
+    @media(max-width:700px) { .grid,.gates { grid-template-columns:1fr; } h1 { font-size:28px; } .item { grid-template-columns:82px 18px 1fr; } .tag { display:none; } .detail { grid-column:3; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Citraverse pilot · Bengaluru</div>
+    <h1>Accelerated radar + PCB pilot plan</h1>
+    <p class="subtitle">Target: assemble, integrate, and demonstrate the first MRS6240 / ESP32-S3 sensor node by <b>16 October</b>. Click a row for its delivery condition.</p>
+    <div class="banner">Critical path: PCB release and Lion Circuits Rush order must be completed on <b>8 October</b>. Confirm the portal’s stated “Ships Before” date before paying.</div>
+    <div class="grid">
+      <div class="stat"><span>Board release + order</span><strong>8 Oct</strong></div>
+      <div class="stat"><span>Board collection target</span><strong>14 Oct</strong></div>
+      <div class="stat"><span>Demo target</span><strong>16 Oct</strong></div>
+    </div>
+    <section>
+      <h2>Execution timeline</h2>
+      <div class="timeline" id="timeline">
+        <div class="item active"><div class="date">7 Oct</div><div class="dot"></div><div class="task">Radar bring-up + design freeze</div><div class="tag">In progress</div></div>
+        <div class="detail">Validate SPI data transfer, UART control, current draw, antenna keep-out, and final pin contract. No footprint or connector changes after this gate.</div>
+        <div class="item warn"><div class="date">8 Oct</div><div class="dot"></div><div class="task">Route, ERC/DRC, DFM, and Lion Rush order</div><div class="tag risk">Critical</div></div>
+        <div class="detail">Finish routing, check manufacturing rules, generate Gerbers/BOM/CPL, then order with a confirmed 14 Oct local-collection/arrival commitment.</div>
+        <div class="item"><div class="date">9–14 Oct</div><div class="dot"></div><div class="task">PCB fabrication + firmware in parallel</div><div class="tag">Parallel</div></div>
+        <div class="detail">Prepare OTA, Wi-Fi provisioning, SD buffering/replay, 30-second audio upload, radar frame uplink, health telemetry, and recovery tests while boards are fabricated.</div>
+        <div class="item warn"><div class="date">14 Oct</div><div class="dot"></div><div class="task">Local PCB collection target</div><div class="tag risk">Gate</div></div>
+        <div class="detail">If the actual Lion Circuits shipping promise does not support this date, the 16 Oct integrated-hardware target slips. This is the key external dependency.</div>
+        <div class="item"><div class="date">15 Oct</div><div class="dot"></div><div class="task">Assembly, power-up, and smoke test</div><div class="tag">Bench</div></div>
+        <div class="detail">Inspect rails, USB boot, ESP32-S3 enumeration, radar UART/SPI, microphone I2S, SD writes, Wi-Fi, and thermal behaviour before field-like test.</div>
+        <div class="item ok"><div class="date">16 Oct</div><div class="dot"></div><div class="task">Integrated prototype demo</div><div class="tag">Target</div></div>
+        <div class="detail">Demonstrate continuous radar frames, 30-second audio uploads, local buffering, reconnect/replay, and visible health status. This is a pilot prototype demo—not a two-year reliability qualification.</div>
+      </div>
+    </section>
+    <section>
+      <h2>Non-negotiable gates</h2>
+      <div class="gates">
+        <div class="gate"><b>Electrical gate — 8 Oct</b><span>No factory release without a clean electrical review, DRC/DFM review, and validated radar footprint orientation.</span></div>
+        <div class="gate"><b>Supplier gate — 8 Oct</b><span>Lion Circuits’ quote must explicitly show a delivery/collection date compatible with 14 Oct.</span></div>
+        <div class="gate"><b>Bring-up gate — 15 Oct</b><span>Every power rail, boot path, storage, radar transport, audio capture, and Wi-Fi reconnect has a short bench test.</span></div>
+        <div class="gate"><b>Demo gate — 16 Oct</b><span>Show end-to-end cloud transfer and power/network recovery. Keep a known-good dev-kit fallback for the demo.</span></div>
+      </div>
+    </section>
+    <footer>Live browser rendition of the Citrawas pilot timeline · click any timeline row to expand details</footer>
+  </main>
+  <script>
+    document.querySelectorAll('.item').forEach(item => item.addEventListener('click', () => {
+      document.querySelectorAll('.item').forEach(other => other.classList.remove('active'));
+      item.classList.add('active');
+    }));
+  </script>
+</body>
+</html>

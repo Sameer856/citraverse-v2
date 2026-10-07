@@ -1,0 +1,25 @@
+# Local secrets and environment configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+service-account*.json
+
+# Generated logs and captures; store large radar captures in approved cloud storage
+*.log
+hardware/radar_validation/raw/
+hardware/radar_validation/captures/
+
+# KiCad user and recovery files
+*.kicad_prl
+*-backups/
+*.lck
+
+# Local preview and operating-system files
+.DS_Store
+node_modules/
+__pycache__/
+.pytest_cache/

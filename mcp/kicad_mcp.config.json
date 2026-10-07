@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "citraverse-kicad": {
+      "command": "node",
+      "args": ["/Users/sameersmacbookair/Documents/Projects/citraverse-V2/mcp/kicad_mcp.mjs"],
+      "env": {
+        "CITRAVERSE_KICAD_WORKSPACE": "/Users/sameersmacbookair/Documents/Projects/citraverse-V2",
+        "KICAD_CLI": "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
+      }
+    }
+  }
+}

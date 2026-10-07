@@ -1,0 +1,3049 @@
+(export
+	(version "E")
+	(design
+		(source "/Users/sameersmacbookair/Documents/Projects/citraverse-V2/hardware/kicad_rev_a/citraverse_rev_a_PRELIMINARY.kicad_sch")
+		(date "2026-10-06T17:31:18")
+		(tool "Eeschema 10.0.3")
+		(textvar
+			(name "STATUS") "PRELIMINARY / NOT FOR FABRICATION")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title)
+				(company)
+				(rev)
+				(date)
+				(source "citraverse_rev_a_PRELIMINARY.kicad_sch")
+				(comment
+					(number "1")
+					(value "")
+				)
+				(comment
+					(number "2")
+					(value "")
+				)
+				(comment
+					(number "3")
+					(value "")
+				)
+				(comment
+					(number "4")
+					(value "")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components
+		(comp
+			(ref "C1")
+			(value "10uF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "ddccf7c0-001f-4191-823c-779e16b17910")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C2")
+			(value "100nF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C2")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "be2a15c3-a436-408a-9edc-ecc989f8f951")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C3")
+			(value "1uF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C3")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "c6ba7243-a952-4537-b2a8-b63eca88bdd4")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C4")
+			(value "100nF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C4")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "d8de305f-19d6-493b-a878-6512b8f74906")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C5")
+			(value "10uF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C5")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "835c8f14-29bf-4a9a-b651-4609a6a1e95b")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C6")
+			(value "100nF")
+			(footprint "Capacitor_SMD:C_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "C6")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "ab1ebf77-c568-4506-ad3b-0af1a132a880")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J1")
+			(value "microSD Hirose DM3AT-SF-PEJM5 candidate")
+			(footprint "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5")
+			(fields
+				(field
+					(name "Footprint") "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "J1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "6b7f4343-9a28-4d04-9b22-4e60c3ff8f44")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "10")
+						)
+						(pin
+							(num "SH")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J2")
+			(value "USB-C 5V input / native USB")
+			(footprint "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
+			(fields
+				(field
+					(name "Footprint") "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "J2")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "94fb723d-890e-4f1c-b717-9ddf5f926963")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "A1")
+						)
+						(pin
+							(num "A4")
+						)
+						(pin
+							(num "A5")
+						)
+						(pin
+							(num "A6")
+						)
+						(pin
+							(num "A7")
+						)
+						(pin
+							(num "A8")
+						)
+						(pin
+							(num "A9")
+						)
+						(pin
+							(num "A12")
+						)
+						(pin
+							(num "B1")
+						)
+						(pin
+							(num "B4")
+						)
+						(pin
+							(num "B5")
+						)
+						(pin
+							(num "B6")
+						)
+						(pin
+							(num "B7")
+						)
+						(pin
+							(num "B8")
+						)
+						(pin
+							(num "B9")
+						)
+						(pin
+							(num "B12")
+						)
+						(pin
+							(num "S1")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J3")
+			(value "INMP441 plug-in adapter - verify actual module")
+			(footprint "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical")
+			(fields
+				(field
+					(name "Footprint") "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "J3")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "5d548d9e-3d95-4626-8cb9-9974ec9a0273")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J4")
+			(value "Factory recovery pads")
+			(footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+			(fields
+				(field
+					(name "Footprint") "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "J4")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "5931f726-db13-41ce-a3ab-565f121fedfe")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "PS1")
+			(value "POWER BLOCK UNDESIGNED 5V to 3V3 >=2A")
+			(footprint "Citraverse:POWER_UNDESIGNED_NO_PADS")
+			(fields
+				(field
+					(name "Footprint") "Citraverse:POWER_UNDESIGNED_NO_PADS")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "PS1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "34119a86-f683-46b5-a0c6-a79dc069ec5e")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R1")
+			(value "5.1k")
+			(footprint "Resistor_SMD:R_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "R1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "e6e81724-2de3-42f2-85d6-88e2e68a1551")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R2")
+			(value "5.1k")
+			(footprint "Resistor_SMD:R_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "R2")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "1648e919-915a-4112-8279-0238171e7cf7")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R3")
+			(value "10k")
+			(footprint "Resistor_SMD:R_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "R3")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "6d78ea07-bf8e-40a4-a46c-224dcaef85a8")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R4")
+			(value "10k")
+			(footprint "Resistor_SMD:R_0603_1608Metric")
+			(fields
+				(field
+					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "R4")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "a6e4f6e6-9c2c-4a3d-ba97-d20a9b6d95f9")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U1")
+			(value "ESP32-S3-WROOM-1-N16R8")
+			(footprint "RF_Module:ESP32-S3-WROOM-1")
+			(fields
+				(field
+					(name "Footprint") "RF_Module:ESP32-S3-WROOM-1")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "U1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "a630714d-01bc-45fb-ba7d-a31ff02c9150")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "10")
+						)
+						(pin
+							(num "11")
+						)
+						(pin
+							(num "12")
+						)
+						(pin
+							(num "13")
+						)
+						(pin
+							(num "14")
+						)
+						(pin
+							(num "15")
+						)
+						(pin
+							(num "16")
+						)
+						(pin
+							(num "17")
+						)
+						(pin
+							(num "18")
+						)
+						(pin
+							(num "19")
+						)
+						(pin
+							(num "20")
+						)
+						(pin
+							(num "21")
+						)
+						(pin
+							(num "22")
+						)
+						(pin
+							(num "23")
+						)
+						(pin
+							(num "24")
+						)
+						(pin
+							(num "25")
+						)
+						(pin
+							(num "26")
+						)
+						(pin
+							(num "27")
+						)
+						(pin
+							(num "28")
+						)
+						(pin
+							(num "29")
+						)
+						(pin
+							(num "30")
+						)
+						(pin
+							(num "31")
+						)
+						(pin
+							(num "32")
+						)
+						(pin
+							(num "33")
+						)
+						(pin
+							(num "34")
+						)
+						(pin
+							(num "35")
+						)
+						(pin
+							(num "36")
+						)
+						(pin
+							(num "37")
+						)
+						(pin
+							(num "38")
+						)
+						(pin
+							(num "39")
+						)
+						(pin
+							(num "40")
+						)
+						(pin
+							(num "41")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U2")
+			(value "MRS6240-P2512 FOOTPRINT UNVERIFIED")
+			(footprint "Citraverse:RADAR_UNVERIFIED_NO_PADS")
+			(fields
+				(field
+					(name "Footprint") "Citraverse:RADAR_UNVERIFIED_NO_PADS")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Citraverse")
+				(part "U2")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "citraverse_rev_a_PRELIMINARY.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "9c72effe-1756-4c75-a62c-8a245f177378")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "10")
+						)
+						(pin
+							(num "11")
+						)
+						(pin
+							(num "12")
+						)
+						(pin
+							(num "13")
+						)
+						(pin
+							(num "14")
+						)
+						(pin
+							(num "15")
+						)
+						(pin
+							(num "16")
+						)
+					)
+				)
+			)
+		)
+	)
+	(groups)
+	(variants)
+	(libparts
+		(libpart
+			(lib "Citraverse")
+			(part "C1")
+			(fields
+				(field
+					(name "Reference") "C1")
+				(field
+					(name "Value") "10uF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "C2")
+			(fields
+				(field
+					(name "Reference") "C2")
+				(field
+					(name "Value") "100nF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "C3")
+			(fields
+				(field
+					(name "Reference") "C3")
+				(field
+					(name "Value") "1uF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "C4")
+			(fields
+				(field
+					(name "Reference") "C4")
+				(field
+					(name "Value") "100nF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "C5")
+			(fields
+				(field
+					(name "Reference") "C5")
+				(field
+					(name "Value") "10uF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "C6")
+			(fields
+				(field
+					(name "Reference") "C6")
+				(field
+					(name "Value") "100nF")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "J1")
+			(fields
+				(field
+					(name "Reference") "J1")
+				(field
+					(name "Value") "microSD Hirose DM3AT-SF-PEJM5 candidate")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "DAT2_NC")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "DAT3_CS")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "CMD_MOSI")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "VDD")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "CLK")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "VSS")
+					(type "passive")
+				)
+				(pin
+					(num "7")
+					(name "DAT0_MISO")
+					(type "passive")
+				)
+				(pin
+					(num "8")
+					(name "DAT1_NC")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "SWITCH_1_RESERVED")
+					(type "passive")
+				)
+				(pin
+					(num "10")
+					(name "SWITCH_2_RESERVED")
+					(type "passive")
+				)
+				(pin
+					(num "SH")
+					(name "SHIELD")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "J2")
+			(fields
+				(field
+					(name "Reference") "J2")
+				(field
+					(name "Value") "USB-C 5V input / native USB")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "A1")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "A4")
+					(name "VBUS")
+					(type "passive")
+				)
+				(pin
+					(num "A5")
+					(name "CC1")
+					(type "passive")
+				)
+				(pin
+					(num "A6")
+					(name "D+")
+					(type "passive")
+				)
+				(pin
+					(num "A7")
+					(name "D-")
+					(type "passive")
+				)
+				(pin
+					(num "A8")
+					(name "SBU1")
+					(type "passive")
+				)
+				(pin
+					(num "A9")
+					(name "VBUS")
+					(type "passive")
+				)
+				(pin
+					(num "A12")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "B1")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "B4")
+					(name "VBUS")
+					(type "passive")
+				)
+				(pin
+					(num "B5")
+					(name "CC2")
+					(type "passive")
+				)
+				(pin
+					(num "B6")
+					(name "D+")
+					(type "passive")
+				)
+				(pin
+					(num "B7")
+					(name "D-")
+					(type "passive")
+				)
+				(pin
+					(num "B8")
+					(name "SBU2")
+					(type "passive")
+				)
+				(pin
+					(num "B9")
+					(name "VBUS")
+					(type "passive")
+				)
+				(pin
+					(num "B12")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "S1")
+					(name "SHIELD")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "J3")
+			(fields
+				(field
+					(name "Reference") "J3")
+				(field
+					(name "Value") "INMP441 plug-in adapter - verify actual module")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "3V3")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "BCLK")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "WS")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "DOUT")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "L/R_GND")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "J4")
+			(fields
+				(field
+					(name "Reference") "J4")
+				(field
+					(name "Value") "Factory recovery pads")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "3V3")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "EN")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "BOOT")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "PS1")
+			(fields
+				(field
+					(name "Reference") "PS1")
+				(field
+					(name "Value") "POWER BLOCK UNDESIGNED 5V to 3V3 >=2A")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "USB_5V_IN")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "3V3_MAIN_OUT")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "RADAR_ENABLE")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "RADAR_3V3_OUT")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "R1")
+			(fields
+				(field
+					(name "Reference") "R1")
+				(field
+					(name "Value") "5.1k")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "R2")
+			(fields
+				(field
+					(name "Reference") "R2")
+				(field
+					(name "Value") "5.1k")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "R3")
+			(fields
+				(field
+					(name "Reference") "R3")
+				(field
+					(name "Value") "10k")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "R4")
+			(fields
+				(field
+					(name "Reference") "R4")
+				(field
+					(name "Value") "10k")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "2")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "U1")
+			(fields
+				(field
+					(name "Reference") "U1")
+				(field
+					(name "Value") "ESP32-S3-WROOM-1-N16R8")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "2")
+					(name "3V3")
+					(type "power_in")
+				)
+				(pin
+					(num "3")
+					(name "EN")
+					(type "input")
+				)
+				(pin
+					(num "4")
+					(name "IO4")
+					(type "bidirectional")
+				)
+				(pin
+					(num "5")
+					(name "IO5")
+					(type "bidirectional")
+				)
+				(pin
+					(num "6")
+					(name "IO6")
+					(type "bidirectional")
+				)
+				(pin
+					(num "7")
+					(name "IO7")
+					(type "bidirectional")
+				)
+				(pin
+					(num "8")
+					(name "IO15")
+					(type "bidirectional")
+				)
+				(pin
+					(num "9")
+					(name "IO16")
+					(type "bidirectional")
+				)
+				(pin
+					(num "10")
+					(name "IO17")
+					(type "bidirectional")
+				)
+				(pin
+					(num "11")
+					(name "IO18")
+					(type "bidirectional")
+				)
+				(pin
+					(num "12")
+					(name "IO8")
+					(type "bidirectional")
+				)
+				(pin
+					(num "13")
+					(name "USB_D-")
+					(type "bidirectional")
+				)
+				(pin
+					(num "14")
+					(name "USB_D+")
+					(type "bidirectional")
+				)
+				(pin
+					(num "15")
+					(name "IO3")
+					(type "bidirectional")
+				)
+				(pin
+					(num "16")
+					(name "IO46")
+					(type "bidirectional")
+				)
+				(pin
+					(num "17")
+					(name "IO9")
+					(type "bidirectional")
+				)
+				(pin
+					(num "18")
+					(name "IO10")
+					(type "bidirectional")
+				)
+				(pin
+					(num "19")
+					(name "IO11")
+					(type "bidirectional")
+				)
+				(pin
+					(num "20")
+					(name "IO12")
+					(type "bidirectional")
+				)
+				(pin
+					(num "21")
+					(name "IO13")
+					(type "bidirectional")
+				)
+				(pin
+					(num "22")
+					(name "IO14")
+					(type "bidirectional")
+				)
+				(pin
+					(num "23")
+					(name "IO21")
+					(type "bidirectional")
+				)
+				(pin
+					(num "24")
+					(name "IO47")
+					(type "bidirectional")
+				)
+				(pin
+					(num "25")
+					(name "IO48")
+					(type "bidirectional")
+				)
+				(pin
+					(num "26")
+					(name "IO45")
+					(type "bidirectional")
+				)
+				(pin
+					(num "27")
+					(name "IO0")
+					(type "bidirectional")
+				)
+				(pin
+					(num "28")
+					(name "IO35")
+					(type "bidirectional")
+				)
+				(pin
+					(num "29")
+					(name "IO36")
+					(type "bidirectional")
+				)
+				(pin
+					(num "30")
+					(name "IO37")
+					(type "bidirectional")
+				)
+				(pin
+					(num "31")
+					(name "IO38")
+					(type "bidirectional")
+				)
+				(pin
+					(num "32")
+					(name "IO39")
+					(type "bidirectional")
+				)
+				(pin
+					(num "33")
+					(name "IO40")
+					(type "bidirectional")
+				)
+				(pin
+					(num "34")
+					(name "IO41")
+					(type "bidirectional")
+				)
+				(pin
+					(num "35")
+					(name "IO42")
+					(type "bidirectional")
+				)
+				(pin
+					(num "36")
+					(name "RXD0")
+					(type "bidirectional")
+				)
+				(pin
+					(num "37")
+					(name "TXD0")
+					(type "bidirectional")
+				)
+				(pin
+					(num "38")
+					(name "IO2")
+					(type "bidirectional")
+				)
+				(pin
+					(num "39")
+					(name "IO1")
+					(type "bidirectional")
+				)
+				(pin
+					(num "40")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "41")
+					(name "GND")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Citraverse")
+			(part "U2")
+			(fields
+				(field
+					(name "Reference") "U2")
+				(field
+					(name "Value") "MRS6240-P2512 FOOTPRINT UNVERIFIED")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "PA11_RESERVED")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "PA6_RESERVED")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "PB1_UART_RX")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "PB0_UART_TX")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "NRST")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "7")
+					(name "VCC_3V3")
+					(type "passive")
+				)
+				(pin
+					(num "8")
+					(name "VDDIO_3V3")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "PA5_SPI_WP")
+					(type "passive")
+				)
+				(pin
+					(num "10")
+					(name "PA4_SPI_HOLD")
+					(type "passive")
+				)
+				(pin
+					(num "11")
+					(name "PA3_SPI_MISO")
+					(type "passive")
+				)
+				(pin
+					(num "12")
+					(name "PA2_SPI_MOSI")
+					(type "passive")
+				)
+				(pin
+					(num "13")
+					(name "PA1_SPI_CLK")
+					(type "passive")
+				)
+				(pin
+					(num "14")
+					(name "PA0_SPI_CS")
+					(type "passive")
+				)
+				(pin
+					(num "15")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "16")
+					(name "V13_NO_LOAD")
+					(type "passive")
+				)
+			)
+		)
+	)
+	(libraries)
+	(nets
+		(net
+			(code "1")
+			(name "/3V3")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C2")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C5")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C6")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "4")
+				(pinfunction "VDD_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "J3")
+				(pin "1")
+				(pinfunction "3V3_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J4")
+				(pin "2")
+				(pinfunction "3V3_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "PS1")
+				(pin "2")
+				(pinfunction "3V3_MAIN_OUT_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "R3")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "R4")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "2")
+				(pinfunction "3V3_2")
+				(pintype "power_in")
+			)
+		)
+		(net
+			(code "2")
+			(name "/BOARD_NTC")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "39")
+				(pinfunction "IO1_39")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "3")
+			(name "/BOOT_SERVICE")
+			(class "Default")
+			(node
+				(ref "J4")
+				(pin "4")
+				(pinfunction "BOOT_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "R4")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "27")
+				(pinfunction "IO0_27")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "4")
+			(name "/ESP_EN")
+			(class "Default")
+			(node
+				(ref "C3")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J4")
+				(pin "3")
+				(pinfunction "EN_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "R3")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "3")
+				(pinfunction "EN_3")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "5")
+			(name "/GND")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C2")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C3")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C5")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C6")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "6")
+				(pinfunction "VSS_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "SH")
+				(pinfunction "SHIELD_SH")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "A1")
+				(pinfunction "GND_A1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "A12")
+				(pinfunction "GND_A12")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B1")
+				(pinfunction "GND_B1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B12")
+				(pinfunction "GND_B12")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "S1")
+				(pinfunction "SHIELD_S1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J3")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J3")
+				(pin "6")
+				(pinfunction "L/R_GND_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "J4")
+				(pin "1")
+				(pinfunction "GND_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "PS1")
+				(pin "3")
+				(pinfunction "GND_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "R1")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "R2")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "1")
+				(pinfunction "GND_1")
+				(pintype "power_in")
+			)
+			(node
+				(ref "U1")
+				(pin "40")
+				(pinfunction "GND_40")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "41")
+				(pinfunction "GND_41")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "15")
+				(pinfunction "GND_15")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "6")
+				(pinfunction "GND_6")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "6")
+			(name "/MIC_BCLK")
+			(class "Default")
+			(node
+				(ref "J3")
+				(pin "3")
+				(pinfunction "BCLK_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "8")
+				(pinfunction "IO15_8")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "7")
+			(name "/MIC_DOUT")
+			(class "Default")
+			(node
+				(ref "J3")
+				(pin "5")
+				(pinfunction "DOUT_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "10")
+				(pinfunction "IO17_10")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "8")
+			(name "/MIC_WS")
+			(class "Default")
+			(node
+				(ref "J3")
+				(pin "4")
+				(pinfunction "WS_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "9")
+				(pinfunction "IO16_9")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "9")
+			(name "/RADAR_3V3")
+			(class "Default")
+			(node
+				(ref "PS1")
+				(pin "5")
+				(pinfunction "RADAR_3V3_OUT_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "7")
+				(pinfunction "VCC_3V3_7")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "8")
+				(pinfunction "VDDIO_3V3_8")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "10")
+			(name "/RADAR_CLK")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "20")
+				(pinfunction "IO12_20")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "13")
+				(pinfunction "PA1_SPI_CLK_13")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "11")
+			(name "/RADAR_CS")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "18")
+				(pinfunction "IO10_18")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "14")
+				(pinfunction "PA0_SPI_CS_14")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "12")
+			(name "/RADAR_MISO")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "21")
+				(pinfunction "IO13_21")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "11")
+				(pinfunction "PA3_SPI_MISO_11")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "13")
+			(name "/RADAR_MOSI")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "19")
+				(pinfunction "IO11_19")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "12")
+				(pinfunction "PA2_SPI_MOSI_12")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "14")
+			(name "/RADAR_NRST")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "25")
+				(pinfunction "IO48_25")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "5")
+				(pinfunction "NRST_5")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "15")
+			(name "/RADAR_PA4")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "22")
+				(pinfunction "IO14_22")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "10")
+				(pinfunction "PA4_SPI_HOLD_10")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "16")
+			(name "/RADAR_PA5")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "17")
+				(pinfunction "IO9_17")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "9")
+				(pinfunction "PA5_SPI_WP_9")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "17")
+			(name "/RADAR_PA11_RESERVED")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "24")
+				(pinfunction "IO47_24")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "1")
+				(pinfunction "PA11_RESERVED_1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "18")
+			(name "/RADAR_POWER_EN")
+			(class "Default")
+			(node
+				(ref "PS1")
+				(pin "4")
+				(pinfunction "RADAR_ENABLE_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "12")
+				(pinfunction "IO8_12")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "19")
+			(name "/RADAR_RX_AT_MODULE")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "11")
+				(pinfunction "IO18_11")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "3")
+				(pinfunction "PB1_UART_RX_3")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "20")
+			(name "/RADAR_TX_AT_MODULE")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "23")
+				(pinfunction "IO21_23")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "4")
+				(pinfunction "PB0_UART_TX_4")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "21")
+			(name "/SD_CLK")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "5")
+				(pinfunction "CLK_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "5")
+				(pinfunction "IO5_5")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "22")
+			(name "/SD_CS")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "2")
+				(pinfunction "DAT3_CS_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "4")
+				(pinfunction "IO4_4")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "23")
+			(name "/SD_MISO")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "7")
+				(pinfunction "DAT0_MISO_7")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "6")
+				(pinfunction "IO6_6")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "24")
+			(name "/SD_MOSI")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "3")
+				(pinfunction "CMD_MOSI_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "7")
+				(pinfunction "IO7_7")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "25")
+			(name "/STATUS_LED")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "31")
+				(pinfunction "IO38_31")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "26")
+			(name "/USB_5V")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "A4")
+				(pinfunction "VBUS_A4")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "A9")
+				(pinfunction "VBUS_A9")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B4")
+				(pinfunction "VBUS_B4")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B9")
+				(pinfunction "VBUS_B9")
+				(pintype "passive")
+			)
+			(node
+				(ref "PS1")
+				(pin "1")
+				(pinfunction "USB_5V_IN_1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "27")
+			(name "/USB_CC1")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "A5")
+				(pinfunction "CC1_A5")
+				(pintype "passive")
+			)
+			(node
+				(ref "R1")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "28")
+			(name "/USB_CC2")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "B5")
+				(pinfunction "CC2_B5")
+				(pintype "passive")
+			)
+			(node
+				(ref "R2")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "29")
+			(name "/USB_D+")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "A6")
+				(pinfunction "D+_A6")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B6")
+				(pinfunction "D+_B6")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "30")
+			(name "/USB_D-")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "A7")
+				(pinfunction "D-_A7")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "B7")
+				(pinfunction "D-_B7")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "31")
+			(name "unconnected-(J1-DAT1_NC-Pad8)")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "8")
+				(pinfunction "DAT1_NC_8")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "32")
+			(name "unconnected-(J1-DAT2_NC-Pad1)")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "1")
+				(pinfunction "DAT2_NC_1")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "33")
+			(name "unconnected-(J1-SWITCH_1_RESERVED-Pad9)")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "9")
+				(pinfunction "SWITCH_1_RESERVED_9")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "34")
+			(name "unconnected-(J1-SWITCH_2_RESERVED-Pad10)")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "10")
+				(pinfunction "SWITCH_2_RESERVED_10")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "35")
+			(name "unconnected-(J2-SBU1-PadA8)")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "A8")
+				(pinfunction "SBU1_A8")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "36")
+			(name "unconnected-(J2-SBU2-PadB8)")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "B8")
+				(pinfunction "SBU2_B8")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "37")
+			(name "unconnected-(U1-IO2-Pad38)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "38")
+				(pinfunction "IO2_38")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "38")
+			(name "unconnected-(U1-IO3-Pad15)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "15")
+				(pinfunction "IO3_15")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "39")
+			(name "unconnected-(U1-IO35-Pad28)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "28")
+				(pinfunction "IO35_28")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "40")
+			(name "unconnected-(U1-IO36-Pad29)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "29")
+				(pinfunction "IO36_29")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "41")
+			(name "unconnected-(U1-IO37-Pad30)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "30")
+				(pinfunction "IO37_30")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "42")
+			(name "unconnected-(U1-IO39-Pad32)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "32")
+				(pinfunction "IO39_32")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "43")
+			(name "unconnected-(U1-IO40-Pad33)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "33")
+				(pinfunction "IO40_33")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "44")
+			(name "unconnected-(U1-IO41-Pad34)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "34")
+				(pinfunction "IO41_34")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "45")
+			(name "unconnected-(U1-IO42-Pad35)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "35")
+				(pinfunction "IO42_35")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "46")
+			(name "unconnected-(U1-IO45-Pad26)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "26")
+				(pinfunction "IO45_26")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "47")
+			(name "unconnected-(U1-IO46-Pad16)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "16")
+				(pinfunction "IO46_16")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "48")
+			(name "unconnected-(U1-RXD0-Pad36)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "36")
+				(pinfunction "RXD0_36")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "49")
+			(name "unconnected-(U1-TXD0-Pad37)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "37")
+				(pinfunction "TXD0_37")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "50")
+			(name "unconnected-(U1-USB_D+-Pad14)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "14")
+				(pinfunction "USB_D+_14")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "51")
+			(name "unconnected-(U1-USB_D--Pad13)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "13")
+				(pinfunction "USB_D-_13")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "52")
+			(name "unconnected-(U2-PA6_RESERVED-Pad2)")
+			(class "Default")
+			(node
+				(ref "U2")
+				(pin "2")
+				(pinfunction "PA6_RESERVED_2")
+				(pintype "passive+no_connect")
+			)
+		)
+		(net
+			(code "53")
+			(name "unconnected-(U2-V13_NO_LOAD-Pad16)")
+			(class "Default")
+			(node
+				(ref "U2")
+				(pin "16")
+				(pinfunction "V13_NO_LOAD_16")
+				(pintype "passive+no_connect")
+			)
+		)
+	)
+)

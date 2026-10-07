@@ -1,0 +1,1373 @@
+[
+  {
+    "ref": "U1",
+    "value": "ESP32-S3-WROOM-1-N16R8",
+    "fp": "RF_Module:ESP32-S3-WROOM-1",
+    "pins": [
+      [
+        "1",
+        "GND",
+        "power_in"
+      ],
+      [
+        "2",
+        "3V3",
+        "power_in"
+      ],
+      [
+        "3",
+        "EN",
+        "input"
+      ],
+      [
+        "4",
+        "IO4",
+        "bidirectional"
+      ],
+      [
+        "5",
+        "IO5",
+        "bidirectional"
+      ],
+      [
+        "6",
+        "IO6",
+        "bidirectional"
+      ],
+      [
+        "7",
+        "IO7",
+        "bidirectional"
+      ],
+      [
+        "8",
+        "IO15",
+        "bidirectional"
+      ],
+      [
+        "9",
+        "IO16",
+        "bidirectional"
+      ],
+      [
+        "10",
+        "IO17",
+        "bidirectional"
+      ],
+      [
+        "11",
+        "IO18",
+        "bidirectional"
+      ],
+      [
+        "12",
+        "IO8",
+        "bidirectional"
+      ],
+      [
+        "13",
+        "USB_D-",
+        "bidirectional"
+      ],
+      [
+        "14",
+        "USB_D+",
+        "bidirectional"
+      ],
+      [
+        "15",
+        "IO3",
+        "bidirectional"
+      ],
+      [
+        "16",
+        "IO46",
+        "bidirectional"
+      ],
+      [
+        "17",
+        "IO9",
+        "bidirectional"
+      ],
+      [
+        "18",
+        "IO10",
+        "bidirectional"
+      ],
+      [
+        "19",
+        "IO11",
+        "bidirectional"
+      ],
+      [
+        "20",
+        "IO12",
+        "bidirectional"
+      ],
+      [
+        "21",
+        "IO13",
+        "bidirectional"
+      ],
+      [
+        "22",
+        "IO14",
+        "bidirectional"
+      ],
+      [
+        "23",
+        "IO21",
+        "bidirectional"
+      ],
+      [
+        "24",
+        "IO47",
+        "bidirectional"
+      ],
+      [
+        "25",
+        "IO48",
+        "bidirectional"
+      ],
+      [
+        "26",
+        "IO45",
+        "bidirectional"
+      ],
+      [
+        "27",
+        "IO0",
+        "bidirectional"
+      ],
+      [
+        "28",
+        "IO35",
+        "bidirectional"
+      ],
+      [
+        "29",
+        "IO36",
+        "bidirectional"
+      ],
+      [
+        "30",
+        "IO37",
+        "bidirectional"
+      ],
+      [
+        "31",
+        "IO38",
+        "bidirectional"
+      ],
+      [
+        "32",
+        "IO39",
+        "bidirectional"
+      ],
+      [
+        "33",
+        "IO40",
+        "bidirectional"
+      ],
+      [
+        "34",
+        "IO41",
+        "bidirectional"
+      ],
+      [
+        "35",
+        "IO42",
+        "bidirectional"
+      ],
+      [
+        "36",
+        "RXD0",
+        "bidirectional"
+      ],
+      [
+        "37",
+        "TXD0",
+        "bidirectional"
+      ],
+      [
+        "38",
+        "IO2",
+        "bidirectional"
+      ],
+      [
+        "39",
+        "IO1",
+        "bidirectional"
+      ],
+      [
+        "40",
+        "GND",
+        "passive"
+      ],
+      [
+        "41",
+        "GND",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "GND",
+      "2": "3V3",
+      "3": "ESP_EN",
+      "4": "SD_CS",
+      "5": "SD_CLK",
+      "6": "SD_MISO",
+      "7": "SD_MOSI",
+      "8": "I2S_BCLK",
+      "9": "I2S_WS",
+      "10": "MIC_DOUT",
+      "11": "RADAR_RX_AT_MODULE",
+      "12": "RADAR_POWER_EN",
+      "17": "RADAR_PA5",
+      "18": "RADAR_CS",
+      "19": "RADAR_MOSI",
+      "20": "RADAR_CLK",
+      "21": "RADAR_MISO",
+      "22": "RADAR_PA4",
+      "23": "RADAR_TX_AT_MODULE",
+      "24": "RADAR_PA11_RESERVED",
+      "25": "RADAR_NRST",
+      "27": "BOOT_SERVICE",
+      "31": "STATUS_LED",
+      "38": "SPK_DIN",
+      "39": "BOARD_NTC",
+      "40": "GND",
+      "41": "GND"
+    },
+    "spos": [
+      65,
+      80
+    ],
+    "bpos": [
+      100,
+      74
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "U2",
+    "value": "MRS6240-P2512 - guide-derived 16-pin THT footprint",
+    "fp": "Citraverse:MRS6240_P2512_GUIDE_DERIVED",
+    "pins": [
+      [
+        "1",
+        "PA11_RESERVED",
+        "passive"
+      ],
+      [
+        "2",
+        "PA6_RESERVED",
+        "passive"
+      ],
+      [
+        "3",
+        "PB1_UART_RX",
+        "passive"
+      ],
+      [
+        "4",
+        "PB0_UART_TX",
+        "passive"
+      ],
+      [
+        "5",
+        "NRST",
+        "passive"
+      ],
+      [
+        "6",
+        "GND",
+        "passive"
+      ],
+      [
+        "7",
+        "VCC_3V3",
+        "passive"
+      ],
+      [
+        "8",
+        "VDDIO_3V3",
+        "passive"
+      ],
+      [
+        "9",
+        "PA5_SPI_WP",
+        "passive"
+      ],
+      [
+        "10",
+        "PA4_SPI_HOLD",
+        "passive"
+      ],
+      [
+        "11",
+        "PA3_SPI_MISO",
+        "passive"
+      ],
+      [
+        "12",
+        "PA2_SPI_MOSI",
+        "passive"
+      ],
+      [
+        "13",
+        "PA1_SPI_CLK",
+        "passive"
+      ],
+      [
+        "14",
+        "PA0_SPI_CS",
+        "passive"
+      ],
+      [
+        "15",
+        "GND",
+        "passive"
+      ],
+      [
+        "16",
+        "V13_NO_LOAD",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "RADAR_PA11_RESERVED",
+      "3": "RADAR_RX_AT_MODULE",
+      "4": "RADAR_TX_AT_MODULE",
+      "5": "RADAR_NRST",
+      "6": "GND",
+      "7": "RADAR_3V3",
+      "8": "RADAR_3V3",
+      "9": "RADAR_PA5",
+      "10": "RADAR_PA4",
+      "11": "RADAR_MISO",
+      "12": "RADAR_MOSI",
+      "13": "RADAR_CLK",
+      "14": "RADAR_CS",
+      "15": "GND"
+    },
+    "spos": [
+      170,
+      58
+    ],
+    "bpos": [
+      100,
+      104
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "J1",
+    "value": "microSD Hirose DM3AT-SF-PEJM5 candidate",
+    "fp": "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5",
+    "pins": [
+      [
+        "1",
+        "DAT2_NC",
+        "passive"
+      ],
+      [
+        "2",
+        "DAT3_CS",
+        "passive"
+      ],
+      [
+        "3",
+        "CMD_MOSI",
+        "passive"
+      ],
+      [
+        "4",
+        "VDD",
+        "passive"
+      ],
+      [
+        "5",
+        "CLK",
+        "passive"
+      ],
+      [
+        "6",
+        "VSS",
+        "passive"
+      ],
+      [
+        "7",
+        "DAT0_MISO",
+        "passive"
+      ],
+      [
+        "8",
+        "DAT1_NC",
+        "passive"
+      ],
+      [
+        "9",
+        "SWITCH_1_RESERVED",
+        "passive"
+      ],
+      [
+        "10",
+        "SWITCH_2_RESERVED",
+        "passive"
+      ],
+      [
+        "SH",
+        "SHIELD",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "2": "SD_CS",
+      "3": "SD_MOSI",
+      "4": "3V3",
+      "5": "SD_CLK",
+      "6": "GND",
+      "7": "SD_MISO",
+      "SH": "GND"
+    },
+    "spos": [
+      170,
+      115
+    ],
+    "bpos": [
+      73,
+      109
+    ],
+    "rot": -90
+  },
+  {
+    "ref": "J2",
+    "value": "USB-C 5V input / native USB",
+    "fp": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
+    "pins": [
+      [
+        "A1",
+        "GND",
+        "passive"
+      ],
+      [
+        "A4",
+        "VBUS",
+        "passive"
+      ],
+      [
+        "A5",
+        "CC1",
+        "passive"
+      ],
+      [
+        "A6",
+        "D+",
+        "passive"
+      ],
+      [
+        "A7",
+        "D-",
+        "passive"
+      ],
+      [
+        "A8",
+        "SBU1",
+        "passive"
+      ],
+      [
+        "A9",
+        "VBUS",
+        "passive"
+      ],
+      [
+        "A12",
+        "GND",
+        "passive"
+      ],
+      [
+        "B1",
+        "GND",
+        "passive"
+      ],
+      [
+        "B4",
+        "VBUS",
+        "passive"
+      ],
+      [
+        "B5",
+        "CC2",
+        "passive"
+      ],
+      [
+        "B6",
+        "D+",
+        "passive"
+      ],
+      [
+        "B7",
+        "D-",
+        "passive"
+      ],
+      [
+        "B8",
+        "SBU2",
+        "passive"
+      ],
+      [
+        "B9",
+        "VBUS",
+        "passive"
+      ],
+      [
+        "B12",
+        "GND",
+        "passive"
+      ],
+      [
+        "S1",
+        "SHIELD",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "A1": "GND",
+      "A4": "USB_5V",
+      "A5": "USB_CC1",
+      "A6": "USB_D+",
+      "A7": "USB_D-",
+      "A9": "USB_5V",
+      "A12": "GND",
+      "B1": "GND",
+      "B4": "USB_5V",
+      "B5": "USB_CC2",
+      "B6": "USB_D+",
+      "B7": "USB_D-",
+      "B9": "USB_5V",
+      "B12": "GND",
+      "S1": "GND"
+    },
+    "spos": [
+      280,
+      58
+    ],
+    "bpos": [
+      138,
+      101
+    ],
+    "rot": 90
+  },
+  {
+    "ref": "U3",
+    "value": "INMP441 6-pin breakout module",
+    "fp": "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical",
+    "pins": [
+      [
+        "1",
+        "VDD",
+        "power_in"
+      ],
+      [
+        "2",
+        "GND",
+        "power_in"
+      ],
+      [
+        "3",
+        "L_R",
+        "input"
+      ],
+      [
+        "4",
+        "SD",
+        "output"
+      ],
+      [
+        "5",
+        "WS",
+        "input"
+      ],
+      [
+        "6",
+        "SCK",
+        "input"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND",
+      "3": "GND",
+      "4": "MIC_DOUT",
+      "5": "I2S_WS",
+      "6": "I2S_BCLK"
+    },
+    "spos": [
+      170,
+      158
+    ],
+    "bpos": [
+      94,
+      132
+    ],
+    "rot": 90
+  },
+  {
+    "ref": "PS1",
+    "value": "POWER BLOCK UNDESIGNED 5V to 3V3 >=2A",
+    "fp": "Citraverse:POWER_UNDESIGNED_NO_PADS",
+    "pins": [
+      [
+        "1",
+        "USB_5V_IN",
+        "passive"
+      ],
+      [
+        "2",
+        "3V3_MAIN_OUT",
+        "passive"
+      ],
+      [
+        "3",
+        "GND",
+        "passive"
+      ],
+      [
+        "4",
+        "RADAR_ENABLE",
+        "passive"
+      ],
+      [
+        "5",
+        "RADAR_3V3_OUT",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "USB_5V",
+      "2": "3V3",
+      "3": "GND",
+      "4": "RADAR_POWER_EN",
+      "5": "RADAR_3V3"
+    },
+    "spos": [
+      280,
+      112
+    ],
+    "bpos": [
+      125,
+      117
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R1",
+    "value": "5.1k USB-C CC1",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "USB_CC1",
+      "2": "GND"
+    },
+    "spos": [
+      250,
+      154
+    ],
+    "bpos": [
+      128,
+      94
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R2",
+    "value": "5.1k USB-C CC2",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "USB_CC2",
+      "2": "GND"
+    },
+    "spos": [
+      295,
+      154
+    ],
+    "bpos": [
+      128,
+      97
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R3",
+    "value": "10k EN pull-up",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "ESP_EN",
+      "2": "3V3"
+    },
+    "spos": [
+      250,
+      178
+    ],
+    "bpos": [
+      110,
+      88
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R4",
+    "value": "10k BOOT pull-up",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "BOOT_SERVICE",
+      "2": "3V3"
+    },
+    "spos": [
+      295,
+      178
+    ],
+    "bpos": [
+      110,
+      91
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R5",
+    "value": "100k INMP441 SD pulldown",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "MIC_DOUT",
+      "2": "3V3"
+    },
+    "spos": [
+      40,
+      222
+    ],
+    "bpos": [
+      82,
+      120
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R6",
+    "value": "0R INMP441 left select",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "GND",
+      "2": "3V3"
+    },
+    "spos": [
+      85,
+      222
+    ],
+    "bpos": [
+      82,
+      122
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "R7",
+    "value": "10k INMP441 enable",
+    "fp": "Resistor_SMD:R_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "3V3"
+    },
+    "spos": [
+      130,
+      222
+    ],
+    "bpos": [
+      82,
+      124
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C1",
+    "value": "10uF ESP32 bulk",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND"
+    },
+    "spos": [
+      40,
+      161
+    ],
+    "bpos": [
+      87,
+      87
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C2",
+    "value": "100nF ESP32 local",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND"
+    },
+    "spos": [
+      85,
+      161
+    ],
+    "bpos": [
+      90,
+      87
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C3",
+    "value": "1uF EN delay",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "ESP_EN",
+      "2": "GND"
+    },
+    "spos": [
+      40,
+      185
+    ],
+    "bpos": [
+      110,
+      94
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C4",
+    "value": "100nF radar local",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "RADAR_3V3",
+      "2": "GND"
+    },
+    "spos": [
+      85,
+      185
+    ],
+    "bpos": [
+      96,
+      114
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C5",
+    "value": "10uF radar bulk",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "RADAR_3V3",
+      "2": "GND"
+    },
+    "spos": [
+      40,
+      209
+    ],
+    "bpos": [
+      92,
+      114
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C6",
+    "value": "100nF SD local",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND"
+    },
+    "spos": [
+      85,
+      209
+    ],
+    "bpos": [
+      73,
+      105
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C7",
+    "value": "100nF INMP441 VDD",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND"
+    },
+    "spos": [
+      40,
+      233
+    ],
+    "bpos": [
+      87,
+      123
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C8",
+    "value": "1uF INMP441 bulk",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "3V3",
+      "2": "GND"
+    },
+    "spos": [
+      85,
+      233
+    ],
+    "bpos": [
+      90,
+      123
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C9",
+    "value": "10uF speaker amp bulk",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "5V_PROTECTED",
+      "2": "GND"
+    },
+    "spos": [
+      130,
+      233
+    ],
+    "bpos": [
+      118,
+      116
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "C10",
+    "value": "100nF speaker amp local",
+    "fp": "Capacitor_SMD:C_0603_1608Metric",
+    "pins": [
+      [
+        "1",
+        "1",
+        "passive"
+      ],
+      [
+        "2",
+        "2",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "5V_PROTECTED",
+      "2": "GND"
+    },
+    "spos": [
+      175,
+      233
+    ],
+    "bpos": [
+      121,
+      116
+    ],
+    "rot": 0
+  },
+  {
+    "ref": "J4",
+    "value": "Factory pogo: GND 3V3 EN BOOT TX RX",
+    "fp": "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical",
+    "pins": [
+      [
+        "1",
+        "GND",
+        "passive"
+      ],
+      [
+        "2",
+        "3V3",
+        "passive"
+      ],
+      [
+        "3",
+        "EN",
+        "passive"
+      ],
+      [
+        "4",
+        "BOOT",
+        "passive"
+      ],
+      [
+        "5",
+        "UART_TX",
+        "passive"
+      ],
+      [
+        "6",
+        "UART_RX",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "GND",
+      "2": "3V3",
+      "3": "ESP_EN",
+      "4": "BOOT_SERVICE",
+      "5": "FACTORY_UART_TX",
+      "6": "FACTORY_UART_RX"
+    },
+    "spos": [
+      170,
+      203
+    ],
+    "bpos": [
+      77,
+      128
+    ],
+    "rot": 90
+  },
+  {
+    "ref": "J5",
+    "value": "JST-PH speaker output (from MAX98357A)",
+    "fp": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
+    "pins": [
+      [
+        "1",
+        "SPK+",
+        "passive"
+      ],
+      [
+        "2",
+        "SPK-",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "SPK_P",
+      "2": "SPK_N"
+    },
+    "spos": [
+      230,
+      203
+    ],
+    "bpos": [
+      122,
+      124
+    ],
+    "rot": 180
+  },
+  {
+    "ref": "U4",
+    "value": "MAX98357AETE+ I2S Class-D speaker amplifier",
+    "fp": "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.45x1.45mm",
+    "pins": [
+      [
+        "1",
+        "DIN",
+        "passive"
+      ],
+      [
+        "2",
+        "GAIN_SLOT",
+        "passive"
+      ],
+      [
+        "3",
+        "OUTN",
+        "passive"
+      ],
+      [
+        "4",
+        "LRCLK",
+        "passive"
+      ],
+      [
+        "5",
+        "GND",
+        "passive"
+      ],
+      [
+        "6",
+        "BCLK",
+        "passive"
+      ],
+      [
+        "7",
+        "VDD",
+        "passive"
+      ],
+      [
+        "8",
+        "VDD",
+        "passive"
+      ],
+      [
+        "9",
+        "OUTP",
+        "passive"
+      ],
+      [
+        "10",
+        "NC",
+        "passive"
+      ],
+      [
+        "11",
+        "GND",
+        "passive"
+      ],
+      [
+        "12",
+        "NC",
+        "passive"
+      ],
+      [
+        "13",
+        "NC",
+        "passive"
+      ],
+      [
+        "14",
+        "NC",
+        "passive"
+      ],
+      [
+        "15",
+        "NC",
+        "passive"
+      ],
+      [
+        "16",
+        "SD_MODE",
+        "passive"
+      ],
+      [
+        "EP",
+        "EP_GND",
+        "passive"
+      ]
+    ],
+    "nets": {
+      "1": "SPK_DIN",
+      "2": "GND",
+      "3": "SPK_N",
+      "4": "I2S_WS",
+      "5": "GND",
+      "6": "I2S_BCLK",
+      "7": "5V_PROTECTED",
+      "8": "5V_PROTECTED",
+      "9": "SPK_P",
+      "11": "GND",
+      "16": "3V3",
+      "EP": "GND"
+    },
+    "spos": [
+      230,
+      160
+    ],
+    "bpos": [
+      121,
+      119
+    ],
+    "rot": 0
+  }
+]
