@@ -1,0 +1,34 @@
+{
+  "result": "NOT ACCEPTED: resets persist; HTTP timed out before soak",
+  "reset_lines": [
+    "rst:0x1 (POWERON),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x3 (RTC_SW_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x8 (TG1WDT_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)",
+    "rst:0x3 (RTC_SW_SYS_RST),boot:0x2b (SPI_FAST_FLASH_BOOT)"
+  ],
+  "watchdog_reports": 0,
+  "brownout_mentions": 2,
+  "app_sha256": "c86eeba6d299995edce6d59cff7a6eef5dd7784748c70b113ab574336bb2c728",
+  "app_bytes": 867408,
+  "changes": [
+    "TCP_NODELAY for HTTP/WebSocket client sockets",
+    "browser request timer 20 ms instead of 50 ms",
+    "world-safe country code 01; automatic AP country adoption disabled"
+  ],
+  "original_hang_symbols": [
+    "ieee80211_regdomain_max_chan",
+    "ieee80211_regdomain_chan_in_range",
+    "ieee80211_parse_beacon",
+    "sta_recv_mgmt",
+    "sta_input",
+    "sta_rx_cb",
+    "ppRxPkt",
+    "ppTask"
+  ]
+}

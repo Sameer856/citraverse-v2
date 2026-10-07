@@ -12,6 +12,8 @@
 #include "esp_system.h"
 #include "nvs_flash.h"
 #include "cJSON.h"
+#include "lwip/sockets.h"
+#include "lwip/tcp.h"
 static const char *TAG="radar_wifi";
 static SemaphoreHandle_t guard;
 static uint8_t latest[8192], outgoing[8192];
@@ -47,6 +49,10 @@ void radar_wifi_frame(const uint8_t *data,uint32_t len) {
     if(xSemaphoreTake(guard,0)!=pdTRUE) { __atomic_add_fetch(&skipped,1,__ATOMIC_RELAXED);return; }
     memcpy(latest,data,len);latest_len=len;received++;last_frame_us=esp_timer_get_time();
     xSemaphoreGive(guard);
+}
+static esp_err_t socket_open(httpd_handle_t handle,int fd) {
+    (void)handle;int enabled=1;
+    return setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&enabled,sizeof(enabled))==0?ESP_OK:ESP_FAIL;
 }
 static esp_err_t page(httpd_req_t *req) {
     httpd_resp_set_type(req,"text/html");
@@ -107,10 +113,13 @@ esp_err_t radar_wifi_start(void) {
     cfg.sta.threshold.authmode=pass[0]?WIFI_AUTH_WPA2_PSK:WIFI_AUTH_OPEN;
     memset(pass,0,sizeof(pass));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    /* Channel 6 AP: keep conservative world-safe channels, ignore AP country IE.
+       Diagnostic mitigation for a captured regdomain/beacon Wi-Fi task hang. */
+    ESP_ERROR_CHECK(esp_wifi_set_country_code("01",false));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA,&cfg));
     memset(&cfg,0,sizeof(cfg));
     httpd_config_t config=HTTPD_DEFAULT_CONFIG();config.stack_size=6144;config.max_open_sockets=6;
-    config.lru_purge_enable=true;config.send_wait_timeout=2;config.recv_wait_timeout=2;
+    config.open_fn=socket_open;config.lru_purge_enable=true;config.send_wait_timeout=2;config.recv_wait_timeout=2;
     err=httpd_start(&server,&config);if(err!=ESP_OK) return err;
     httpd_uri_t home={.uri="/",.method=HTTP_GET,.handler=page};
     httpd_uri_t health={.uri="/api/status",.method=HTTP_GET,.handler=status};

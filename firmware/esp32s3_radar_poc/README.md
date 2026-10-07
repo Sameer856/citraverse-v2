@@ -59,7 +59,7 @@ Endpoints:
 
 - `/`: embedded viewer.
 - `/api/status`: latest valid frame count since Wi-Fi initialization, copy drops, frame age and free heap.
-- `/ws`: send text `next` to receive the latest validated C3 callback as binary, including its 12-byte little-endian frame index/word-length/offset header. Before the first frame, response is text `waiting`. The browser requests at 20 Hz with one outstanding request. Point blocks retain all coordinates, velocity and SNR; Cartesian flags 1/3 are required by the viewer. Coordinates and velocity divide signed int16 by 100 into metres and m/s; SNR divides by 100 into dB.
+- `/ws`: send text `next` to receive the latest validated C3 callback as binary, including its 12-byte little-endian frame index/word-length/offset header. Before the first frame, response is text `waiting`. The browser requests at up to 50 Hz with one outstanding request, displaying only new frame indices. Point blocks retain all coordinates, velocity and SNR; Cartesian flags 1/3 are required by the viewer. Coordinates and velocity divide signed int16 by 100 into metres and m/s; SNR divides by 100 into dB.
 
 This follows the reference's HTTP/WebSocket viewer architecture but uses a documented binary protocol rather than its JSON schema; it is not a drop-in endpoint for the unmodified vendor frontend. Latest-frame delivery bounds memory and latency; a slow client can skip frames. The acquisition callback never waits for a browser/socket, allocating no frame memory. A try-lock copy may be dropped; `/api/status` exposes that count. SPI continuity counters and viewer delivery are separate measurements.
 
@@ -70,3 +70,5 @@ Run `node tests/test_viewer.cjs` from this directory to exercise the actual brow
 ### Wi-Fi validation status
 
 The firmware builds, flashes and verifies; the live HTTP page rendered radar points at `http://192.168.1.10/`. Sustained operation is **not accepted yet**: final testing recorded explicit brownouts and watchdog resets, and the WebSocket soak timed out. Correct the power/wiring issue before relying on this host. See `hardware/radar_validation/wifi_host_runtime_summary.json`. Wi-Fi power saving is disabled in this build for latency; that increases supply demand. The server permits up to six client sockets but has not passed a multi-client soak.
+
+The current experimental build additionally enables TCP_NODELAY, polls latest frames at up to 50 Hz and keeps world-safe channels 1-11 instead of adopting router country information. This targets an observed Wi-Fi beacon/regdomain hang; it is not a confirmed fix. The user reconfirmed shared ESP32 3.3 V radar power and tests still recorded brownouts. Do not claim an improved Wi-Fi frame rate until the supply is corrected and the soak passes.
