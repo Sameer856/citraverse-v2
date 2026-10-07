@@ -1,0 +1,7 @@
+{
+  "duration_seconds": 12,
+  "power": "User confirms radar powered from ESP32 3.3 V pin",
+  "brownout_mentions": 175,
+  "ready_observed": false,
+  "radar_command_sent": false
+}

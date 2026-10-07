@@ -171,3 +171,8 @@ The user reported removing the radar. COM8 identified the same ESP32-S3. A compl
 Evidence: `esp32-radar-removed-flash.txt` (per-block progress omitted; all substantive results retained) and `esp32_radar_removed_boot.txt`. `esp32_programmer_build.json` now records the successful upload. The embedded app version is `d29ab70-dirty` because this binary was built before the programmer changes were committed; its previously recorded artifact hash identifies the build.
 
 Removing the radar resolved the observed upload/reset failure in this run. This supports a connection/load-related fault but does not distinguish regulator capacity, supply transients, shorts or pin wiring. The 30-second idle observation is not a loaded power test. Before reconnecting, check the bare-module power and pin mapping and establish a suitable radar supply; do not infer adequate ESP32-regulator headroom from the earlier static 3.3 V reading. Electrical timing/current/FPS and radar bootloader tests are still outstanding.
+
+
+### Radar reconnected to ESP32 3.3 V — brownout recurs
+
+The user confirmed using the ESP32 board 3.3 V pin again. COM8 remained present; a 15-second passive capture was empty. One reset followed by a 12-second capture showed 175 `BROWNOUT_RST` occurrences and no programmer READY prompt. No radar configuration or programming command was sent. Evidence: `esp32_rewired_boot.txt`, `esp32_rewired_summary.json`. The earlier radar-disconnected test reached READY without brownouts. Shared-supply operation remains unusable in this wiring; investigate the radar supply and wiring before further programming. This does not isolate regulator capacity versus a wiring fault.
