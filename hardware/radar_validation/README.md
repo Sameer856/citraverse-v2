@@ -157,3 +157,9 @@ After the user requested another attempt, COM8 still identified the same ESP32-S
 ### Manual-download-mode attempt
 
 With wiring left soldered in place, the user performed a manual ESP32 BOOT/EN sequence. esptool was invoked with `--no-stub --before no_reset --after no_reset` at 115200. Connection failed with packet byte 0x69 before any erase/write. A passive three-second COM8 capture still showed repeated `invalid header: 0xffffffff`, so download mode was not maintained/observed. Evidence: `esp32-manual-boot.txt`, `esp32_manual_boot_console.txt`. Next check: hold ESP32 BOOT continuously through EN release and the host connection attempt. This does not require desoldering radar wiring and does not involve radar UPD.
+
+### User-supplied brownout evidence
+
+The subsequent pasted console log contains 366 occurrences of `BROWNOUT_RST`, 20315 occurrences of `invalid header`, and explicit `DOWNLOAD(USB/UART0)` / `waiting for download` output. Counts describe text occurrences, not independently timed or deduplicated events. This is direct reported brownout evidence and shows manual download mode was reached at least once; the previous failure cannot be attributed solely to the button sequence. Stabilize power before further programming. USB cable/source, board regulator, radar load and solder/wiring faults remain possible causes; none is isolated. A static multimeter voltage reading does not exclude transient dips.
+
+The pasted log also mentions an OTA slot at 0x150000, unlike this PoC's factory-only partition layout. Its firmware/time provenance is unconfirmed, so it does not establish a successful PoC upload. The source hash, counts and deduplicated ASCII lines are saved in `user_boot_log_summary.json`; the large repetitive original remains in the user attachment.
