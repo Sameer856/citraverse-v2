@@ -1,0 +1,18 @@
+menu "Citraverse radar PoC"
+config RADAR_SPI_HZ
+    int "Requested SPI clock (Hz)"
+    range 500000 8000000
+    default 8000000
+config RADAR_AUTO_CONFIGURE
+    bool "Configure radar through PB0/PB1 shell UART on startup"
+    default y
+    help
+        Requires radar-analysis firmware exposing mmwc on UART0.
+        Configure RAM settings and start SPI point reporting; no flash writes.
+config RADAR_FRAME_MS
+    int "Requested frame period (ms)"
+    range 41 1000
+    default 50
+    help
+        Start at 50 ms (20 FPS). Use 41 ms for an at-least-24-FPS test.
+endmenu
