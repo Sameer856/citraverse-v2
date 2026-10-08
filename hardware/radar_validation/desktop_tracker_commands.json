@@ -1,0 +1,47 @@
+{
+  "commands": [
+    {
+      "command": "mmwc mode get",
+      "reply": "mmwc mode get\r\ntxrx_mode=2T4R(4), work_mode=2DFFT(2)\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc freq get",
+      "reply": "mmwc freq get\r\nFreqStart=58000MHz, Max=70000MHz\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc range get",
+      "reply": "mmwc range get\r\nrange=20480mm, resol=80mm\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc veloc get",
+      "reply": "mmwc veloc get\r\nveloc=3200mm/s, resol=200mm/s\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc frame get",
+      "reply": "mmwc frame get\r\nperiod=50ms, frame_num=0\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc dop_fft get",
+      "reply": "mmwc dop_fft get\r\ndop fft=1\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc stop",
+      "reply": "mmwc stop\r\n\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc start",
+      "reply": "mmwc start\r\n\r\nCommand Success\r\n\r\npsic:/$ "
+    },
+    {
+      "command": "mmwc report points 0",
+      "reply": "mmwc report points 0\r\n\r\nCommand Success\r\n\r\npsic:/$ "
+    }
+  ],
+  "uart_switch_rejected": "ESP_ERR_NOT_SUPPORTED: Command not allowed by USB bridge; keep SPI/Cartesian reporting. Flash and calibration are unavailable.",
+  "after_start": {
+    "frames": 101,
+    "points": 51,
+    "age_ms": 1,
+    "fps": 20.34
+  }
+}

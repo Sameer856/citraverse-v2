@@ -1,0 +1,20 @@
+{
+  "mode": "live",
+  "title": "Possumic Live Tracker - ESP32 / MRS6240",
+  "frame": 1323,
+  "displayed": 374,
+  "stats": {
+    "frames": 375,
+    "points": 8880,
+    "age_ms": 2,
+    "fps": 19.98,
+    "skipped": 2
+  },
+  "details": "Frame 1323 | Received: 0 motion / 31 presence | Selected now: 31 | Display: 33 (motion 5 frames) | 1 human candidates | confirmed presence cluster",
+  "control_status": "USB version verified",
+  "control_log": [
+    "> mmwc version",
+    "mmwc version\r\nMMW version:V5.3.1.0 @    14e6\r\n \r\nCommand Success\r\n\r\npsic:/$ "
+  ],
+  "external_calls": false
+}

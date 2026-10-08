@@ -1,0 +1,17 @@
+{
+  "mode": "live",
+  "title": "Possumic Live Tracker - ESP32 / MRS6240",
+  "frame": 7370,
+  "displayed": 2232,
+  "stats": {
+    "frames": 2231,
+    "points": 950,
+    "age_ms": 33,
+    "fps": 20.03,
+    "skipped": 3
+  },
+  "details": "Frame 7370 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 1 (motion 5 frames) | 0 human candidates | ",
+  "control_status": "USB control ready",
+  "control_log": [],
+  "external_calls": false
+}
