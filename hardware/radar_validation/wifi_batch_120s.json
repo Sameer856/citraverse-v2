@@ -1,0 +1,30 @@
+{
+  "batch": true,
+  "buffered": false,
+  "stall_ms": 0,
+  "max_frame_age_ms": 395,
+  "request_period_ms": 10.0,
+  "error": null,
+  "elapsed_seconds": 120.125,
+  "decoded_frames": 2339,
+  "unique_frames": 2339,
+  "unique_fps": 19.471383975026015,
+  "duplicate_snapshots": 0,
+  "skipped_preview_indices": 65,
+  "points_decoded": 80293,
+  "largest_callback_bytes": 800,
+  "status_before": {
+    "frames": 2404,
+    "viewer_copy_drops": 0,
+    "age_ms": 44,
+    "free_heap": 102376
+  },
+  "status_after": {
+    "frames": 4816,
+    "viewer_copy_drops": 1,
+    "age_ms": 10,
+    "free_heap": 104928
+  },
+  "first_index": 2409,
+  "last_index": 4812
+}

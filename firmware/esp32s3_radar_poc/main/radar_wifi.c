@@ -1,5 +1,6 @@
 #include "radar_wifi.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -16,7 +17,10 @@
 #include "lwip/tcp.h"
 static const char *TAG="radar_wifi";
 static SemaphoreHandle_t guard;
-static uint8_t latest[8192], outgoing[8192];
+#define PREVIEW_DEPTH 8
+static uint8_t history[PREVIEW_DEPTH][8192], outgoing[PREVIEW_DEPTH*8204];
+static uint32_t lengths[PREVIEW_DEPTH], times_ms[PREVIEW_DEPTH];
+typedef struct { uint32_t cursor; } preview_client_t;
 static uint32_t latest_len, received, skipped;
 static int64_t last_frame_us;
 static httpd_handle_t server;
@@ -52,9 +56,12 @@ esp_err_t radar_wifi_provision(const char *text) {
     cJSON_Delete(j);return result;
 }
 void radar_wifi_frame(const uint8_t *data,uint32_t len) {
-    if(!guard || len>sizeof(latest)) return;
+    if(!guard || len>sizeof(history[0])) return;
     if(xSemaphoreTake(guard,0)!=pdTRUE) { __atomic_add_fetch(&skipped,1,__ATOMIC_RELAXED);return; }
-    memcpy(latest,data,len);latest_len=len;received++;last_frame_us=esp_timer_get_time();
+    uint32_t slot=received%PREVIEW_DEPTH;
+    memcpy(history[slot],data,len);lengths[slot]=len;
+    last_frame_us=esp_timer_get_time();times_ms[slot]=(uint32_t)(last_frame_us/1000);
+    latest_len=len;received++;
     xSemaphoreGive(guard);
 }
 static esp_err_t socket_open(httpd_handle_t handle,int fd) {
@@ -79,12 +86,39 @@ static esp_err_t ws(httpd_req_t *req) {
     esp_err_t err=httpd_ws_recv_frame(req,&frame,0);if(err!=ESP_OK) return err;
     if(frame.len>=sizeof(input)) return ESP_ERR_INVALID_SIZE;
     frame.payload=input;err=httpd_ws_recv_frame(req,&frame,sizeof(input));if(err!=ESP_OK) return err;
-    if(frame.type!=HTTPD_WS_TYPE_TEXT || frame.len!=4 || memcmp(input,"next",4)) return ESP_ERR_INVALID_ARG;
+    bool batch=frame.type==HTTPD_WS_TYPE_TEXT && frame.len==5 && !memcmp(input,"next3",5);
+    bool buffered=batch || (frame.type==HTTPD_WS_TYPE_TEXT && frame.len==5 && !memcmp(input,"next2",5));
+    if(!buffered && (frame.type!=HTTPD_WS_TYPE_TEXT || frame.len!=4 || memcmp(input,"next",4))) return ESP_ERR_INVALID_ARG;
+    if(buffered && !req->sess_ctx) {
+        req->sess_ctx=calloc(1,sizeof(preview_client_t));
+        if(!req->sess_ctx) return ESP_ERR_NO_MEM;
+        req->free_ctx=free;
+        xSemaphoreTake(guard,portMAX_DELAY);
+        ((preview_client_t*)req->sess_ctx)->cursor=received?received-1:0;
+        xSemaphoreGive(guard);
+    }
     xSemaphoreTake(guard,portMAX_DELAY);
-    uint32_t len=latest_len;
-    if(len) memcpy(outgoing,latest,len);
+    uint32_t len=0;
+    for(unsigned item=0;item<(batch?PREVIEW_DEPTH:1);item++) {
+    if(latest_len) {
+        uint32_t sequence=received;
+        if(buffered) {
+            preview_client_t *client=req->sess_ctx;
+            uint32_t pending=received-client->cursor;
+            if(pending) {sequence=pending>PREVIEW_DEPTH?received-PREVIEW_DEPTH+1:client->cursor+1;client->cursor=sequence;}
+            else break;
+        }
+        if(sequence) {
+            uint32_t slot=(sequence-1)%PREVIEW_DEPTH;uint32_t size=lengths[slot];
+            if(buffered) {
+                uint32_t header[3]={0x32524452,times_ms[slot],(uint32_t)(esp_timer_get_time()/1000)-times_ms[slot]};
+                memcpy(outgoing+len,header,12);memcpy(outgoing+len+12,history[slot],size);len+=12+size;
+            } else {memcpy(outgoing,history[slot],size);len=size;}
+        }
+    }
+    }
     xSemaphoreGive(guard);
-    /* Single HTTP server task owns outgoing. Socket send happens outside the acquisition lock. */
+    /* Network sends never hold the acquisition mutex. Each client has its own cursor. */
     httpd_ws_frame_t reply={.type=len?HTTPD_WS_TYPE_BINARY:HTTPD_WS_TYPE_TEXT,
         .payload=len?outgoing:(uint8_t*)"waiting",.len=len?len:7};
     return httpd_ws_send_frame(req,&reply);
