@@ -1,0 +1,22 @@
+{
+  "samples": 74,
+  "fps_mean": 20.038256756756745,
+  "last": {
+    "kind": "radar_stats",
+    "frames": 2051,
+    "fps": 19.802,
+    "invalid": 0,
+    "nonconsecutive": 0,
+    "duplicates": 0,
+    "last_index": 2050,
+    "motion_points": 1317,
+    "presence_points": 43248,
+    "max_payload_bytes": 812,
+    "first_frame_host_us": 11987626,
+    "age_ms": 39,
+    "notify_level": 0,
+    "free_heap": 103124
+  },
+  "reset_error_lines": 0,
+  "app_sha256": "94444008C655A96C9D0F45290D8F219DBE5F035022861140D17DFE8AF8F69D5C"
+}

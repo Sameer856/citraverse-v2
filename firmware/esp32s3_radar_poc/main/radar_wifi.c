@@ -17,9 +17,16 @@
 #include "lwip/tcp.h"
 static const char *TAG="radar_wifi";
 static SemaphoreHandle_t guard;
-#define PREVIEW_DEPTH 8
-static uint8_t history[PREVIEW_DEPTH][8192], outgoing[PREVIEW_DEPTH*8204];
-static uint32_t lengths[PREVIEW_DEPTH], times_ms[PREVIEW_DEPTH];
+#define PREVIEW_DEPTH 128
+#define HISTORY_BYTES 65536
+static uint8_t history[HISTORY_BYTES], outgoing[65536];
+static uint32_t lengths[PREVIEW_DEPTH], times_ms[PREVIEW_DEPTH], offsets[PREVIEW_DEPTH];
+static uint32_t retained, used_bytes, write_offset, client_overruns;
+static void history_copy(uint8_t *destination,uint32_t offset,uint32_t size) {
+    uint32_t first=HISTORY_BYTES-offset;if(first>size)first=size;
+    memcpy(destination,history+offset,first);
+    if(size>first)memcpy(destination+first,history,size-first);
+}
 typedef struct { uint32_t cursor; } preview_client_t;
 static uint32_t latest_len, received, skipped;
 static int64_t last_frame_us;
@@ -56,10 +63,17 @@ esp_err_t radar_wifi_provision(const char *text) {
     cJSON_Delete(j);return result;
 }
 void radar_wifi_frame(const uint8_t *data,uint32_t len) {
-    if(!guard || len>sizeof(history[0])) return;
+    if(!guard || len>8192 || !len) return;
     if(xSemaphoreTake(guard,0)!=pdTRUE) { __atomic_add_fetch(&skipped,1,__ATOMIC_RELAXED);return; }
-    uint32_t slot=received%PREVIEW_DEPTH;
-    memcpy(history[slot],data,len);lengths[slot]=len;
+    while(retained && (retained==PREVIEW_DEPTH || used_bytes+len>HISTORY_BYTES)) {
+        used_bytes-=lengths[(received-retained)%PREVIEW_DEPTH];retained--;
+    }
+    uint32_t slot=received%PREVIEW_DEPTH,first=HISTORY_BYTES-write_offset;
+    if(first>len)first=len;
+    memcpy(history+write_offset,data,first);
+    if(len>first)memcpy(history,data+first,len-first);
+    offsets[slot]=write_offset;lengths[slot]=len;
+    write_offset=(write_offset+len)%HISTORY_BYTES;used_bytes+=len;retained++;
     last_frame_us=esp_timer_get_time();times_ms[slot]=(uint32_t)(last_frame_us/1000);
     latest_len=len;received++;
     xSemaphoreGive(guard);
@@ -74,10 +88,10 @@ static esp_err_t page(httpd_req_t *req) {
     return httpd_resp_send(req,(const char*)page_start,page_end-page_start-1);
 }
 static esp_err_t status(httpd_req_t *req) {
-    char body[256];uint32_t count;int64_t age;
-    xSemaphoreTake(guard,portMAX_DELAY);count=received;age=latest_len?(esp_timer_get_time()-last_frame_us)/1000:-1;xSemaphoreGive(guard);
-    snprintf(body,sizeof(body),"{\"frames\":%lu,\"viewer_copy_drops\":%lu,\"age_ms\":%lld,\"free_heap\":%lu}",
-             (unsigned long)count,(unsigned long)__atomic_load_n(&skipped,__ATOMIC_RELAXED),(long long)age,(unsigned long)esp_get_free_heap_size());
+    char body[320];uint32_t count,kept,overruns;int64_t age;
+    xSemaphoreTake(guard,portMAX_DELAY);count=received;kept=retained;overruns=client_overruns;age=latest_len?(esp_timer_get_time()-last_frame_us)/1000:-1;xSemaphoreGive(guard);
+    snprintf(body,sizeof(body),"{\"frames\":%lu,\"viewer_copy_drops\":%lu,\"age_ms\":%lld,\"free_heap\":%lu,\"buffered_frames\":%lu,\"client_overrun_frames\":%lu}",
+             (unsigned long)count,(unsigned long)__atomic_load_n(&skipped,__ATOMIC_RELAXED),(long long)age,(unsigned long)esp_get_free_heap_size(),(unsigned long)kept,(unsigned long)overruns);
     httpd_resp_set_type(req,"application/json");return httpd_resp_sendstr(req,body);
 }
 static esp_err_t ws(httpd_req_t *req) {
@@ -105,15 +119,17 @@ static esp_err_t ws(httpd_req_t *req) {
         if(buffered) {
             preview_client_t *client=req->sess_ctx;
             uint32_t pending=received-client->cursor;
-            if(pending) {sequence=pending>PREVIEW_DEPTH?received-PREVIEW_DEPTH+1:client->cursor+1;client->cursor=sequence;}
+            if(pending) {if(pending>retained){client_overruns+=pending-retained;client->cursor=received-retained;}sequence=client->cursor+1;}
             else break;
         }
         if(sequence) {
             uint32_t slot=(sequence-1)%PREVIEW_DEPTH;uint32_t size=lengths[slot];
+            if(len+size+(buffered?12:0)>sizeof(outgoing))break;
             if(buffered) {
                 uint32_t header[3]={0x32524452,times_ms[slot],(uint32_t)(esp_timer_get_time()/1000)-times_ms[slot]};
-                memcpy(outgoing+len,header,12);memcpy(outgoing+len+12,history[slot],size);len+=12+size;
-            } else {memcpy(outgoing,history[slot],size);len=size;}
+                memcpy(outgoing+len,header,12);history_copy(outgoing+len+12,offsets[slot],size);len+=12+size;
+                ((preview_client_t*)req->sess_ctx)->cursor=sequence;
+            } else {history_copy(outgoing,offsets[slot],size);len=size;}
         }
     }
     }
