@@ -9,3 +9,10 @@ const batch=new Uint8Array(48);batch.set(record(10,500));batch.set(record(11,550
 context.socket.onmessage({data:batch.buffer});assert.deepEqual(calls,[500,550]);assert.equal(context.received,2);assert.equal(context.lastIndex,11);
 context.socket.onmessage({data:batch.buffer.slice(0,25)});assert.match(ui.state.textContent,/Bad buffered frame/);
 console.log('Actual browser batch handler passed multi-frame timestamp and truncated-record checks');
+// Network request must precede decoding/analysis so browser work cannot delay it.
+const order=[];context.requestNext=()=>order.push('request');context.processCloud=()=>order.push('analysis');context.lastIndex=null;
+context.socket.onmessage({data:batch.buffer});assert.deepEqual(order,['request','analysis','analysis']);
+const scheduled=[];let renders=0;const renderContext={requestAnimationFrame:fn=>scheduled.push(fn),render:()=>renders++};
+vm.runInNewContext(html.slice(html.indexOf('let renderPending='),html.indexOf('function render(){')),renderContext);
+renderContext.draw();renderContext.draw();renderContext.draw();assert.equal(scheduled.length,1);scheduled.shift()();assert.equal(renders,1);
+console.log('Browser requests before analysis and coalesces repeated draws into one animation frame');
