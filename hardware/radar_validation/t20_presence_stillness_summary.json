@@ -1,0 +1,23 @@
+{
+  "samples": 60,
+  "duration_s": 59.439,
+  "t20_present": 0,
+  "t20_missing": 60,
+  "presence_only_mode": true,
+  "all_track_points_presence": true,
+  "other_track_ids": [
+    71,
+    79,
+    88,
+    94,
+    100,
+    106,
+    111,
+    114,
+    116
+  ],
+  "frames": 1203,
+  "presence_points": 19014,
+  "callback_fps": 20.225,
+  "nonconsecutive_delta": 0
+}
