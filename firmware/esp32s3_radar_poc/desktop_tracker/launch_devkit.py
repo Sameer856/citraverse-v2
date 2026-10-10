@@ -62,6 +62,7 @@ class DevKitRoom(fall_ui.RoomView):
             age = app.tracker.last-q['last'] if q else None
             source_points = q['points'] if q and age <= .35 else []
             shown_age = f'{age*1000:.0f} ms' if age is not None else 'track lost'
+            if app.tracker.focus is not None: shown_age += ' | stationary region lock (0.5 m)'
         # Render a separate snapshot: cloud toggles must never modify fall inputs.
         pts = [
             fall_detection.world_point(p,settings) for p in source_points
@@ -196,6 +197,9 @@ class Desktop(legacy.App):
                 return
         self.displayed += 1
         self.last_frame = frame['frame']
+        if args.presence_only:
+            selected = self.target_view.get()
+            self.tracker.focus_presence(None if selected == 'All candidates' else int(selected[1:]))
         super().show(frame,t)
         burst, age = self.presence_preview.update([p for p in self.current if p['cloud']=='presence'], t)
         self.preview_age_text = 'none' if age is None else f'{age*1000:.0f} ms'
@@ -228,6 +232,9 @@ class Desktop(legacy.App):
                      file_age_ms=self.file_age_ms,ui_queue_ms=self.ui_queue_ms,
                      source=str(args.recording) if args.recording else 'direct CH347 SPI',external_calls=False)
         state['presence_only_tracking'] = args.presence_only
+        state['selected_target'] = self.target_view.get()
+        state['stationary_focus_anchor'] = self.tracker.focus['anchor'] if self.tracker.focus else None
+        state['saved_at'] = time.time()
         state['tracks'] = {str(i):dict(position=q['pos'],age_s=round(max(0,self.tracker.last-q['last']),3),
                                      state=q['state'],clouds=sorted({p['cloud'] for p in q['points']}))
                            for i,q in self.tracker.tracks.items()}
