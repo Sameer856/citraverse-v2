@@ -29,6 +29,10 @@ from tkinter import ttk
 from devkit_feed import LiveRecording
 from direct_spi import DirectSpi
 import fall_ui
+import fall_detection
+from presence_tracker import PresenceTracker
+legacy.Tracker = PresenceTracker
+fall_detection.Tracker = PresenceTracker
 
 class DevKitRoom(fall_ui.RoomView):
     def draw(self):
@@ -125,6 +129,12 @@ class Desktop(legacy.App):
         self.displayed += 1
         self.last_frame = frame['frame']
         super().show(frame,t)
+        retained = [q for q in self.tracker.tracks.values() if q['last'] < t]
+        if retained:
+            age = min(t-q['last'] for q in retained)
+            self.info.configure(text=self.info.cget('text')+f' | {len(retained)} recently seen (latest {age:.1f}s ago; not fresh detection)')
+            # Keep the location marker across burst gaps, not old point clouds or fall samples.
+            self.tracks = dict(self.tracker.tracks)
 
     def draw(self):
         if self.paint_pending: return
