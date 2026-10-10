@@ -1,0 +1,17 @@
+{
+  "samples": 60,
+  "duration_s": 59.491,
+  "unique_snapshot_frames": 58,
+  "frames": 1221,
+  "fps": 20.524,
+  "presence_points": 9179,
+  "motion_points": 116381,
+  "no_fresh_candidate": 0,
+  "one_fresh_candidate": 45,
+  "multiple_fresh_candidates": 15,
+  "presence_preview_samples": 60,
+  "fresh_presence_or_mixed_samples": 15,
+  "nonconsecutive_delta": 0,
+  "queue_drop_delta": 0,
+  "max_sampled_age_ms": 58.1
+}

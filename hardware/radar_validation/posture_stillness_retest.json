@@ -1,0 +1,1382 @@
+[
+  {
+    "elapsed_s": 0.068,
+    "state": {
+      "mode": "live",
+      "frame": 533564,
+      "displayed": 3113,
+      "stats": {
+        "frames": 3114,
+        "bytes": 3990764,
+        "motion_points": 305236,
+        "presence_points": 26030,
+        "callback_fps": 20.222
+      },
+      "details": "Frame 533564 | Received: 61 motion / 39 presence | Selected now: 39 | Display: 33 (motion 5 frames) | 3 human candidates | confirmed motion cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 33 points, age 0 ms | 1 recently seen (latest 0.5s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 7.9,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 6.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 1.09,
+    "state": {
+      "mode": "live",
+      "frame": 533586,
+      "displayed": 3135,
+      "stats": {
+        "frames": 3135,
+        "bytes": 4019680,
+        "motion_points": 307483,
+        "presence_points": 26184,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533586 | Received: 108 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 22 points, age 80 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 19.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 18.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 2.094,
+    "state": {
+      "mode": "live",
+      "frame": 533606,
+      "displayed": 3155,
+      "stats": {
+        "frames": 3155,
+        "bytes": 4040720,
+        "motion_points": 309072,
+        "presence_points": 26340,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533606 | Received: 83 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 25 points, age 100 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 25.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 24.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 3.1,
+    "state": {
+      "mode": "live",
+      "frame": 533626,
+      "displayed": 3175,
+      "stats": {
+        "frames": 3175,
+        "bytes": 4069572,
+        "motion_points": 311284,
+        "presence_points": 26524,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533626 | Received: 102 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 21 points, age 84 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 20.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 19.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 4.107,
+    "state": {
+      "mode": "live",
+      "frame": 533646,
+      "displayed": 3195,
+      "stats": {
+        "frames": 3196,
+        "bytes": 4092860,
+        "motion_points": 313049,
+        "presence_points": 26691,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533646 | Received: 74 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 35 points, age 63 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 46.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.0,
+      "ui_queue_ms": 38.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 5.119,
+    "state": {
+      "mode": "live",
+      "frame": 533667,
+      "displayed": 3216,
+      "stats": {
+        "frames": 3216,
+        "bytes": 4120188,
+        "motion_points": 315155,
+        "presence_points": 26854,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533667 | Received: 105 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 22 points, age 132 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 22.3,
+      "ui_queue_ms": 13.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 6.146,
+    "state": {
+      "mode": "live",
+      "frame": 533687,
+      "displayed": 3236,
+      "stats": {
+        "frames": 3236,
+        "bytes": 4141948,
+        "motion_points": 316816,
+        "presence_points": 26998,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 533687 | Received: 95 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 140 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 48.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 16.7,
+      "ui_queue_ms": 32.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 7.149,
+    "state": {
+      "mode": "live",
+      "frame": 533708,
+      "displayed": 3257,
+      "stats": {
+        "frames": 3257,
+        "bytes": 4170736,
+        "motion_points": 319012,
+        "presence_points": 27192,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533708 | Received: 84 motion / 37 presence | Selected now: 37 | Display: 27 (motion 5 frames) | 2 human candidates | confirmed motion cluster, confirmed presence cluster | Presence preview: 27 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 14.6,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.1,
+      "ui_queue_ms": 6.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 8.15,
+    "state": {
+      "mode": "live",
+      "frame": 533728,
+      "displayed": 3277,
+      "stats": {
+        "frames": 3277,
+        "bytes": 4196276,
+        "motion_points": 320990,
+        "presence_points": 27334,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533728 | Received: 97 motion / 24 presence | Selected now: 24 | Display: 12 (motion 5 frames) | 2 human candidates | confirmed motion cluster, confirmed presence cluster | Presence preview: 12 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 7.6,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 6.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 9.155,
+    "state": {
+      "mode": "live",
+      "frame": 533749,
+      "displayed": 3298,
+      "stats": {
+        "frames": 3298,
+        "bytes": 4221436,
+        "motion_points": 322947,
+        "presence_points": 27465,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533749 | Received: 126 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 15 points, age 43 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 3.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 1.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 10.162,
+    "state": {
+      "mode": "live",
+      "frame": 533769,
+      "displayed": 3318,
+      "stats": {
+        "frames": 3318,
+        "bytes": 4245776,
+        "motion_points": 324798,
+        "presence_points": 27634,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533769 | Received: 123 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 27 points, age 35 ms | 2 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.5,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 15.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 11.169,
+    "state": {
+      "mode": "live",
+      "frame": 533789,
+      "displayed": 3338,
+      "stats": {
+        "frames": 3339,
+        "bytes": 4271164,
+        "motion_points": 326734,
+        "presence_points": 27805,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533789 | Received: 85 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 25 points, age 35 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 15.4,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 14.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 12.185,
+    "state": {
+      "mode": "live",
+      "frame": 533809,
+      "displayed": 3358,
+      "stats": {
+        "frames": 3359,
+        "bytes": 4296272,
+        "motion_points": 328660,
+        "presence_points": 27963,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 533809 | Received: 83 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 21 points, age 42 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 21.4,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 13.197,
+    "state": {
+      "mode": "live",
+      "frame": 533830,
+      "displayed": 3379,
+      "stats": {
+        "frames": 3379,
+        "bytes": 4322484,
+        "motion_points": 330674,
+        "presence_points": 28125,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533830 | Received: 90 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 27 points, age 89 ms | 2 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 3.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 1.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 14.198,
+    "state": {
+      "mode": "live",
+      "frame": 533850,
+      "displayed": 3399,
+      "stats": {
+        "frames": 3399,
+        "bytes": 4346632,
+        "motion_points": 332510,
+        "presence_points": 28293,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533850 | Received: 117 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 65 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 12.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 9.6,
+      "ui_queue_ms": 2.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 15.21,
+    "state": {
+      "mode": "live",
+      "frame": 533870,
+      "displayed": 3419,
+      "stats": {
+        "frames": 3420,
+        "bytes": 4371144,
+        "motion_points": 334390,
+        "presence_points": 28447,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533870 | Received: 93 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 18 points, age 91 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 20.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 13.9,
+      "ui_queue_ms": 6.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 16.219,
+    "state": {
+      "mode": "live",
+      "frame": 533890,
+      "displayed": 3439,
+      "stats": {
+        "frames": 3440,
+        "bytes": 4396768,
+        "motion_points": 336354,
+        "presence_points": 28610,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 533890 | Received: 89 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 9 points, age 90 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 21.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 17.226,
+    "state": {
+      "mode": "live",
+      "frame": 533911,
+      "displayed": 3460,
+      "stats": {
+        "frames": 3460,
+        "bytes": 4422572,
+        "motion_points": 338353,
+        "presence_points": 28753,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 533911 | Received: 93 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 21 points, age 132 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 58.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 16.7,
+      "ui_queue_ms": 41.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 18.231,
+    "state": {
+      "mode": "live",
+      "frame": 533932,
+      "displayed": 3481,
+      "stats": {
+        "frames": 3481,
+        "bytes": 4447472,
+        "motion_points": 340270,
+        "presence_points": 28902,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 533932 | Received: 110 motion / 30 presence | Selected now: 30 | Display: 23 (motion 5 frames) | 3 human candidates | confirmed motion cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 23 points, age 0 ms | 1 recently seen (latest 2.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 8.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 7.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 19.231,
+    "state": {
+      "mode": "live",
+      "frame": 533952,
+      "displayed": 3501,
+      "stats": {
+        "frames": 3501,
+        "bytes": 4470516,
+        "motion_points": 342043,
+        "presence_points": 29041,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 533952 | Received: 72 motion / 24 presence | Selected now: 24 | Display: 19 (motion 5 frames) | 3 human candidates | confirmed mixed cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 19 points, age 0 ms | 1 recently seen (latest 0.5s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.5,
+      "max_age_ms": 245.4,
+      "file_age_ms": 24.2,
+      "ui_queue_ms": 11.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 20.247,
+    "state": {
+      "mode": "live",
+      "frame": 533972,
+      "displayed": 3521,
+      "stats": {
+        "frames": 3521,
+        "bytes": 4497220,
+        "motion_points": 344130,
+        "presence_points": 29171,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533972 | Received: 89 motion / 29 presence | Selected now: 29 | Display: 24 (motion 5 frames) | 2 human candidates | confirmed motion cluster, confirmed presence cluster | Presence preview: 24 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.1,
+      "ui_queue_ms": 27.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 21.251,
+    "state": {
+      "mode": "live",
+      "frame": 533992,
+      "displayed": 3541,
+      "stats": {
+        "frames": 3542,
+        "bytes": 4521192,
+        "motion_points": 345965,
+        "presence_points": 29325,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 533992 | Received: 91 motion / 41 presence | Selected now: 41 | Display: 26 (motion 5 frames) | 3 human candidates | confirmed motion cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 26 points, age 0 ms | 1 recently seen (latest 0.6s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.3,
+      "ui_queue_ms": 26.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 22.252,
+    "state": {
+      "mode": "live",
+      "frame": 534013,
+      "displayed": 3562,
+      "stats": {
+        "frames": 3562,
+        "bytes": 4545928,
+        "motion_points": 347864,
+        "presence_points": 29479,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534013 | Received: 77 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 28 points, age 26 ms | 5 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 28.4,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 27.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 23.258,
+    "state": {
+      "mode": "live",
+      "frame": 534033,
+      "displayed": 3582,
+      "stats": {
+        "frames": 3582,
+        "bytes": 4573844,
+        "motion_points": 350013,
+        "presence_points": 29648,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534033 | Received: 124 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 31 points, age 19 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 28.5,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.1,
+      "ui_queue_ms": 20.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 24.286,
+    "state": {
+      "mode": "live",
+      "frame": 534053,
+      "displayed": 3602,
+      "stats": {
+        "frames": 3603,
+        "bytes": 4601668,
+        "motion_points": 352105,
+        "presence_points": 29866,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534053 | Received: 141 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 36 points, age 42 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 10.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 9.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 25.293,
+    "state": {
+      "mode": "live",
+      "frame": 534073,
+      "displayed": 3622,
+      "stats": {
+        "frames": 3623,
+        "bytes": 4626824,
+        "motion_points": 353990,
+        "presence_points": 30069,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534073 | Received: 80 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 31 points, age 44 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 2.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 1.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 26.3,
+    "state": {
+      "mode": "live",
+      "frame": 534094,
+      "displayed": 3643,
+      "stats": {
+        "frames": 3643,
+        "bytes": 4655748,
+        "motion_points": 356201,
+        "presence_points": 30260,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534094 | Received: 106 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 2 human candidates | confirmed motion cluster, confirmed motion cluster | Presence preview: 35 points, age 92 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 4.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.8,
+      "ui_queue_ms": 2.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 27.302,
+    "state": {
+      "mode": "live",
+      "frame": 534114,
+      "displayed": 3663,
+      "stats": {
+        "frames": 3664,
+        "bytes": 4683272,
+        "motion_points": 358304,
+        "presence_points": 30442,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534114 | Received: 137 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 30 points, age 76 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 42.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.2,
+      "ui_queue_ms": 34.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 28.307,
+    "state": {
+      "mode": "live",
+      "frame": 534135,
+      "displayed": 3684,
+      "stats": {
+        "frames": 3684,
+        "bytes": 4705692,
+        "motion_points": 360000,
+        "presence_points": 30606,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 534135 | Received: 92 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 20 points, age 156 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 31.5,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 30.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 29.314,
+    "state": {
+      "mode": "live",
+      "frame": 534155,
+      "displayed": 3704,
+      "stats": {
+        "frames": 3704,
+        "bytes": 4732696,
+        "motion_points": 362122,
+        "presence_points": 30726,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534155 | Received: 102 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 11 points, age 130 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 57.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 16.2,
+      "ui_queue_ms": 41.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 30.32,
+    "state": {
+      "mode": "live",
+      "frame": 534175,
+      "displayed": 3724,
+      "stats": {
+        "frames": 3725,
+        "bytes": 4757620,
+        "motion_points": 364033,
+        "presence_points": 30883,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 534175 | Received: 106 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 20 points, age 135 ms | 5 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 1.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 0.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 31.35,
+    "state": {
+      "mode": "live",
+      "frame": 534196,
+      "displayed": 3745,
+      "stats": {
+        "frames": 3745,
+        "bytes": 4780868,
+        "motion_points": 365808,
+        "presence_points": 31037,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534196 | Received: 82 motion / 27 presence | Selected now: 27 | Display: 19 (motion 5 frames) | 2 human candidates | confirmed mixed cluster, confirmed presence cluster | Presence preview: 19 points, age 0 ms | 3 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 38.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 37.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 32.355,
+    "state": {
+      "mode": "live",
+      "frame": 534216,
+      "displayed": 3765,
+      "stats": {
+        "frames": 3766,
+        "bytes": 4808752,
+        "motion_points": 368001,
+        "presence_points": 31159,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534216 | Received: 90 motion / 23 presence | Selected now: 23 | Display: 20 (motion 5 frames) | 2 human candidates | confirmed mixed cluster, confirmed presence cluster | Presence preview: 20 points, age 0 ms | 3 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 36.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 34.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 33.367,
+    "state": {
+      "mode": "live",
+      "frame": 534237,
+      "displayed": 3786,
+      "stats": {
+        "frames": 3786,
+        "bytes": 4829864,
+        "motion_points": 369615,
+        "presence_points": 31296,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534237 | Received: 93 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 23 points, age 29 ms | 2 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 34.4,
+      "max_age_ms": 245.4,
+      "file_age_ms": 15.1,
+      "ui_queue_ms": 19.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 34.383,
+    "state": {
+      "mode": "live",
+      "frame": 534256,
+      "displayed": 3805,
+      "stats": {
+        "frames": 3806,
+        "bytes": 4857948,
+        "motion_points": 371793,
+        "presence_points": 31450,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534256 | Received: 102 motion / 25 presence | Selected now: 25 | Display: 13 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed mixed cluster | Presence preview: 13 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 32.5,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.8,
+      "ui_queue_ms": 30.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 35.391,
+    "state": {
+      "mode": "live",
+      "frame": 534277,
+      "displayed": 3826,
+      "stats": {
+        "frames": 3826,
+        "bytes": 4879384,
+        "motion_points": 373425,
+        "presence_points": 31596,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534277 | Received: 84 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 21 points, age 28 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 38.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.0,
+      "ui_queue_ms": 30.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 36.397,
+    "state": {
+      "mode": "live",
+      "frame": 534318,
+      "displayed": 3867,
+      "stats": {
+        "frames": 3867,
+        "bytes": 4930120,
+        "motion_points": 377384,
+        "presence_points": 31848,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534318 | Received: 122 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 23 points, age 75 ms | 5 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 42.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 14.7,
+      "ui_queue_ms": 27.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 37.418,
+    "state": {
+      "mode": "live",
+      "frame": 534338,
+      "displayed": 3887,
+      "stats": {
+        "frames": 3888,
+        "bytes": 4955040,
+        "motion_points": 379288,
+        "presence_points": 32012,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534338 | Received: 73 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 30 points, age 92 ms | 5 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 12.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.5,
+      "ui_queue_ms": 12.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 38.424,
+    "state": {
+      "mode": "live",
+      "frame": 534358,
+      "displayed": 3907,
+      "stats": {
+        "frames": 3908,
+        "bytes": 4981048,
+        "motion_points": 381263,
+        "presence_points": 32196,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534358 | Received: 63 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 26 points, age 82 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 15.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 14.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 39.424,
+    "state": {
+      "mode": "live",
+      "frame": 534379,
+      "displayed": 3928,
+      "stats": {
+        "frames": 3928,
+        "bytes": 5005712,
+        "motion_points": 383158,
+        "presence_points": 32348,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534379 | Received: 86 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 139 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 14.2,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.8,
+      "ui_queue_ms": 5.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 40.425,
+    "state": {
+      "mode": "live",
+      "frame": 534399,
+      "displayed": 3948,
+      "stats": {
+        "frames": 3948,
+        "bytes": 5030124,
+        "motion_points": 385027,
+        "presence_points": 32505,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534399 | Received: 112 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 9 points, age 139 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 42.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 41.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 41.426,
+    "state": {
+      "mode": "live",
+      "frame": 534399,
+      "displayed": 3948,
+      "stats": {
+        "frames": 3948,
+        "bytes": 5030124,
+        "motion_points": 385027,
+        "presence_points": 32505,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534399 | Received: 112 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 9 points, age 139 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 42.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 41.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 42.431,
+    "state": {
+      "mode": "live",
+      "frame": 534420,
+      "displayed": 3969,
+      "stats": {
+        "frames": 3969,
+        "bytes": 5056008,
+        "motion_points": 386984,
+        "presence_points": 32696,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 534420 | Received: 129 motion / 33 presence | Selected now: 33 | Display: 20 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed mixed cluster | Presence preview: 20 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.4,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.8,
+      "ui_queue_ms": 14.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 43.442,
+    "state": {
+      "mode": "live",
+      "frame": 534440,
+      "displayed": 3989,
+      "stats": {
+        "frames": 3989,
+        "bytes": 5079952,
+        "motion_points": 388852,
+        "presence_points": 32815,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 534440 | Received: 119 motion / 26 presence | Selected now: 26 | Display: 20 (motion 5 frames) | 3 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed motion cluster | Presence preview: 20 points, age 0 ms | 1 recently seen (latest 0.6s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 28.7,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.2,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 44.447,
+    "state": {
+      "mode": "live",
+      "frame": 534481,
+      "displayed": 4030,
+      "stats": {
+        "frames": 4030,
+        "bytes": 5131312,
+        "motion_points": 392815,
+        "presence_points": 33115,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534481 | Received: 115 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 21 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 32.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.1,
+      "ui_queue_ms": 24.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 45.453,
+    "state": {
+      "mode": "live",
+      "frame": 534501,
+      "displayed": 4050,
+      "stats": {
+        "frames": 4050,
+        "bytes": 5155448,
+        "motion_points": 394677,
+        "presence_points": 33256,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534501 | Received: 99 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 23 points, age 46 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 17.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 15.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 46.459,
+    "state": {
+      "mode": "live",
+      "frame": 534501,
+      "displayed": 4050,
+      "stats": {
+        "frames": 4050,
+        "bytes": 5155448,
+        "motion_points": 394677,
+        "presence_points": 33256,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534501 | Received: 99 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 23 points, age 46 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 17.1,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 15.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 47.466,
+    "state": {
+      "mode": "live",
+      "frame": 534542,
+      "displayed": 4091,
+      "stats": {
+        "frames": 4091,
+        "bytes": 5204708,
+        "motion_points": 398502,
+        "presence_points": 33519,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534542 | Received: 113 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 89 ms | 2 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 3.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 2.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 48.468,
+    "state": {
+      "mode": "live",
+      "frame": 534562,
+      "displayed": 4111,
+      "stats": {
+        "frames": 4111,
+        "bytes": 5228220,
+        "motion_points": 400317,
+        "presence_points": 33655,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534562 | Received: 131 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 18 points, age 90 ms | 2 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 36.8,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 36.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 49.473,
+    "state": {
+      "mode": "live",
+      "frame": 534582,
+      "displayed": 4131,
+      "stats": {
+        "frames": 4132,
+        "bytes": 5253500,
+        "motion_points": 402259,
+        "presence_points": 33811,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534582 | Received: 85 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 19 points, age 67 ms | 2 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 44.2,
+      "max_age_ms": 245.4,
+      "file_age_ms": 15.0,
+      "ui_queue_ms": 29.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 50.482,
+    "state": {
+      "mode": "live",
+      "frame": 534603,
+      "displayed": 4152,
+      "stats": {
+        "frames": 4152,
+        "bytes": 5279124,
+        "motion_points": 404255,
+        "presence_points": 33942,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534603 | Received: 55 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 24 points, age 143 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 15.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 51.485,
+    "state": {
+      "mode": "live",
+      "frame": 534623,
+      "displayed": 4172,
+      "stats": {
+        "frames": 4172,
+        "bytes": 5305072,
+        "motion_points": 406282,
+        "presence_points": 34069,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534623 | Received: 100 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 16 points, age 134 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 37.9,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 36.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 52.494,
+    "state": {
+      "mode": "live",
+      "frame": 534643,
+      "displayed": 4192,
+      "stats": {
+        "frames": 4193,
+        "bytes": 5329564,
+        "motion_points": 408146,
+        "presence_points": 34237,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534643 | Received: 113 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 20 points, age 129 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 50.6,
+      "max_age_ms": 245.4,
+      "file_age_ms": 16.0,
+      "ui_queue_ms": 34.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 53.5,
+    "state": {
+      "mode": "live",
+      "frame": 534664,
+      "displayed": 4213,
+      "stats": {
+        "frames": 4213,
+        "bytes": 5352596,
+        "motion_points": 409940,
+        "presence_points": 34354,
+        "callback_fps": 20.223
+      },
+      "details": "Frame 534664 | Received: 87 motion / 30 presence | Selected now: 30 | Display: 19 (motion 5 frames) | 2 human candidates | confirmed mixed cluster, confirmed presence cluster | Presence preview: 19 points, age 0 ms | 3 recently seen (latest 0.4s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.2,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 14.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 54.509,
+    "state": {
+      "mode": "live",
+      "frame": 534684,
+      "displayed": 4233,
+      "stats": {
+        "frames": 4233,
+        "bytes": 5379168,
+        "motion_points": 411977,
+        "presence_points": 34523,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534684 | Received: 71 motion / 27 presence | Selected now: 27 | Display: 20 (motion 5 frames) | 3 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed mixed cluster | Presence preview: 20 points, age 0 ms | 2 recently seen (latest 0.8s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 15.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 55.523,
+    "state": {
+      "mode": "live",
+      "frame": 534704,
+      "displayed": 4253,
+      "stats": {
+        "frames": 4254,
+        "bytes": 5404712,
+        "motion_points": 413985,
+        "presence_points": 34635,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534704 | Received: 113 motion / 24 presence | Selected now: 24 | Display: 18 (motion 5 frames) | 1 human candidates | confirmed mixed cluster | Presence preview: 18 points, age 0 ms | 3 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 30.6,
+      "max_age_ms": 245.4,
+      "file_age_ms": 8.4,
+      "ui_queue_ms": 22.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 56.529,
+    "state": {
+      "mode": "live",
+      "frame": 534725,
+      "displayed": 4274,
+      "stats": {
+        "frames": 4274,
+        "bytes": 5428068,
+        "motion_points": 415771,
+        "presence_points": 34787,
+        "callback_fps": 20.226
+      },
+      "details": "Frame 534725 | Received: 116 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 30 points, age 34 ms | 2 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 26.9,
+      "max_age_ms": 245.4,
+      "file_age_ms": 10.3,
+      "ui_queue_ms": 16.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 57.53,
+    "state": {
+      "mode": "live",
+      "frame": 534746,
+      "displayed": 4295,
+      "stats": {
+        "frames": 4295,
+        "bytes": 5453372,
+        "motion_points": 417709,
+        "presence_points": 34949,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534746 | Received: 98 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 15 points, age 100 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 2.9,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 1.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 58.543,
+    "state": {
+      "mode": "live",
+      "frame": 534766,
+      "displayed": 4315,
+      "stats": {
+        "frames": 4315,
+        "bytes": 5477928,
+        "motion_points": 419613,
+        "presence_points": 35083,
+        "callback_fps": 20.224
+      },
+      "details": "Frame 534766 | Received: 76 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 24 points, age 101 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.3,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 59.559,
+    "state": {
+      "mode": "live",
+      "frame": 534786,
+      "displayed": 4335,
+      "stats": {
+        "frames": 4335,
+        "bytes": 5503588,
+        "motion_points": 421617,
+        "presence_points": 35209,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 534786 | Received: 74 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 1 human candidates | confirmed motion cluster | Presence preview: 20 points, age 88 ms | 3 recently seen (latest 0.3s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.0,
+      "max_age_ms": 245.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  }
+]
