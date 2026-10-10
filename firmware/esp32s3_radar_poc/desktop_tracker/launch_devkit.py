@@ -13,7 +13,8 @@ REPO = HERE.parents[2]
 BUILD = HERE.parent / 'build'
 sys.path.insert(0, str(BUILD / 'tracker_deps'))
 parser = argparse.ArgumentParser()
-parser.add_argument('--recording', type=Path, required=True)
+parser.add_argument('--recording', type=Path)
+parser.add_argument('--library', type=Path, default=REPO.parent/'resources/hif_library/HifMsgDataCollectionLib.dll')
 parser.add_argument('--tracker', type=Path, default=REPO.parent / 'live_tracker')
 args = parser.parse_args()
 stub = types.ModuleType('fall_call')
@@ -26,6 +27,7 @@ sys.path.insert(0, str(args.tracker))
 import app as legacy
 from tkinter import ttk
 from devkit_feed import LiveRecording
+from direct_spi import DirectSpi
 import fall_ui
 
 class DevKitRoom(fall_ui.RoomView):
@@ -60,11 +62,11 @@ class Desktop(legacy.App):
         self.file_age_ms = None
         self.ui_queue_ms = None
         super().__init__(root)
-        root.title('Possumic Fall Tracker - Posture dev kit (buffered preview)')
-        self.port.set('Dev kit / vendor recording')
+        root.title('Possumic Fall Tracker - Posture dev kit' + (' (buffered preview)' if args.recording else ' / direct SPI'))
+        self.port.set('Dev kit / vendor recording' if args.recording else 'CH347 direct SPI')
         self.raw_points.set(True)
         self.snr.set(0)
-        self.fall.call_status.set('Buffered dev-kit preview (up to 1.5 s) — external calls disabled')
+        self.fall.call_status.set(('Buffered dev-kit preview (up to 1.5 s)' if args.recording else 'Direct SPI acquisition')+' — external calls disabled')
         for panel in root.winfo_children():
             for widget in panel.winfo_children():
                 if isinstance(widget, ttk.Button):
@@ -78,16 +80,16 @@ class Desktop(legacy.App):
 
     def connect(self):
         self.disconnect()
-        try: self.serial = LiveRecording(args.recording, legacy.Stream())
+        try: self.serial = LiveRecording(args.recording, legacy.Stream()) if args.recording else DirectSpi(args.library,legacy.points)
         except OSError as e:
             self.status.set('Cannot open vendor recording: '+str(e)); return
         self.stream = self.serial
         self.stop_event = threading.Event()
         self.mode = 'live'
         self.reset_tracks()
-        self.fall.reset('POSTURE DEV KIT / BUFFERED PREVIEW — verify mounting')
+        self.fall.reset('POSTURE DEV KIT / '+('BUFFERED PREVIEW' if args.recording else 'DIRECT SPI')+' — verify mounting')
         self.received = time.monotonic()
-        self.control_status.set('Radar control remains in RadarDebugTool; Auto save must stay enabled')
+        self.control_status.set('Radar control remains in RadarDebugTool; Auto save must stay enabled' if args.recording else 'Direct SPI active — keep RadarDebugTool disconnected')
         self.worker = threading.Thread(target=self.read, args=(self.serial,self.stop_event), daemon=True)
         self.worker.start()
 
@@ -98,7 +100,7 @@ class Desktop(legacy.App):
                     frame['file_arrival_age_ms'] = time.time()*1000-frame['host_timestamp_ms']
                     try: self.events.put_nowait(frame)
                     except queue.Full: feed.stats['queue_drops'] += 1
-                stop.wait(.01)
+                if args.recording: stop.wait(.01)
         except Exception as e:
             if not stop.is_set():
                 try: self.events.put_nowait(str(e))
@@ -113,7 +115,7 @@ class Desktop(legacy.App):
             self.max_age_ms = max(self.max_age_ms,age)
             # Vendor file output is buffered. Analyze by original source time,
             # with an explicit bounded delay; never retimestamp a backlog as now.
-            if age < -100 or age > 1500:
+            if age < -100 or age > (1500 if args.recording else 350):
                 self.stream.stats['stale_frames'] += 1
                 self.fall.detector.reset()
                 self.current=[]; self.tracks={}; self.display_history.clear()
@@ -140,7 +142,7 @@ class Desktop(legacy.App):
                      details=self.info.cget('text'),armed=self.fall.armed.get(),
                      last_age_ms=self.last_age_ms,max_age_ms=round(self.max_age_ms,1),
                      file_age_ms=self.file_age_ms,ui_queue_ms=self.ui_queue_ms,
-                     source=str(args.recording),external_calls=False)
+                     source=str(args.recording) if args.recording else 'direct CH347 SPI',external_calls=False)
         (BUILD/'devkit_tracker_state.json').write_text(json.dumps(state,indent=2))
         self.root.after(1000,self.save_state)
 

@@ -1,0 +1,20 @@
+{
+  "mode": "live",
+  "frame": 449074,
+  "displayed": 1311,
+  "stats": {
+    "frames": 1311,
+    "bytes": 1171744,
+    "motion_points": 78542,
+    "presence_points": 18557,
+    "callback_fps": 20.232
+  },
+  "details": "Frame 449074 | Received: 156 motion / 0 presence | Selected now: 156 | Display: 911 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+  "armed": false,
+  "last_age_ms": 21.4,
+  "max_age_ms": 71.7,
+  "file_age_ms": 6.9,
+  "ui_queue_ms": 14.5,
+  "source": "direct CH347 SPI",
+  "external_calls": false
+}

@@ -274,3 +274,13 @@ The command test discovered that a bare stop/start can leave point reporting dis
 
 The separate CH347 dev-kit radar, reported by the user as flashed with Posture_mrs6240_p2512.img, delivered 2,221 consecutive frame-info records over 109.742 s (20.229 FPS). After host Stop Scan / Start Scan, a second 830-record capture over 40.973 s averaged 20.233 FPS. Neither capture had duplicate or missing frame-info indices. Both motion and presence clouds were recorded. Reported period stayed 50 ms. This does not establish worst-case density, electrical timing, or fall accuracy. See [test evidence](posture_devkit_20261010/README.md). No changes to the ESP32-connected radar or KiCad files.
 
+## Direct SPI desktop fall tracker — 2026-10-11
+
+Launch `firmware/esp32s3_radar_poc/desktop_tracker/Start-DevKit-Tracker.ps1 -DirectSpi` with RadarDebugTool disconnected. The adapter uses the local vendor HifMsgDataCollectionLib DLL, OpenSpiDevice(0,3), and point-cloud callbacks through a local pipe. Selector 3 requests 7.5 MHz; electrical timing is not measured. The sibling workspace's `live_tracker` and `resources/hif_library` remain required dependencies. The recording-based launch remains available.
+
+Live validation received and displayed 1,311 frames over approximately 64.75 seconds at 20.232 FPS, with no reported duplicate or nonconsecutive indices, UI queue drops, or stale frames. Both motion and presence points were decoded. Latest host callback-to-display age was 21.4 ms; maximum was 71.7 ms. This measures host delivery latency, not radar acquisition-to-display latency. Evidence: [live snapshot](posture_direct_spi_live.json). The 200-frame recorded callback parser regression also passed continuity and malformed-length checks.
+
+Earlier attempts were suspended before the helper's first instruction. Streaming succeeded after the user reported removing RAV and restarting; the precise suspension mechanism was not established. No protection settings were changed by the collector.
+
+Fall detection is disarmed pending mounting calibration, and external calls remain disabled. This run does not validate fall accuracy, worst-case density, long-duration reliability, or 24 FPS. Radar commands are not exposed by this direct-SPI adapter. Frames older than 350 ms at UI consumption are rejected; the callback queue is bounded to 64 records, with its eviction count reported on collector closure. No KiCad or radar firmware changes were made.
+
