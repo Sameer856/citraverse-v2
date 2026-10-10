@@ -17,3 +17,13 @@ Transport tests: `python test_transport.py`. Hardware/UI runtime evidence is rec
 Firmware stop/start quirk verified on V5.3.1.0: after `mmwc stop` then `mmwc start`, measurement acknowledged but point delivery remained disabled until `mmwc report points 0` was sent again. Both start buttons therefore re-enable point reporting after start. A raw manual `mmwc start` command does not include this extra step.
 
 For a fresh local setup, install dependencies with `python -m pip install --target ../build/tracker_deps -r requirements.txt` from this folder. The launcher uses the existing workspace tracker rather than copying its source or credentials into this repository.
+
+## Posture dev-kit fall dashboard
+
+Run Start-DevKit-Tracker.ps1 after connecting RadarDebugTool via SPI and enabling Start Scan and Data management / Auto save data. This reads the newest rawData.bin; pass -Recording for an explicit file. Keep vendor scanning and saving enabled. Restart the launcher if the vendor starts a new recording directory. Closing the tracker does not stop vendor recording; turn Auto save off when finished to stop disk growth.
+
+This is a buffered local preview adapter, not a direct CH347 driver. It parses PSIC timestamp envelopes and uses the existing checksummed HIF/C3 decoder, including fragmented packets. It starts at the file end, preserves original timestamps, retries file-sharing conflicts, and rejects timestamps over 1.5 seconds old or more than 100 ms in the future. The vendor tool batches writes; measured preview age peaked around 0.63 seconds in the initial live check. This delay is explicitly allowed only for this development preview, not inherited by the ESP32 path.
+
+Both motion and presence points feed the existing experimental fall detector. Start disarmed and calibrate THIS dev kit's height/orientation/room; the old tabletop mounting is not assumed. External telephone calls are disabled. Firmware controls remain in RadarDebugTool; legacy Analysis commands are disabled in this launcher.
+
+Validation: raw-recording partial-read test decoded 2,221 baseline frames identically to whole-file input, preserving both clouds. Twelve existing fall-detector tests passed. Live check displayed 838/838 decoded frames with no stale-frame rejection after buffered-preview adjustment; max observed age 627.4 ms. This is not a fall-accuracy test. Initial 350 ms gating rejected about half of the buffered arrivals, which is why this path is labelled delayed preview.

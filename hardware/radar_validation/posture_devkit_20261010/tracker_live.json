@@ -1,0 +1,19 @@
+{
+  "mode": "live",
+  "frame": 406341,
+  "displayed": 1454,
+  "stats": {
+    "bytes": 840572,
+    "packets": 2909,
+    "frames": 1454,
+    "motion_points": 42520,
+    "presence_points": 18436,
+    "file_busy": 45
+  },
+  "details": "Frame 406341 | Received: 63 motion / 0 presence | Selected now: 63 | Display: 300 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+  "armed": false,
+  "last_age_ms": 193.8,
+  "max_age_ms": 647.3,
+  "source": "C:\\Users\\msame\\Downloads\\mmwave\\RadarDebugTool_EN_V1.0.0.9\\DataStorage\\2026_10_10_233953\\2026_10_10_233953_rawData.bin",
+  "external_calls": false
+}
