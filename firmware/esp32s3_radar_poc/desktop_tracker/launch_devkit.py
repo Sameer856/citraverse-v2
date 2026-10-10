@@ -54,9 +54,17 @@ class DevKitRoom(fall_ui.RoomView):
         preview = copy.copy(original)
         preview.detector = copy.copy(original.detector)
         settings = original.detector.settings
+        selected = app.target_view.get()
+        source_points = app.current
+        shown_age = app.preview_age_text
+        if selected != 'All candidates':
+            q = app.tracker.tracks.get(int(selected[1:]))
+            age = app.tracker.last-q['last'] if q else None
+            source_points = q['points'] if q and age <= .35 else []
+            shown_age = f'{age*1000:.0f} ms' if age is not None else 'track lost'
         # Render a separate snapshot: cloud toggles must never modify fall inputs.
         pts = [
-            fall_detection.world_point(p,settings) for p in app.current
+            fall_detection.world_point(p,settings) for p in source_points
             if (app.presence.get() if p['cloud']=='presence' else app.motion.get())]
         preview.detector.world = pts
         preview.detector.histories = {}  # Display track IDs are independent of fall-track IDs.
@@ -81,7 +89,7 @@ class DevKitRoom(fall_ui.RoomView):
             self.panel = original
             self.rendering_preview = False
         self.canvas.create_text(18,42,anchor='w',fill='#e1e7ed',text=
-            f"Shown: {sum(p['cloud']=='motion' for p in pts)} motion / {sum(p['cloud']=='presence' for p in pts)} presence | latest presence age: {app.preview_age_text}")
+            f"{selected} | Shown: {sum(p['cloud']=='motion' for p in pts)} motion / {sum(p['cloud']=='presence' for p in pts)} presence | evidence age: {shown_age}")
         for item in self.canvas.find_all():
             if self.canvas.type(item) == 'text':
                 label = self.canvas.itemcget(item,'text')
@@ -123,7 +131,7 @@ class Desktop(legacy.App):
         self.target_view = legacy.tk.StringVar(value='All candidates')
         target_row = ttk.Frame(root)
         target_row.pack(fill='x')
-        ttk.Label(target_row,text='3D target marker (select your candidate; clouds stay visible):').pack(side='left')
+        ttk.Label(target_row,text='3D target (filters marker AND point cloud):').pack(side='left')
         self.target_choice = ttk.Combobox(target_row,textvariable=self.target_view,
             values=['All candidates'],state='readonly',width=20)
         self.target_choice.pack(side='left')
