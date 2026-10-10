@@ -31,6 +31,7 @@ from direct_spi import DirectSpi
 import fall_ui
 import fall_detection
 from presence_tracker import PresenceTracker
+from presence_preview import PresencePreview
 legacy.Tracker = PresenceTracker
 fall_detection.Tracker = PresenceTracker
 
@@ -58,6 +59,7 @@ class Desktop(legacy.App):
         return super().load()
 
     def __init__(self, root):
+        self.presence_preview = PresencePreview()
         self.displayed = 0
         self.last_frame = None
         self.last_age_ms = None
@@ -129,6 +131,10 @@ class Desktop(legacy.App):
         self.displayed += 1
         self.last_frame = frame['frame']
         super().show(frame,t)
+        burst, age = self.presence_preview.update([p for p in self.current if p['cloud']=='presence'], t)
+        if self.presence.get() and burst:
+            self.current = [p for p in self.current if p['cloud']!='presence'] + list(burst)
+            self.info.configure(text=self.info.cget('text')+f' | Presence preview: {len(burst)} points, age {age*1000:.0f} ms')
         retained = [q for q in self.tracker.tracks.values() if q['last'] < t]
         if retained:
             age = min(t-q['last'] for q in retained)
