@@ -45,15 +45,23 @@ class PresenceTracker:
                 used.add(ident)
                 if len(e['times'])>=3 and t-e['times'][0]>=.1-1e-8:
                     observations.append(dict(q,state='confirmed presence cluster'))
+        # Match against one immutable prior-frame snapshot. Previously an observation
+        # could move an ID, then another cluster could reuse that same ID in this frame.
+        pairs = sorted((sum((q['pos'][k]-e['pos'][k])**2 for k in range(2)),i,j)
+                       for i,e in self.tracks.items() for j,q in enumerate(observations))
+        assigned = {}; used = set()
+        for distance,i,j in pairs:
+            if distance>radius**2 or i in used or j in assigned: continue
+            assigned[j]=i; used.add(i)
         used = set()
-        for q in observations:
-            near = sorted((sum((q['pos'][k]-e['pos'][k])**2 for k in range(2)),i) for i,e in self.tracks.items())
-            ident = near[0][1] if near and near[0][0]<=radius**2 else self.next_id
-            if ident == self.next_id: self.next_id += 1
+        for j,q in enumerate(observations):
+            ident = assigned.get(j)
+            if ident is None:
+                ident=self.next_id; self.next_id+=1
             e = self.tracks.setdefault(ident,dict(trail=deque(maxlen=40)))
-            members = q['points'] + (e['points'] if ident in used else [])
-            e.update(pos=list(q['pos']),points=members,last=t,evidence_time=t,hits=q['hits'],
-                     state='confirmed mixed cluster' if len({p['cloud'] for p in members})>1 else q['state'])
+            # Smooth the association center, not the current point cloud or its time.
+            position=[.7*a+.3*b for a,b in zip(e['pos'],q['pos'])] if 'pos' in e else list(q['pos'])
+            e.update(pos=position,points=list(q['points']),last=t,evidence_time=t,hits=q['hits'],state=q['state'])
             e['trail'].append(tuple(e['pos']))
             used.add(ident)
         for i,q in self.tracks.items():

@@ -1,0 +1,4034 @@
+[
+  {
+    "elapsed_s": 0.0571232,
+    "state": {
+      "mode": "live",
+      "frame": 599487,
+      "displayed": 392,
+      "stats": {
+        "frames": 392,
+        "bytes": 239020,
+        "motion_points": 13645,
+        "presence_points": 6110,
+        "callback_fps": 20.258
+      },
+      "details": "Frame 599487 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 66 points, age 140 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 48.9,
+      "max_age_ms": 69.9,
+      "file_age_ms": 14.2,
+      "ui_queue_ms": 34.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.0696810664118826,
+            1.1030098714774002,
+            -0.19335427986621306
+          ],
+          "age_s": 0.14,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5489314455822212,
+            2.44792872784456,
+            0.09118548407555815
+          ],
+          "age_s": 0.14,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1182615617,
+            1.0425919165999997,
+            0.11659295569999999
+          ],
+          "age_s": 0.14,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "17": {
+          "position": [
+            -0.9564166666666666,
+            2.867583333333333,
+            -1.2939999999999998
+          ],
+          "age_s": 0.334,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 1.0660599,
+    "state": {
+      "mode": "live",
+      "frame": 599507,
+      "displayed": 412,
+      "stats": {
+        "frames": 412,
+        "bytes": 249944,
+        "motion_points": 14263,
+        "presence_points": 6394,
+        "callback_fps": 20.252
+      },
+      "details": "Frame 599507 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 37 points, age 107 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.3,
+      "max_age_ms": 69.9,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 15.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.003540684958935402,
+            1.09254215488516,
+            -0.3170760319107599
+          ],
+          "age_s": 0.107,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4888460628865126,
+            2.4954111588537993,
+            -0.02591919117529191
+          ],
+          "age_s": 0.107,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.097726195674919,
+            1.0327395484229618,
+            0.09746827806449898
+          ],
+          "age_s": 0.107,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "17": {
+          "position": [
+            -0.9544916666666666,
+            2.867022619047619,
+            -1.2885142857142855
+          ],
+          "age_s": 0.529,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 2.0874581,
+    "state": {
+      "mode": "live",
+      "frame": 599527,
+      "displayed": 432,
+      "stats": {
+        "frames": 433,
+        "bytes": 259976,
+        "motion_points": 14772,
+        "presence_points": 6712,
+        "callback_fps": 20.249
+      },
+      "details": "Frame 599527 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 42 points, age 148 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 19.5,
+      "max_age_ms": 69.9,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 18.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.009634436265529879,
+            1.0808745511086724,
+            -0.3603034193521376
+          ],
+          "age_s": 0.148,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5342020944609562,
+            2.466982344240797,
+            0.015407817079764782
+          ],
+          "age_s": 0.148,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1327566517070833,
+            1.031241875903447,
+            0.08527747349430033
+          ],
+          "age_s": 0.148,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "17": {
+          "position": [
+            -0.9983268916666667,
+            2.816861258333333,
+            -1.1900116499999998
+          ],
+          "age_s": 0.148,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 3.0941663,
+    "state": {
+      "mode": "live",
+      "frame": 599548,
+      "displayed": 453,
+      "stats": {
+        "frames": 453,
+        "bytes": 270444,
+        "motion_points": 15393,
+        "presence_points": 6955,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 599548 | Received: 0 motion / 49 presence | Selected now: 49 | Display: 49 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed presence cluster | Presence preview: 49 points, age 0 ms | 2 recently seen (latest 0.4s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 18.1,
+      "max_age_ms": 69.9,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 17.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.056955936186940156,
+            1.065889671694963,
+            -0.09860373061493857
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5320199019927052,
+            2.4349159331136225,
+            0.09744909231940278
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1306724970748705,
+            1.1129056744044177,
+            0.1077208713859815
+          ],
+          "age_s": 0.396,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "17": {
+          "position": [
+            -0.9908001769166666,
+            2.8428620165833327,
+            -1.2357657084999998
+          ],
+          "age_s": 0.792,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 4.108104,
+    "state": {
+      "mode": "live",
+      "frame": 599569,
+      "displayed": 474,
+      "stats": {
+        "frames": 474,
+        "bytes": 280592,
+        "motion_points": 15941,
+        "presence_points": 7244,
+        "callback_fps": 20.252
+      },
+      "details": "Frame 599569 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 63 points, age 32 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 7.1,
+      "max_age_ms": 69.9,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 6.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.03386403492807685,
+            1.116344507620306,
+            -0.26365438267014185
+          ],
+          "age_s": 0.032,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.6218668714825353,
+            2.3749270362255976,
+            0.3256295692557195
+          ],
+          "age_s": 0.032,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1333206664966804,
+            1.0639841463207151,
+            0.08007825888539165
+          ],
+          "age_s": 0.032,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "17": {
+          "position": [
+            -0.9908001769166666,
+            2.8428620165833327,
+            -1.2357657084999998
+          ],
+          "age_s": 1.799,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 5.1142383,
+    "state": {
+      "mode": "live",
+      "frame": 599589,
+      "displayed": 494,
+      "stats": {
+        "frames": 494,
+        "bytes": 290376,
+        "motion_points": 16498,
+        "presence_points": 7494,
+        "callback_fps": 20.241
+      },
+      "details": "Frame 599589 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 47 points, age 56 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 7.1,
+      "max_age_ms": 69.9,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 6.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.05270089833629479,
+            1.089687844709088,
+            -0.36836438737273197
+          ],
+          "age_s": 0.056,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.631716058233882,
+            2.3797788423296065,
+            0.20931020886199936
+          ],
+          "age_s": 0.056,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.140987126583373,
+            1.0440979459828648,
+            0.0638383468538419
+          ],
+          "age_s": 0.244,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 6.1222263,
+    "state": {
+      "mode": "live",
+      "frame": 599609,
+      "displayed": 514,
+      "stats": {
+        "frames": 514,
+        "bytes": 301468,
+        "motion_points": 17108,
+        "presence_points": 7800,
+        "callback_fps": 20.254
+      },
+      "details": "Frame 599609 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 60 points, age 7 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 20.2,
+      "max_age_ms": 69.9,
+      "file_age_ms": 18.7,
+      "ui_queue_ms": 1.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.05053046001661894,
+            1.0424356012117715,
+            -0.10102951470694715
+          ],
+          "age_s": 0.007,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5587928880786552,
+            2.4447870463702057,
+            0.033903328703368596
+          ],
+          "age_s": 0.007,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.138440988608361,
+            1.0443685621880052,
+            0.05368684279768933
+          ],
+          "age_s": 0.827,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 7.1274577,
+    "state": {
+      "mode": "live",
+      "frame": 599629,
+      "displayed": 534,
+      "stats": {
+        "frames": 535,
+        "bytes": 312240,
+        "motion_points": 17675,
+        "presence_points": 8122,
+        "callback_fps": 20.246
+      },
+      "details": "Frame 599629 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 66 points, age 29 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 34.8,
+      "max_age_ms": 69.9,
+      "file_age_ms": 9.5,
+      "ui_queue_ms": 25.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.019180129983469896,
+            1.1099915137844008,
+            -0.18065104028870949
+          ],
+          "age_s": 0.029,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5674229294713091,
+            2.433218492057284,
+            0.16868060470397894
+          ],
+          "age_s": 0.029,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1437702590926677,
+            1.0355034168304857,
+            0.09238708707960744
+          ],
+          "age_s": 0.029,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 8.128572,
+    "state": {
+      "mode": "live",
+      "frame": 599649,
+      "displayed": 554,
+      "stats": {
+        "frames": 555,
+        "bytes": 321040,
+        "motion_points": 18187,
+        "presence_points": 8335,
+        "callback_fps": 20.247
+      },
+      "details": "Frame 599649 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 60 points, age 42 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 15.4,
+      "max_age_ms": 69.9,
+      "file_age_ms": 8.5,
+      "ui_queue_ms": 6.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.020221863309198035,
+            1.0989633937886336,
+            -0.3390386644884805
+          ],
+          "age_s": 0.042,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5603514881562512,
+            2.425702218593248,
+            0.24455101273256521
+          ],
+          "age_s": 0.042,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1846391813648673,
+            0.99785239178134,
+            0.037670960955725204
+          ],
+          "age_s": 0.236,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 9.1427097,
+    "state": {
+      "mode": "live",
+      "frame": 599670,
+      "displayed": 575,
+      "stats": {
+        "frames": 575,
+        "bytes": 331556,
+        "motion_points": 18788,
+        "presence_points": 8602,
+        "callback_fps": 20.241
+      },
+      "details": "Frame 599670 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 54 points, age 100 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 1.6,
+      "max_age_ms": 69.9,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 0.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.05520890519923695,
+            1.0463580999064286,
+            -0.08372132570366209
+          ],
+          "age_s": 0.1,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4927376811933684,
+            2.4890740330631775,
+            -0.0003109586584588205
+          ],
+          "age_s": 0.1,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.169247426955407,
+            1.012496674246938,
+            0.049369672669007644
+          ],
+          "age_s": 0.294,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.1551024,
+    "state": {
+      "mode": "live",
+      "frame": 599690,
+      "displayed": 595,
+      "stats": {
+        "frames": 595,
+        "bytes": 341436,
+        "motion_points": 19308,
+        "presence_points": 8897,
+        "callback_fps": 20.24
+      },
+      "details": "Frame 599690 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 53 points, age 90 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 22.1,
+      "max_age_ms": 74.4,
+      "file_age_ms": 2.0,
+      "ui_queue_ms": 20.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.06123268430794685,
+            1.016098146129051,
+            -0.026257327933236707
+          ],
+          "age_s": 0.09,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5312954808069141,
+            2.47828979938875,
+            0.06693303569244287
+          ],
+          "age_s": 0.09,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1539731988687847,
+            0.9867476719728565,
+            0.08055877086830535
+          ],
+          "age_s": 0.893,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 11.1569108,
+    "state": {
+      "mode": "live",
+      "frame": 599710,
+      "displayed": 615,
+      "stats": {
+        "frames": 616,
+        "bytes": 352172,
+        "motion_points": 19948,
+        "presence_points": 9143,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 599710 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 51 points, age 105 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.4,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.7,
+      "ui_queue_ms": 14.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.04937348800678536,
+            1.105793249973685,
+            -0.36925302951763833
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4506156961651002,
+            2.5133365136420904,
+            -0.1369717793970535
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1287468674457044,
+            1.0305063592666996,
+            0.08527379772546961
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 12.1701836,
+    "state": {
+      "mode": "live",
+      "frame": 599731,
+      "displayed": 636,
+      "stats": {
+        "frames": 636,
+        "bytes": 362976,
+        "motion_points": 20584,
+        "presence_points": 9399,
+        "callback_fps": 20.243
+      },
+      "details": "Frame 599731 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 55 points, age 139 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 37.5,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 36.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.041173943197676484,
+            1.031466550402969,
+            -0.2863709999031482
+          ],
+          "age_s": 0.139,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4066035333878015,
+            2.5573776945144924,
+            -0.11740762696326278
+          ],
+          "age_s": 0.139,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1284859650483952,
+            1.0770481160406826,
+            0.0627091608854801
+          ],
+          "age_s": 0.518,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "21": {
+          "position": [
+            -0.9366666666666666,
+            2.893333333333333,
+            -1.2566666666666666
+          ],
+          "age_s": 0.923,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 13.1755488,
+    "state": {
+      "mode": "live",
+      "frame": 599751,
+      "displayed": 656,
+      "stats": {
+        "frames": 656,
+        "bytes": 372916,
+        "motion_points": 21126,
+        "presence_points": 9677,
+        "callback_fps": 20.241
+      },
+      "details": "Frame 599751 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 62 points, age 129 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 30.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 29.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.04720072291789,
+            1.0166165997449024,
+            -0.18803959569374679
+          ],
+          "age_s": 0.129,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4204282625902338,
+            2.5372321963255127,
+            -0.09410237568930896
+          ],
+          "age_s": 0.129,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1284401755338764,
+            1.1169336812284778,
+            0.03389641261983607
+          ],
+          "age_s": 0.331,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "21": {
+          "position": [
+            -0.9366666666666666,
+            2.893333333333333,
+            -1.2566666666666666
+          ],
+          "age_s": 1.914,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 14.1913867,
+    "state": {
+      "mode": "live",
+      "frame": 599771,
+      "displayed": 676,
+      "stats": {
+        "frames": 676,
+        "bytes": 383096,
+        "motion_points": 21675,
+        "presence_points": 9968,
+        "callback_fps": 20.243
+      },
+      "details": "Frame 599771 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 62 points, age 120 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 15.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.07445861005101988,
+            1.066255638604491,
+            -0.2404091627252242
+          ],
+          "age_s": 0.12,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.520705686375274,
+            2.4678429844895247,
+            0.05996889338121053
+          ],
+          "age_s": 0.12,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1284401755338764,
+            1.1169336812284778,
+            0.03389641261983607
+          ],
+          "age_s": 1.316,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 15.1969675,
+    "state": {
+      "mode": "live",
+      "frame": 599792,
+      "displayed": 697,
+      "stats": {
+        "frames": 697,
+        "bytes": 394952,
+        "motion_points": 22287,
+        "presence_points": 10335,
+        "callback_fps": 20.228
+      },
+      "details": "Frame 599792 | Received: 0 motion / 46 presence | Selected now: 46 | Display: 46 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed presence cluster | Presence preview: 46 points, age 0 ms | 2 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 17.5,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 16.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.14069197259283978,
+            1.03518833685106,
+            -0.004686188829479044
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5670633302341632,
+            2.449603342568332,
+            0.17916600211731032
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1141461403019786,
+            1.06882014380407,
+            0.06525867006901584
+          ],
+          "age_s": 0.203,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "23": {
+          "position": [
+            -0.79625,
+            2.84,
+            -1.445
+          ],
+          "age_s": 0.407,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 16.2119231,
+    "state": {
+      "mode": "live",
+      "frame": 599812,
+      "displayed": 717,
+      "stats": {
+        "frames": 718,
+        "bytes": 405904,
+        "motion_points": 22895,
+        "presence_points": 10631,
+        "callback_fps": 20.24
+      },
+      "details": "Frame 599812 | Received: 0 motion / 70 presence | Selected now: 70 | Display: 70 (motion 5 frames) | 3 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 70 points, age 0 ms | 1 recently seen (latest 1.4s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 14.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.05758084416116395,
+            1.0360082469324523,
+            -0.22707492383844188
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5330633162242613,
+            2.491955916344077,
+            0.04510492606799947
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1238721261235787,
+            1.144490309324796,
+            0.05626122383367243
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "23": {
+          "position": [
+            -0.79625,
+            2.84,
+            -1.445
+          ],
+          "age_s": 1.393,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 17.2218631,
+    "state": {
+      "mode": "live",
+      "frame": 599833,
+      "displayed": 738,
+      "stats": {
+        "frames": 738,
+        "bytes": 416816,
+        "motion_points": 23445,
+        "presence_points": 10982,
+        "callback_fps": 20.244
+      },
+      "details": "Frame 599833 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 63 points, age 36 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 35.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.0007929875218331741,
+            1.0839964898457208,
+            -0.205063063530608
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5025724012532773,
+            2.4982097339842433,
+            0.07942519545887534
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1306658641489378,
+            1.1483331232688834,
+            0.07963881984246474
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.2246439,
+    "state": {
+      "mode": "live",
+      "frame": 599853,
+      "displayed": 758,
+      "stats": {
+        "frames": 759,
+        "bytes": 427360,
+        "motion_points": 23983,
+        "presence_points": 11314,
+        "callback_fps": 20.238
+      },
+      "details": "Frame 599853 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 76 points, age 36 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 3.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.9,
+      "ui_queue_ms": 1.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.11978854312012083,
+            1.0159291659186886,
+            0.019819131691160105
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5768067790958629,
+            2.467263801107245,
+            0.12106306600928214
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1396662367875117,
+            1.0770224980278011,
+            0.06553554645092305
+          ],
+          "age_s": 0.036,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 19.233703,
+    "state": {
+      "mode": "live",
+      "frame": 599874,
+      "displayed": 779,
+      "stats": {
+        "frames": 780,
+        "bytes": 438564,
+        "motion_points": 24586,
+        "presence_points": 11636,
+        "callback_fps": 20.244
+      },
+      "details": "Frame 599874 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 67 points, age 94 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 15.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 14.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.07196053316947142,
+            1.0863352558250448,
+            -0.2775000576275758
+          ],
+          "age_s": 0.094,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.61672712728835,
+            2.4338166366317617,
+            0.21394518250515754
+          ],
+          "age_s": 0.094,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1014736134526815,
+            1.079485101776475,
+            0.12327258470286662
+          ],
+          "age_s": 0.094,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 20.2527862,
+    "state": {
+      "mode": "live",
+      "frame": 599894,
+      "displayed": 799,
+      "stats": {
+        "frames": 800,
+        "bytes": 450112,
+        "motion_points": 25177,
+        "presence_points": 11999,
+        "callback_fps": 20.235
+      },
+      "details": "Frame 599894 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 68 points, age 73 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 38.2,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 36.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.07547643416369505,
+            1.0312765111806348,
+            -0.1726006816155937
+          ],
+          "age_s": 0.073,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5290997417672236,
+            2.4849435662477317,
+            0.08596184361934073
+          ],
+          "age_s": 0.073,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1212257166415636,
+            1.054036836055572,
+            0.10150162688243936
+          ],
+          "age_s": 0.073,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 21.2668761,
+    "state": {
+      "mode": "live",
+      "frame": 599915,
+      "displayed": 820,
+      "stats": {
+        "frames": 820,
+        "bytes": 460016,
+        "motion_points": 25727,
+        "presence_points": 12266,
+        "callback_fps": 20.237
+      },
+      "details": "Frame 599915 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 49 points, age 136 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 18.1,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 17.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.09004323637545372,
+            1.0174244345175516,
+            -0.11012055035592427
+          ],
+          "age_s": 0.136,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5074540723103016,
+            2.4631308733025055,
+            0.017369255843283714
+          ],
+          "age_s": 0.136,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1272864261959474,
+            1.0434639910358599,
+            0.09575609843013158
+          ],
+          "age_s": 0.136,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 22.2866176,
+    "state": {
+      "mode": "live",
+      "frame": 599935,
+      "displayed": 840,
+      "stats": {
+        "frames": 840,
+        "bytes": 470220,
+        "motion_points": 26295,
+        "presence_points": 12540,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 599935 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 55 points, age 154 ms | 3 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 17.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 16.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.007679491195826834,
+            1.0947253677434206,
+            -0.2544385008364006
+          ],
+          "age_s": 0.154,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4449253104520652,
+            2.5070190728881796,
+            -0.10466251046760164
+          ],
+          "age_s": 0.154,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1254642209296468,
+            1.0385179542477099,
+            0.11915153923307459
+          ],
+          "age_s": 0.154,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 23.293209,
+    "state": {
+      "mode": "live",
+      "frame": 599955,
+      "displayed": 860,
+      "stats": {
+        "frames": 860,
+        "bytes": 480520,
+        "motion_points": 26835,
+        "presence_points": 12850,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 599955 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 53 points, age 157 ms | 4 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.2,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 15.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.07207335108481511,
+            0.9922995461798251,
+            0.03464060971047572
+          ],
+          "age_s": 0.157,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5495208598702621,
+            2.439023473786057,
+            0.17687473985614083
+          ],
+          "age_s": 0.157,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1267442277788688,
+            1.0435916583069644,
+            0.10917647795694457
+          ],
+          "age_s": 0.335,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "26": {
+          "position": [
+            -0.9199999999999999,
+            2.83875,
+            -1.3824999999999998
+          ],
+          "age_s": 0.157,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 24.3002376,
+    "state": {
+      "mode": "live",
+      "frame": 599975,
+      "displayed": 880,
+      "stats": {
+        "frames": 881,
+        "bytes": 492124,
+        "motion_points": 27465,
+        "presence_points": 13178,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 599975 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 51 points, age 134 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 28.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 8.3,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.07742481875186201,
+            1.065616524625433,
+            -0.2018425830289906
+          ],
+          "age_s": 0.134,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5663073823735032,
+            2.433300723846034,
+            0.3007566775276216
+          ],
+          "age_s": 0.134,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.126459270128152,
+            1.0469439387992887,
+            0.10408353193923198
+          ],
+          "age_s": 0.338,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "26": {
+          "position": [
+            -0.8691099999999998,
+            2.7869812499999997,
+            -1.4982924999999998
+          ],
+          "age_s": 0.134,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 25.3006201,
+    "state": {
+      "mode": "live",
+      "frame": 599996,
+      "displayed": 901,
+      "stats": {
+        "frames": 901,
+        "bytes": 502340,
+        "motion_points": 28062,
+        "presence_points": 13424,
+        "callback_fps": 20.235
+      },
+      "details": "Frame 599996 | Received: 0 motion / 40 presence | Selected now: 40 | Display: 40 (motion 5 frames) | 3 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 40 points, age 0 ms | 1 recently seen (latest 0.2s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 39.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 4.3,
+      "ui_queue_ms": 35.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.021849350647185968,
+            1.0877359595002734,
+            -0.2648414213614828
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.491276231981759,
+            2.463160018720151,
+            0.03109353316310806
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1629685595304382,
+            1.0134247177939963,
+            0.05110666921302672
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "26": {
+          "position": [
+            -0.9442638999999998,
+            2.723754145833333,
+            -1.362296658333333
+          ],
+          "age_s": 0.181,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 26.3212749,
+    "state": {
+      "mode": "live",
+      "frame": 600017,
+      "displayed": 922,
+      "stats": {
+        "frames": 922,
+        "bytes": 512728,
+        "motion_points": 28667,
+        "presence_points": 13676,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 600017 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 69 points, age 46 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 8.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 6.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.034791684802927714,
+            1.025505107713211,
+            -0.16759648066236232
+          ],
+          "age_s": 0.046,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4672806832457697,
+            2.489959447285159,
+            0.06838134511087073
+          ],
+          "age_s": 0.046,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1275940011432581,
+            1.046919441409005,
+            0.09640254461138104
+          ],
+          "age_s": 0.046,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "26": {
+          "position": [
+            -0.9442638999999998,
+            2.723754145833333,
+            -1.362296658333333
+          ],
+          "age_s": 1.225,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 27.3303322,
+    "state": {
+      "mode": "live",
+      "frame": 600037,
+      "displayed": 942,
+      "stats": {
+        "frames": 943,
+        "bytes": 522864,
+        "motion_points": 29221,
+        "presence_points": 13958,
+        "callback_fps": 20.238
+      },
+      "details": "Frame 600037 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 54 points, age 35 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 2.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 1.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.025360126535171938,
+            1.1414613627670847,
+            -0.3254506707990409
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4985651388702648,
+            2.4813159239393627,
+            0.020253908629632073
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1203708437721471,
+            1.0563019705176115,
+            0.0836444156728348
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 28.3473925,
+    "state": {
+      "mode": "live",
+      "frame": 600057,
+      "displayed": 962,
+      "stats": {
+        "frames": 963,
+        "bytes": 533812,
+        "motion_points": 29809,
+        "presence_points": 14274,
+        "callback_fps": 20.235
+      },
+      "details": "Frame 600057 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 61 points, age 41 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 16.2,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.1,
+      "ui_queue_ms": 15.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.0524710289978777,
+            1.0525333164600439,
+            -0.019824041440191432
+          ],
+          "age_s": 0.041,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5182943428899254,
+            2.493307008682642,
+            0.04733462875030532
+          ],
+          "age_s": 0.041,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1262595906405029,
+            1.051411379362328,
+            0.07880109097098435
+          ],
+          "age_s": 0.041,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "28": {
+          "position": [
+            -0.974,
+            2.8600000000000003,
+            -1.298
+          ],
+          "age_s": 0.429,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 29.3503433,
+    "state": {
+      "mode": "live",
+      "frame": 600078,
+      "displayed": 983,
+      "stats": {
+        "frames": 983,
+        "bytes": 545204,
+        "motion_points": 30375,
+        "presence_points": 14649,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600078 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 79 points, age 96 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 21.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.010281173862249146,
+            1.0577140340020834,
+            -0.11904643633525544
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5349636294402786,
+            2.467554139718522,
+            0.10098975413098689
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.142668849398949,
+            1.0328166105294263,
+            0.05872329935949333
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "28": {
+          "position": [
+            -0.879717,
+            2.847595,
+            -1.385749
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 30.3617942,
+    "state": {
+      "mode": "live",
+      "frame": 600098,
+      "displayed": 1003,
+      "stats": {
+        "frames": 1004,
+        "bytes": 555244,
+        "motion_points": 30968,
+        "presence_points": 14884,
+        "callback_fps": 20.24
+      },
+      "details": "Frame 600098 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 49 points, age 71 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 33.9,
+      "max_age_ms": 74.4,
+      "file_age_ms": 13.8,
+      "ui_queue_ms": 20.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.10554957950525609,
+            0.9904840393951349,
+            -0.05088412460691959
+          ],
+          "age_s": 0.071,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4198558154051557,
+            2.5236283020402692,
+            -0.2959056827924358
+          ],
+          "age_s": 0.071,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1168822907406875,
+            1.054422768188115,
+            0.09058396417621434
+          ],
+          "age_s": 0.071,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "28": {
+          "position": [
+            -0.879717,
+            2.847595,
+            -1.385749
+          ],
+          "age_s": 1.07,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 31.3635538,
+    "state": {
+      "mode": "live",
+      "frame": 600119,
+      "displayed": 1024,
+      "stats": {
+        "frames": 1024,
+        "bytes": 565196,
+        "motion_points": 31525,
+        "presence_points": 15148,
+        "callback_fps": 20.235
+      },
+      "details": "Frame 600119 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 62 points, age 145 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 38.5,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 37.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.11756084122879934,
+            1.0368315648540813,
+            -0.02416619437517585
+          ],
+          "age_s": 0.145,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4821183621332397,
+            2.4989745158667644,
+            -0.01665803001168656
+          ],
+          "age_s": 0.145,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1330726257240555,
+            1.1428570094885233,
+            0.07456429971244152
+          ],
+          "age_s": 0.145,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 32.3699149,
+    "state": {
+      "mode": "live",
+      "frame": 600139,
+      "displayed": 1044,
+      "stats": {
+        "frames": 1044,
+        "bytes": 574464,
+        "motion_points": 32030,
+        "presence_points": 15407,
+        "callback_fps": 20.239
+      },
+      "details": "Frame 600139 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 58 points, age 131 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 54.6,
+      "max_age_ms": 74.4,
+      "file_age_ms": 16.9,
+      "ui_queue_ms": 37.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.006634301267336232,
+            1.0772235925287252,
+            -0.31949886024260005
+          ],
+          "age_s": 0.131,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5768748029482949,
+            2.4187393696887445,
+            0.28612892138716384
+          ],
+          "age_s": 0.131,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1177109374363456,
+            1.0923885679781942,
+            0.0748864883609572
+          ],
+          "age_s": 0.131,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 33.3767648,
+    "state": {
+      "mode": "live",
+      "frame": 600160,
+      "displayed": 1065,
+      "stats": {
+        "frames": 1065,
+        "bytes": 585348,
+        "motion_points": 32597,
+        "presence_points": 15738,
+        "callback_fps": 20.231
+      },
+      "details": "Frame 600160 | Received: 0 motion / 50 presence | Selected now: 50 | Display: 50 (motion 5 frames) | 4 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 50 points, age 0 ms",
+      "armed": false,
+      "last_age_ms": 1.6,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 0.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.003665596022065007,
+            1.0603122702902787,
+            -0.29075273007198915
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5967954506826592,
+            2.440861736296778,
+            0.12105574243884058
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1422781740784482,
+            1.0348103226340664,
+            0.08960194046917824
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "31": {
+          "position": [
+            -0.9033333333333333,
+            2.823333333333333,
+            -1.4233333333333331
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 34.3906945,
+    "state": {
+      "mode": "live",
+      "frame": 600179,
+      "displayed": 1084,
+      "stats": {
+        "frames": 1085,
+        "bytes": 595516,
+        "motion_points": 33191,
+        "presence_points": 15983,
+        "callback_fps": 20.225
+      },
+      "details": "Frame 600179 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 61 points, age 133 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 30.9,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 29.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.024245888340529997,
+            1.0865942318438222,
+            -0.24366564428338805
+          ],
+          "age_s": 0.133,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.6376656309021838,
+            2.418552990447881,
+            0.17413955384359922
+          ],
+          "age_s": 0.133,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1304163052984395,
+            1.0034570580906923,
+            0.08090495082989733
+          ],
+          "age_s": 0.133,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "31": {
+          "position": [
+            -0.9067033333333332,
+            2.8570633333333326,
+            -1.351493333333333
+          ],
+          "age_s": 0.344,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 35.3925578,
+    "state": {
+      "mode": "live",
+      "frame": 600201,
+      "displayed": 1106,
+      "stats": {
+        "frames": 1106,
+        "bytes": 605916,
+        "motion_points": 33827,
+        "presence_points": 16205,
+        "callback_fps": 20.239
+      },
+      "details": "Frame 600201 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 56 points, age 33 ms | 4 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 23.5,
+      "max_age_ms": 74.4,
+      "file_age_ms": 8.5,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.03981160126847713,
+            1.1028316432083276,
+            -0.17967158570930764
+          ],
+          "age_s": 0.033,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.6198384484814516,
+            2.4051857187850567,
+            0.13288655804310334
+          ],
+          "age_s": 0.033,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1139512245687226,
+            1.0409389060939787,
+            0.12420873489351991
+          ],
+          "age_s": 0.033,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "31": {
+          "position": [
+            -0.9067033333333332,
+            2.8570633333333326,
+            -1.351493333333333
+          ],
+          "age_s": 1.408,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.3968457,
+    "state": {
+      "mode": "live",
+      "frame": 600221,
+      "displayed": 1126,
+      "stats": {
+        "frames": 1126,
+        "bytes": 614956,
+        "motion_points": 34315,
+        "presence_points": 16462,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600221 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 61 points, age 29 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 6.6,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 5.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.03227206901613244,
+            1.0983951553062519,
+            -0.14589870296321894
+          ],
+          "age_s": 0.029,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.6105106975906445,
+            2.3837813115280397,
+            0.2987431179636021
+          ],
+          "age_s": 0.029,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.117586100038674,
+            1.0464600639860495,
+            0.09866228009782475
+          ],
+          "age_s": 0.635,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 37.406196,
+    "state": {
+      "mode": "live",
+      "frame": 600240,
+      "displayed": 1145,
+      "stats": {
+        "frames": 1146,
+        "bytes": 626204,
+        "motion_points": 34916,
+        "presence_points": 16790,
+        "callback_fps": 20.228
+      },
+      "details": "Frame 600240 | Received: 0 motion / 69 presence | Selected now: 69 | Display: 69 (motion 5 frames) | 3 human candidates | confirmed presence cluster, confirmed presence cluster, confirmed presence cluster | Presence preview: 69 points, age 0 ms",
+      "armed": false,
+      "last_age_ms": 16.3,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.010322746344485554,
+            1.1105922404269628,
+            -0.2685850053419564
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5677101552489945,
+            2.432104605914298,
+            0.12932479228499832
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1319044525001665,
+            1.1178818112874684,
+            0.07974483274937473
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 38.4180891,
+    "state": {
+      "mode": "live",
+      "frame": 600261,
+      "displayed": 1166,
+      "stats": {
+        "frames": 1167,
+        "bytes": 636580,
+        "motion_points": 35477,
+        "presence_points": 17085,
+        "callback_fps": 20.234
+      },
+      "details": "Frame 600261 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 54 points, age 55 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 22.4,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 20.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.0075453089720603425,
+            1.1117975653165901,
+            -0.18136538628718185
+          ],
+          "age_s": 0.055,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.52610679011088,
+            2.426106721116016,
+            0.0360605939757033
+          ],
+          "age_s": 0.055,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1270155563317028,
+            1.0594691210230847,
+            0.0702338890401874
+          ],
+          "age_s": 0.055,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 39.4189884,
+    "state": {
+      "mode": "live",
+      "frame": 600282,
+      "displayed": 1187,
+      "stats": {
+        "frames": 1187,
+        "bytes": 646568,
+        "motion_points": 36035,
+        "presence_points": 17351,
+        "callback_fps": 20.238
+      },
+      "details": "Frame 600282 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 48 points, age 76 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 24.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 22.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.04538578026469269,
+            1.0590272626231927,
+            -0.059323527563069925
+          ],
+          "age_s": 0.076,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.60256646714288,
+            2.3953976474748124,
+            0.19707428451538986
+          ],
+          "age_s": 0.076,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1355776226025343,
+            1.0459198693013114,
+            0.07111460562969182
+          ],
+          "age_s": 0.472,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "33": {
+          "position": [
+            -0.8325,
+            2.8425000000000002,
+            -1.4375
+          ],
+          "age_s": 0.472,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 40.4248302,
+    "state": {
+      "mode": "live",
+      "frame": 600302,
+      "displayed": 1207,
+      "stats": {
+        "frames": 1208,
+        "bytes": 657928,
+        "motion_points": 36655,
+        "presence_points": 17669,
+        "callback_fps": 20.233
+      },
+      "details": "Frame 600302 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 66 points, age 105 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 21.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 20.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.013744390401686579,
+            1.1313852178185535,
+            -0.26057914132218224
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5590631211327035,
+            2.4198244326110916,
+            0.21542582499850155
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1370659060308077,
+            1.1244209774334712,
+            0.10906943176818229
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "33": {
+          "position": [
+            -0.8617151666666667,
+            2.8770699583333332,
+            -1.341616208333333
+          ],
+          "age_s": 0.105,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 41.4318523,
+    "state": {
+      "mode": "live",
+      "frame": 600323,
+      "displayed": 1228,
+      "stats": {
+        "frames": 1228,
+        "bytes": 667592,
+        "motion_points": 37150,
+        "presence_points": 17971,
+        "callback_fps": 20.237
+      },
+      "details": "Frame 600323 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 52 points, age 137 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 30.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 8.4,
+      "ui_queue_ms": 22.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.06215542594481145,
+            1.069377644808764,
+            -0.054483713365352474
+          ],
+          "age_s": 0.137,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5081987512687731,
+            2.517413142388946,
+            0.06963018090749815
+          ],
+          "age_s": 0.137,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1491489668265975,
+            1.1369820736772431,
+            0.09470204939727839
+          ],
+          "age_s": 0.137,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "33": {
+          "position": [
+            -0.8822006166666667,
+            2.8834489708333333,
+            -1.312631345833333
+          ],
+          "age_s": 0.91,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 42.4475543,
+    "state": {
+      "mode": "live",
+      "frame": 600343,
+      "displayed": 1248,
+      "stats": {
+        "frames": 1248,
+        "bytes": 677940,
+        "motion_points": 37719,
+        "presence_points": 18256,
+        "callback_fps": 20.238
+      },
+      "details": "Frame 600343 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 66 points, age 125 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 14.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 13.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.06540194872082673,
+            1.0087950739762221,
+            -0.04163686189750698
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5515081202882075,
+            2.4523237796424304,
+            0.16333788242529126
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1654042767786184,
+            1.23388745157407,
+            0.06729143457809486
+          ],
+          "age_s": 0.71,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "33": {
+          "position": [
+            -0.9116033021666665,
+            2.887839995708333,
+            -1.2071893594583332
+          ],
+          "age_s": 0.71,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 43.4524001,
+    "state": {
+      "mode": "live",
+      "frame": 600363,
+      "displayed": 1268,
+      "stats": {
+        "frames": 1268,
+        "bytes": 688552,
+        "motion_points": 38286,
+        "presence_points": 18565,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600363 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 57 points, age 139 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 45.1,
+      "max_age_ms": 74.4,
+      "file_age_ms": 16.2,
+      "ui_queue_ms": 28.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.02225503945002765,
+            1.1455720321375795,
+            -0.3328446057345852
+          ],
+          "age_s": 0.139,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5550160064651506,
+            2.431522419332815,
+            0.2729367162433745
+          ],
+          "age_s": 0.139,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "16": {
+          "position": [
+            -1.1654042767786184,
+            1.23388745157407,
+            0.06729143457809486
+          ],
+          "age_s": 1.703,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "33": {
+          "position": [
+            -0.9116033021666665,
+            2.887839995708333,
+            -1.2071893594583332
+          ],
+          "age_s": 1.703,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 44.4603113,
+    "state": {
+      "mode": "live",
+      "frame": 600383,
+      "displayed": 1288,
+      "stats": {
+        "frames": 1289,
+        "bytes": 699244,
+        "motion_points": 38910,
+        "presence_points": 18823,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 600383 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 35 points, age 125 ms | 2 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 29.4,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 28.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.009893581820574291,
+            1.0997301634808245,
+            -0.2508080268550169
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.593022791488649,
+            2.398203008914702,
+            0.33495287133492135
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 45.4665438,
+    "state": {
+      "mode": "live",
+      "frame": 600403,
+      "displayed": 1308,
+      "stats": {
+        "frames": 1309,
+        "bytes": 708944,
+        "motion_points": 39472,
+        "presence_points": 19061,
+        "callback_fps": 20.229
+      },
+      "details": "Frame 600403 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 44 points, age 125 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 1.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 0.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.031054946858784793,
+            1.0743549786161357,
+            -0.2060181355870017
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.6000699072321638,
+            2.372448479708294,
+            0.2609745624185935
+          ],
+          "age_s": 0.125,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1079999999999999,
+            0.9400000000000001,
+            0.11000000000000001
+          ],
+          "age_s": 0.528,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 46.4868627,
+    "state": {
+      "mode": "live",
+      "frame": 600424,
+      "displayed": 1329,
+      "stats": {
+        "frames": 1330,
+        "bytes": 719164,
+        "motion_points": 40031,
+        "presence_points": 19345,
+        "callback_fps": 20.238
+      },
+      "details": "Frame 600424 | Received: 0 motion / 62 presence | Selected now: 62 | Display: 62 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed presence cluster | Presence preview: 62 points, age 0 ms | 1 recently seen (latest 0.4s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 24.3,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 23.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.11611871523343925,
+            1.077750442030746,
+            -0.29518602397436106
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.637327056221642,
+            2.380271484149067,
+            0.3264815543040185
+          ],
+          "age_s": 0,
+          "state": "confirmed presence cluster",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.0751699999999997,
+            0.9873000000000001,
+            0.12215
+          ],
+          "age_s": 0.381,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 47.4883418,
+    "state": {
+      "mode": "live",
+      "frame": 600445,
+      "displayed": 1350,
+      "stats": {
+        "frames": 1350,
+        "bytes": 729476,
+        "motion_points": 40620,
+        "presence_points": 19607,
+        "callback_fps": 20.233
+      },
+      "details": "Frame 600445 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 49 points, age 49 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 1.9,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 1.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.019287568667839608,
+            1.0100212065914382,
+            -0.08198020551759827
+          ],
+          "age_s": 0.049,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5495992092647162,
+            2.44713347819696,
+            0.12539927239666449
+          ],
+          "age_s": 0.049,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.0988358169999999,
+            1.0486317299999999,
+            0.10066821499999999
+          ],
+          "age_s": 0.049,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 48.5164319,
+    "state": {
+      "mode": "live",
+      "frame": 600465,
+      "displayed": 1370,
+      "stats": {
+        "frames": 1370,
+        "bytes": 740244,
+        "motion_points": 41235,
+        "presence_points": 19881,
+        "callback_fps": 20.234
+      },
+      "details": "Frame 600465 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 52 points, age 42 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 22.9,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 22.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.036797307321456606,
+            1.014508367588767,
+            -0.14521523856596075
+          ],
+          "age_s": 0.042,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5086287858047407,
+            2.482540841913009,
+            0.006648216739942044
+          ],
+          "age_s": 0.042,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1243771138024283,
+            1.04533068339,
+            0.08039491203071428
+          ],
+          "age_s": 0.042,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 49.5220205,
+    "state": {
+      "mode": "live",
+      "frame": 600485,
+      "displayed": 1390,
+      "stats": {
+        "frames": 1390,
+        "bytes": 749860,
+        "motion_points": 41755,
+        "presence_points": 20154,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600485 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 57 points, age 35 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 24.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 23.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.016011387988813453,
+            1.04900634459528,
+            -0.1722519919760755
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5230928385990998,
+            2.5077928951678397,
+            -0.04260652294088103
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.142227661516774,
+            1.0311498279573572,
+            0.08933962286500213
+          ],
+          "age_s": 0.035,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 50.5302242,
+    "state": {
+      "mode": "live",
+      "frame": 600506,
+      "displayed": 1411,
+      "stats": {
+        "frames": 1411,
+        "bytes": 760404,
+        "motion_points": 42344,
+        "presence_points": 20435,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600506 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 54 points, age 88 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 9.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 4.1,
+      "ui_queue_ms": 5.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.08699241615866617,
+            0.9940910874454911,
+            -0.059603811842953214
+          ],
+          "age_s": 0.088,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.4442043050500173,
+            2.5272167102241916,
+            -0.17978694497734055
+          ],
+          "age_s": 0.088,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.14946075456692,
+            1.0245777243227068,
+            0.08143349064269573
+          ],
+          "age_s": 0.088,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 51.535635,
+    "state": {
+      "mode": "live",
+      "frame": 600526,
+      "displayed": 1431,
+      "stats": {
+        "frames": 1431,
+        "bytes": 770632,
+        "motion_points": 42941,
+        "presence_points": 20682,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600526 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 47 points, age 66 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 23.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 2.6,
+      "ui_queue_ms": 21.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.0833373580538958,
+            1.0630905016983483,
+            -0.13085921003796827
+          ],
+          "age_s": 0.066,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5561688057076508,
+            2.3867045059084324,
+            0.0884992568418689
+          ],
+          "age_s": 0.066,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1378600388164535,
+            1.0360264094426883,
+            0.08972793729044462
+          ],
+          "age_s": 0.274,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 52.550984,
+    "state": {
+      "mode": "live",
+      "frame": 600546,
+      "displayed": 1451,
+      "stats": {
+        "frames": 1451,
+        "bytes": 780152,
+        "motion_points": 43425,
+        "presence_points": 20983,
+        "callback_fps": 20.234
+      },
+      "details": "Frame 600546 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 49 points, age 84 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 43.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 14.0,
+      "ui_queue_ms": 29.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.0474638537075122,
+            1.1039719519335724,
+            -0.1984204756128995
+          ],
+          "age_s": 0.084,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.483281462221545,
+            2.437711040009528,
+            -0.10285959748094212
+          ],
+          "age_s": 0.084,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.147146511723881,
+            1.0289434336350323,
+            0.05247217442040503
+          ],
+          "age_s": 0.084,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 53.5669332,
+    "state": {
+      "mode": "live",
+      "frame": 600566,
+      "displayed": 1471,
+      "stats": {
+        "frames": 1472,
+        "bytes": 790636,
+        "motion_points": 44014,
+        "presence_points": 21259,
+        "callback_fps": 20.236
+      },
+      "details": "Frame 600566 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 57 points, age 96 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 35.6,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 34.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.06289570663653127,
+            1.0672354199721705,
+            -0.051437221909046676
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5611851090828888,
+            2.4255928658306076,
+            0.11033806761244884
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1338168774649036,
+            1.0413713184157711,
+            0.08576756907833924
+          ],
+          "age_s": 0.096,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 54.5704039,
+    "state": {
+      "mode": "live",
+      "frame": 600586,
+      "displayed": 1491,
+      "stats": {
+        "frames": 1492,
+        "bytes": 800660,
+        "motion_points": 44588,
+        "presence_points": 21512,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 600586 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 48 points, age 91 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 23.8,
+      "max_age_ms": 74.4,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 23.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.12250658747500787,
+            1.0215198327922983,
+            0.049968300659201055
+          ],
+          "age_s": 0.091,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5037530417113685,
+            2.498503013815765,
+            0.03250685645677935
+          ],
+          "age_s": 0.091,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1347741889704617,
+            1.0409278622166094,
+            0.07688577619387035
+          ],
+          "age_s": 0.282,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 55.5913537,
+    "state": {
+      "mode": "live",
+      "frame": 600607,
+      "displayed": 1512,
+      "stats": {
+        "frames": 1512,
+        "bytes": 809880,
+        "motion_points": 45099,
+        "presence_points": 21761,
+        "callback_fps": 20.235
+      },
+      "details": "Frame 600607 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 55 points, age 122 ms | 3 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 32.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 17.0,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.10400509781773434,
+            1.096772332567837,
+            -0.00316807507260837
+          ],
+          "age_s": 0.122,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5199214614477023,
+            2.477597204941106,
+            0.05064387895559999
+          ],
+          "age_s": 0.122,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1303527827718076,
+            1.065932029718208,
+            0.10077127486414825
+          ],
+          "age_s": 0.122,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 56.5911031,
+    "state": {
+      "mode": "live",
+      "frame": 600627,
+      "displayed": 1532,
+      "stats": {
+        "frames": 1533,
+        "bytes": 821244,
+        "motion_points": 45674,
+        "presence_points": 22124,
+        "callback_fps": 20.23
+      },
+      "details": "Frame 600627 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 48 points, age 127 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 29.2,
+      "max_age_ms": 74.4,
+      "file_age_ms": 17.0,
+      "ui_queue_ms": 12.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.11107815903102927,
+            1.016699976503238,
+            0.0978242116559915
+          ],
+          "age_s": 0.127,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5674725923332073,
+            2.462516793003682,
+            0.1219524667360677
+          ],
+          "age_s": 0.127,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.150156649776215,
+            1.2053437356286785,
+            0.07105481301490223
+          ],
+          "age_s": 0.127,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "39": {
+          "position": [
+            -0.8136666666666665,
+            2.842333333333333,
+            -1.4343333333333332
+          ],
+          "age_s": 0.127,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 57.5945875,
+    "state": {
+      "mode": "live",
+      "frame": 600647,
+      "displayed": 1552,
+      "stats": {
+        "frames": 1553,
+        "bytes": 831880,
+        "motion_points": 46275,
+        "presence_points": 22401,
+        "callback_fps": 20.229
+      },
+      "details": "Frame 600647 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 56 points, age 147 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 40.7,
+      "max_age_ms": 74.4,
+      "file_age_ms": 6.5,
+      "ui_queue_ms": 34.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            0.04624704736481566,
+            1.0524566474038402,
+            -0.11963472239403632
+          ],
+          "age_s": 0.147,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5383805750756554,
+            2.472961743328982,
+            0.03526203408828346
+          ],
+          "age_s": 0.147,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1477326531278882,
+            1.1734767966471118,
+            0.07056988242341461
+          ],
+          "age_s": 0.147,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "39": {
+          "position": [
+            -0.8680666666666665,
+            2.845383333333333,
+            -1.394783333333333
+          ],
+          "age_s": 0.932,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 58.5986997,
+    "state": {
+      "mode": "live",
+      "frame": 600667,
+      "displayed": 1572,
+      "stats": {
+        "frames": 1573,
+        "bytes": 845564,
+        "motion_points": 47176,
+        "presence_points": 22632,
+        "callback_fps": 20.231
+      },
+      "details": "Frame 600667 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 44 points, age 141 ms | 4 recently seen (latest 0.1s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 17.9,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 16.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.07133799643055484,
+            1.0922595003233662,
+            -0.34802372615025357
+          ],
+          "age_s": 0.141,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5796982498263916,
+            2.409909287660509,
+            0.18402569985942757
+          ],
+          "age_s": 0.141,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1218166100160056,
+            1.1069452788749714,
+            0.06806457876986184
+          ],
+          "age_s": 0.343,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "39": {
+          "position": [
+            -0.8680666666666665,
+            2.845383333333333,
+            -1.394783333333333
+          ],
+          "age_s": 1.927,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "elapsed_s": 59.6135025,
+    "state": {
+      "mode": "live",
+      "frame": 600689,
+      "displayed": 1594,
+      "stats": {
+        "frames": 1594,
+        "bytes": 858928,
+        "motion_points": 48078,
+        "presence_points": 22835,
+        "callback_fps": 20.232
+      },
+      "details": "Frame 600689 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 0 (motion 5 frames) | 0 human candidates |  | Presence preview: 44 points, age 48 ms | 3 recently seen (latest 0.0s ago; not fresh detection)",
+      "armed": false,
+      "last_age_ms": 3.0,
+      "max_age_ms": 74.4,
+      "file_age_ms": 1.7,
+      "ui_queue_ms": 1.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false,
+      "presence_only_tracking": true,
+      "tracks": {
+        "4": {
+          "position": [
+            -0.10108358969817119,
+            1.0649314533384966,
+            -0.38141193717164423
+          ],
+          "age_s": 0.048,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "5": {
+          "position": [
+            -1.5525342181816548,
+            2.403406220643768,
+            0.18405136604204067
+          ],
+          "age_s": 0.048,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        },
+        "36": {
+          "position": [
+            -1.1218166100160056,
+            1.1069452788749714,
+            0.06806457876986184
+          ],
+          "age_s": 1.422,
+          "state": "temporarily unobserved",
+          "clouds": [
+            "presence"
+          ]
+        }
+      }
+    }
+  }
+]

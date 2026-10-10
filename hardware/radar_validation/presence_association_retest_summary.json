@@ -1,0 +1,18 @@
+{
+  "samples": 60,
+  "duration_s": 59.556,
+  "target_id": 4,
+  "present_samples": 60,
+  "missing_samples": 0,
+  "max_evidence_age_s": 0.157,
+  "only_presence": true,
+  "x_range": [
+    -0.11611871523343925,
+    0.14069197259283978
+  ],
+  "y_range": [
+    0.9904840393951349,
+    1.1455720321375795
+  ],
+  "callback_fps": 20.232
+}
