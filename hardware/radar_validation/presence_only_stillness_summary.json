@@ -1,0 +1,20 @@
+{
+  "samples": 60,
+  "duration_s": 59.5325468,
+  "t5_present": 60,
+  "t5_missing": 0,
+  "max_age_s": 0.142,
+  "only_presence": true,
+  "presence_only_mode": true,
+  "x_range": [
+    -0.5887878787878787,
+    0.15304347826086956
+  ],
+  "y_range": [
+    0.98,
+    1.4118181818181819
+  ],
+  "frames": 1222,
+  "callback_fps": 20.229,
+  "presence_points": 16694
+}

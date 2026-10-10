@@ -15,6 +15,7 @@ BUILD = HERE.parent / 'build'
 sys.path.insert(0, str(BUILD / 'tracker_deps'))
 parser = argparse.ArgumentParser()
 parser.add_argument('--recording', type=Path)
+parser.add_argument('--presence-only', action='store_true', help='Exclude motion from tracking and fall inputs, not only drawing')
 parser.add_argument('--library', type=Path, default=REPO.parent/'resources/hif_library/HifMsgDataCollectionLib.dll')
 parser.add_argument('--tracker', type=Path, default=REPO.parent / 'live_tracker')
 args = parser.parse_args()
@@ -113,6 +114,7 @@ class Desktop(legacy.App):
         self.ui_queue_ms = None
         super().__init__(root)
         root.title('Possumic Fall Tracker - Posture dev kit' + (' (buffered preview)' if args.recording else ' / direct SPI'))
+        if args.presence_only: root.title(root.title()+' / PRESENCE-ONLY TRACKING')
         self.port.set('Dev kit / vendor recording' if args.recording else 'CH347 direct SPI')
         self.raw_points.set(True)
         self.snr.set(0)
@@ -167,6 +169,8 @@ class Desktop(legacy.App):
                 except queue.Full: pass
 
     def show(self, frame, t):
+        if args.presence_only:
+            frame = dict(frame,points=[p for p in frame['points'] if p['cloud']=='presence'])
         if self.mode == 'live':
             age = time.time()*1000-frame['host_timestamp_ms']
             self.last_age_ms = round(age,1)
@@ -215,6 +219,10 @@ class Desktop(legacy.App):
                      last_age_ms=self.last_age_ms,max_age_ms=round(self.max_age_ms,1),
                      file_age_ms=self.file_age_ms,ui_queue_ms=self.ui_queue_ms,
                      source=str(args.recording) if args.recording else 'direct CH347 SPI',external_calls=False)
+        state['presence_only_tracking'] = args.presence_only
+        state['tracks'] = {str(i):dict(position=q['pos'],age_s=round(max(0,self.tracker.last-q['last']),3),
+                                     state=q['state'],clouds=sorted({p['cloud'] for p in q['points']}))
+                           for i,q in self.tracker.tracks.items()}
         (BUILD/'devkit_tracker_state.json').write_text(json.dumps(state,indent=2))
         self.root.after(1000,self.save_state)
 
