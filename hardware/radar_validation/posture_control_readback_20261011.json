@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-10T19:33:54.281703+00:00",
+  "port": "COM7",
+  "baud": 115200,
+  "serial": "8N1",
+  "dtr": false,
+  "rts": false,
+  "queries": [
+    {
+      "command": "mmwc version",
+      "reply_hex": "",
+      "reply": ""
+    }
+  ],
+  "aborted": "No success acknowledgement; remaining queries not sent"
+}

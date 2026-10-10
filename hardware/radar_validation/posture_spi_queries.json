@@ -1,0 +1,18 @@
+﻿{
+    "transport":  "CH347 SPI",
+    "clock_selector":  3,
+    "results":  [
+                    {
+                        "query":  "code_and_configuration_version",
+                        "packet":  "A5 04 15 00 01 40 42 A8 FF FE BF",
+                        "utc":  "2026-10-10T19:35:31.3676757Z",
+                        "status":  -3
+                    },
+                    {
+                        "query":  "heartbeat_tick",
+                        "packet":  "A5 D3 15 01 01 70 40 AA FE FE 8F",
+                        "utc":  "2026-10-10T19:35:31.4642307Z",
+                        "status":  0
+                    }
+                ]
+}

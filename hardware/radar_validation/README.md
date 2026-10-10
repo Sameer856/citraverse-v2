@@ -276,6 +276,12 @@ The separate CH347 dev-kit radar, reported by the user as flashed with Posture_m
 
 ## Direct SPI desktop fall tracker — 2026-10-11
 
+### SPI command probe
+
+The Posture dev-kit did not reply to `mmwc version` on COM7 at 115200 8N1 (four-second timeout). With the tracker disconnected, vendor `SendData` over OpenSpiDevice(0,3) accepted the HIF heartbeat query twice: `A5 D3 15 01 01 70 40 AA FE FE 8F`, returned status 0. Code/config version query `A5 04 15 00 01 40 42 A8 FF FE BF` and config-version query `A5 24 15 00 01 20 40 AA FF FE DF` returned -3 (ACK timeout), including retries. Packets are exact read-only examples from HIF Reference Manual V1.2 pp108-109. The probe records library status only, not raw response payloads or a decoded tick/version. Do not interpret status 0 as a captured version string.
+
+SDK `radar_framework_hif_handler.c` registers configuration writes at 0x60 and reads at 0x61 by default; the manual's generic 0x42 configuration-read example is not automatically applicable to this sample. No configuration writes, radar stop/start, flash, or reset commands were sent. Viewer acquisition was closed for exclusive SPI access and relaunched afterward. Evidence and reproduction: `query_posture_spi.ps1`, `posture_spi_queries.json`, `posture_spi_queries_retry.json`, and `posture_control_readback_20261011.json`. Exact supported Posture configuration TLVs and version-query timeout cause remain unresolved.
+
 ### User-reported seated-still test
 
 Follow-up: the dev-kit adapter now uses a separate burst-tolerant presence path: at least three unique finite points with SNR >=18 per spatial cluster, confirmed on three observations spanning at least 0.1 s within two seconds. Motion filtering is retained. Recent location markers expire after two seconds without evidence and are explicitly labeled recently seen; old points are never re-fed as fresh fall-height measurements. Repeated static clutter can still satisfy these geometric gates: these are candidate clusters, not a validated human classifier.
