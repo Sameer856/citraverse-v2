@@ -1,0 +1,1562 @@
+[
+  {
+    "elapsed_s": 0.064,
+    "observed_utc": "2026-10-10T18:55:26.1161246Z",
+    "state": {
+      "mode": "live",
+      "frame": 457927,
+      "displayed": 10163,
+      "stats": {
+        "frames": 10164,
+        "bytes": 6790440,
+        "motion_points": 448206,
+        "presence_points": 113429,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 457927 | Received: 10 motion / 0 presence | Selected now: 10 | Display: 28 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 31.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.7,
+      "ui_queue_ms": 30.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 1.08,
+    "observed_utc": "2026-10-10T18:55:27.1295022Z",
+    "state": {
+      "mode": "live",
+      "frame": 457949,
+      "displayed": 10185,
+      "stats": {
+        "frames": 10185,
+        "bytes": 6794984,
+        "motion_points": 448369,
+        "presence_points": 113636,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 457949 | Received: 15 motion / 0 presence | Selected now: 15 | Display: 44 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 5.1,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 4.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 2.085,
+    "observed_utc": "2026-10-10T18:55:28.1343740Z",
+    "state": {
+      "mode": "live",
+      "frame": 457969,
+      "displayed": 10205,
+      "stats": {
+        "frames": 10205,
+        "bytes": 6798684,
+        "motion_points": 448483,
+        "presence_points": 113822,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 457969 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 11 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 17.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 7.6,
+      "ui_queue_ms": 10.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 3.09,
+    "observed_utc": "2026-10-10T18:55:29.1391431Z",
+    "state": {
+      "mode": "live",
+      "frame": 457989,
+      "displayed": 10225,
+      "stats": {
+        "frames": 10225,
+        "bytes": 6802504,
+        "motion_points": 448524,
+        "presence_points": 114091,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 457989 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 6 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 12.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 11.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 4.091,
+    "observed_utc": "2026-10-10T18:55:30.1402384Z",
+    "state": {
+      "mode": "live",
+      "frame": 458009,
+      "displayed": 10245,
+      "stats": {
+        "frames": 10245,
+        "bytes": 6807392,
+        "motion_points": 448566,
+        "presence_points": 114448,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458009 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 16 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 13.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 7.6,
+      "ui_queue_ms": 6.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 5.092,
+    "observed_utc": "2026-10-10T18:55:31.1415191Z",
+    "state": {
+      "mode": "live",
+      "frame": 458029,
+      "displayed": 10265,
+      "stats": {
+        "frames": 10266,
+        "bytes": 6810808,
+        "motion_points": 448596,
+        "presence_points": 114694,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458029 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 6 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 21.1,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 19.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 6.102,
+    "observed_utc": "2026-10-10T18:55:32.1516656Z",
+    "state": {
+      "mode": "live",
+      "frame": 458050,
+      "displayed": 10286,
+      "stats": {
+        "frames": 10286,
+        "bytes": 6814532,
+        "motion_points": 448630,
+        "presence_points": 114962,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458050 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 3 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 23.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 21.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 7.111,
+    "observed_utc": "2026-10-10T18:55:33.1607494Z",
+    "state": {
+      "mode": "live",
+      "frame": 458070,
+      "displayed": 10306,
+      "stats": {
+        "frames": 10306,
+        "bytes": 6817776,
+        "motion_points": 448673,
+        "presence_points": 115181,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458070 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 12 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 28.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 17.4,
+      "ui_queue_ms": 11.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 8.118,
+    "observed_utc": "2026-10-10T18:55:34.1679639Z",
+    "state": {
+      "mode": "live",
+      "frame": 458090,
+      "displayed": 10326,
+      "stats": {
+        "frames": 10327,
+        "bytes": 6822008,
+        "motion_points": 448836,
+        "presence_points": 115362,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458090 | Received: 7 motion / 0 presence | Selected now: 7 | Display: 26 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 6.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 5.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 9.132,
+    "observed_utc": "2026-10-10T18:55:35.1820306Z",
+    "state": {
+      "mode": "live",
+      "frame": 458111,
+      "displayed": 10347,
+      "stats": {
+        "frames": 10347,
+        "bytes": 6825708,
+        "motion_points": 448887,
+        "presence_points": 115611,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458111 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 9 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 16.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 15.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 10.141,
+    "observed_utc": "2026-10-10T18:55:36.1901609Z",
+    "state": {
+      "mode": "live",
+      "frame": 458130,
+      "displayed": 10366,
+      "stats": {
+        "frames": 10367,
+        "bytes": 6829396,
+        "motion_points": 448935,
+        "presence_points": 115862,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458130 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 7 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 2.1,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 0.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 11.155,
+    "observed_utc": "2026-10-10T18:55:37.2046704Z",
+    "state": {
+      "mode": "live",
+      "frame": 458151,
+      "displayed": 10387,
+      "stats": {
+        "frames": 10387,
+        "bytes": 6833216,
+        "motion_points": 448986,
+        "presence_points": 116121,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458151 | Received: 8 motion / 0 presence | Selected now: 8 | Display: 15 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 56.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 23.0,
+      "ui_queue_ms": 33.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 12.16,
+    "observed_utc": "2026-10-10T18:55:38.2093149Z",
+    "state": {
+      "mode": "live",
+      "frame": 458172,
+      "displayed": 10408,
+      "stats": {
+        "frames": 10408,
+        "bytes": 6838292,
+        "motion_points": 449056,
+        "presence_points": 116465,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458172 | Received: 12 motion / 58 presence | Selected now: 70 | Display: 81 (motion 5 frames) | 2 human candidates | confirmed mixed cluster, confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 5.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.8,
+      "ui_queue_ms": 4.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 13.168,
+    "observed_utc": "2026-10-10T18:55:39.2177541Z",
+    "state": {
+      "mode": "live",
+      "frame": 458191,
+      "displayed": 10427,
+      "stats": {
+        "frames": 10428,
+        "bytes": 6842484,
+        "motion_points": 449120,
+        "presence_points": 116742,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458191 | Received: 8 motion / 0 presence | Selected now: 8 | Display: 19 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 33.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 11.4,
+      "ui_queue_ms": 22.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 14.181,
+    "observed_utc": "2026-10-10T18:55:40.2302979Z",
+    "state": {
+      "mode": "live",
+      "frame": 458212,
+      "displayed": 10448,
+      "stats": {
+        "frames": 10449,
+        "bytes": 6845900,
+        "motion_points": 449184,
+        "presence_points": 116954,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458212 | Received: 10 motion / 46 presence | Selected now: 56 | Display: 69 (motion 5 frames) | 2 human candidates | confirmed mixed cluster, confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 31.7,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 30.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 15.186,
+    "observed_utc": "2026-10-10T18:55:41.2355556Z",
+    "state": {
+      "mode": "live",
+      "frame": 458233,
+      "displayed": 10469,
+      "stats": {
+        "frames": 10469,
+        "bytes": 6849516,
+        "motion_points": 449265,
+        "presence_points": 117166,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458233 | Received: 14 motion / 0 presence | Selected now: 14 | Display: 43 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 28.4,
+      "max_age_ms": 192.3,
+      "file_age_ms": 7.9,
+      "ui_queue_ms": 20.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 16.188,
+    "observed_utc": "2026-10-10T18:55:42.2373402Z",
+    "state": {
+      "mode": "live",
+      "frame": 458253,
+      "displayed": 10489,
+      "stats": {
+        "frames": 10490,
+        "bytes": 6854444,
+        "motion_points": 449489,
+        "presence_points": 117344,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458253 | Received: 12 motion / 0 presence | Selected now: 12 | Display: 43 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 13.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 12.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 17.193,
+    "observed_utc": "2026-10-10T18:55:43.2421665Z",
+    "state": {
+      "mode": "live",
+      "frame": 458273,
+      "displayed": 10509,
+      "stats": {
+        "frames": 10510,
+        "bytes": 6857916,
+        "motion_points": 449627,
+        "presence_points": 117487,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458273 | Received: 6 motion / 0 presence | Selected now: 6 | Display: 39 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 3.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 2.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 18.201,
+    "observed_utc": "2026-10-10T18:55:44.2502448Z",
+    "state": {
+      "mode": "live",
+      "frame": 458294,
+      "displayed": 10530,
+      "stats": {
+        "frames": 10531,
+        "bytes": 6861512,
+        "motion_points": 449747,
+        "presence_points": 117658,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458294 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 6 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 7.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 6.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 19.215,
+    "observed_utc": "2026-10-10T18:55:45.2645781Z",
+    "state": {
+      "mode": "live",
+      "frame": 458315,
+      "displayed": 10551,
+      "stats": {
+        "frames": 10551,
+        "bytes": 6864480,
+        "motion_points": 449803,
+        "presence_points": 117841,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458315 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 7 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 2.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 1.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 20.221,
+    "observed_utc": "2026-10-10T18:55:46.2707661Z",
+    "state": {
+      "mode": "live",
+      "frame": 458335,
+      "displayed": 10571,
+      "stats": {
+        "frames": 10571,
+        "bytes": 6867004,
+        "motion_points": 449843,
+        "presence_points": 118003,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458335 | Received: 5 motion / 0 presence | Selected now: 5 | Display: 9 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 56.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 8.1,
+      "ui_queue_ms": 48.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 21.222,
+    "observed_utc": "2026-10-10T18:55:47.2711841Z",
+    "state": {
+      "mode": "live",
+      "frame": 458355,
+      "displayed": 10591,
+      "stats": {
+        "frames": 10591,
+        "bytes": 6870068,
+        "motion_points": 449883,
+        "presence_points": 118210,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458355 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 10 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 1.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 0.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 22.228,
+    "observed_utc": "2026-10-10T18:55:48.2777641Z",
+    "state": {
+      "mode": "live",
+      "frame": 458376,
+      "displayed": 10612,
+      "stats": {
+        "frames": 10612,
+        "bytes": 6874556,
+        "motion_points": 449975,
+        "presence_points": 118483,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458376 | Received: 0 motion / 49 presence | Selected now: 49 | Display: 77 (motion 5 frames) | 1 human candidates | confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 28.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 15.4,
+      "ui_queue_ms": 13.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 23.243,
+    "observed_utc": "2026-10-10T18:55:49.2924830Z",
+    "state": {
+      "mode": "live",
+      "frame": 458396,
+      "displayed": 10632,
+      "stats": {
+        "frames": 10633,
+        "bytes": 6878116,
+        "motion_points": 450011,
+        "presence_points": 118735,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458396 | Received: 5 motion / 38 presence | Selected now: 43 | Display: 52 (motion 5 frames) | 1 human candidates | confirmed mixed cluster",
+      "armed": true,
+      "last_age_ms": 41.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 22.9,
+      "ui_queue_ms": 18.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 24.25,
+    "observed_utc": "2026-10-10T18:55:50.2991925Z",
+    "state": {
+      "mode": "live",
+      "frame": 458417,
+      "displayed": 10653,
+      "stats": {
+        "frames": 10653,
+        "bytes": 6881276,
+        "motion_points": 450049,
+        "presence_points": 118952,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458417 | Received: 6 motion / 0 presence | Selected now: 6 | Display: 17 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 22.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 21.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 25.256,
+    "observed_utc": "2026-10-10T18:55:51.3053178Z",
+    "state": {
+      "mode": "live",
+      "frame": 458437,
+      "displayed": 10673,
+      "stats": {
+        "frames": 10673,
+        "bytes": 6884232,
+        "motion_points": 450078,
+        "presence_points": 119161,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458437 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 12 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 10.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 9.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 26.259,
+    "observed_utc": "2026-10-10T18:55:52.3082086Z",
+    "state": {
+      "mode": "live",
+      "frame": 458457,
+      "displayed": 10693,
+      "stats": {
+        "frames": 10693,
+        "bytes": 6887416,
+        "motion_points": 450115,
+        "presence_points": 119381,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458457 | Received: 6 motion / 0 presence | Selected now: 6 | Display: 15 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 10.9,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.6,
+      "ui_queue_ms": 10.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 27.263,
+    "observed_utc": "2026-10-10T18:55:53.3125266Z",
+    "state": {
+      "mode": "live",
+      "frame": 458477,
+      "displayed": 10713,
+      "stats": {
+        "frames": 10714,
+        "bytes": 6890952,
+        "motion_points": 450165,
+        "presence_points": 119617,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458477 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 7 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 16.1,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.6,
+      "ui_queue_ms": 14.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 28.271,
+    "observed_utc": "2026-10-10T18:55:54.3209718Z",
+    "state": {
+      "mode": "live",
+      "frame": 458498,
+      "displayed": 10734,
+      "stats": {
+        "frames": 10734,
+        "bytes": 6894184,
+        "motion_points": 450213,
+        "presence_points": 119830,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458498 | Received: 0 motion / 0 presence | Selected now: 0 | Display: 9 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 34.0,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 33.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 29.276,
+    "observed_utc": "2026-10-10T18:55:55.3256474Z",
+    "state": {
+      "mode": "live",
+      "frame": 458518,
+      "displayed": 10754,
+      "stats": {
+        "frames": 10755,
+        "bytes": 6898068,
+        "motion_points": 450280,
+        "presence_points": 120078,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458518 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 20 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 30.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 8.5,
+      "ui_queue_ms": 22.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 30.277,
+    "observed_utc": "2026-10-10T18:55:56.3265811Z",
+    "state": {
+      "mode": "live",
+      "frame": 458539,
+      "displayed": 10775,
+      "stats": {
+        "frames": 10775,
+        "bytes": 6901528,
+        "motion_points": 450329,
+        "presence_points": 120309,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458539 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 10 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 27.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 13.3,
+      "ui_queue_ms": 14.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 31.279,
+    "observed_utc": "2026-10-10T18:55:57.3287359Z",
+    "state": {
+      "mode": "live",
+      "frame": 458559,
+      "displayed": 10795,
+      "stats": {
+        "frames": 10795,
+        "bytes": 6904556,
+        "motion_points": 450366,
+        "presence_points": 120516,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458559 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 9 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 32.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 31.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 32.284,
+    "observed_utc": "2026-10-10T18:55:58.3338586Z",
+    "state": {
+      "mode": "live",
+      "frame": 458579,
+      "displayed": 10815,
+      "stats": {
+        "frames": 10815,
+        "bytes": 6908916,
+        "motion_points": 450418,
+        "presence_points": 120819,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458579 | Received: 7 motion / 0 presence | Selected now: 7 | Display: 21 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 1.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.5,
+      "ui_queue_ms": 0.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 33.307,
+    "observed_utc": "2026-10-10T18:55:59.3565953Z",
+    "state": {
+      "mode": "live",
+      "frame": 458599,
+      "displayed": 10835,
+      "stats": {
+        "frames": 10835,
+        "bytes": 6913012,
+        "motion_points": 450491,
+        "presence_points": 121079,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458599 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 11 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 27.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 12.1,
+      "ui_queue_ms": 15.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 34.313,
+    "observed_utc": "2026-10-10T18:56:00.3621467Z",
+    "state": {
+      "mode": "live",
+      "frame": 458619,
+      "displayed": 10855,
+      "stats": {
+        "frames": 10856,
+        "bytes": 6919552,
+        "motion_points": 450708,
+        "presence_points": 121398,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458619 | Received: 33 motion / 0 presence | Selected now: 33 | Display: 100 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 16.0,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 15.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 35.318,
+    "observed_utc": "2026-10-10T18:56:01.3676763Z",
+    "state": {
+      "mode": "live",
+      "frame": 458640,
+      "displayed": 10876,
+      "stats": {
+        "frames": 10877,
+        "bytes": 6926868,
+        "motion_points": 451075,
+        "presence_points": 121632,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458640 | Received: 10 motion / 48 presence | Selected now: 58 | Display: 102 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 28.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 27.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 36.322,
+    "observed_utc": "2026-10-10T18:56:02.3715874Z",
+    "state": {
+      "mode": "live",
+      "frame": 458660,
+      "displayed": 10896,
+      "stats": {
+        "frames": 10897,
+        "bytes": 6931360,
+        "motion_points": 451207,
+        "presence_points": 121866,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458660 | Received: 0 motion / 53 presence | Selected now: 53 | Display: 104 (motion 5 frames) | 1 human candidates | confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 35.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 8.0,
+      "ui_queue_ms": 27.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 37.342,
+    "observed_utc": "2026-10-10T18:56:03.3917261Z",
+    "state": {
+      "mode": "live",
+      "frame": 458680,
+      "displayed": 10916,
+      "stats": {
+        "frames": 10917,
+        "bytes": 6935348,
+        "motion_points": 451272,
+        "presence_points": 122125,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458680 | Received: 2 motion / 43 presence | Selected now: 45 | Display: 45 (motion 5 frames) | 1 human candidates | confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 10.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 9.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 38.346,
+    "observed_utc": "2026-10-10T18:56:04.3956957Z",
+    "state": {
+      "mode": "live",
+      "frame": 458702,
+      "displayed": 10938,
+      "stats": {
+        "frames": 10938,
+        "bytes": 6940960,
+        "motion_points": 451485,
+        "presence_points": 122371,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458702 | Received: 12 motion / 0 presence | Selected now: 12 | Display: 59 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 14.7,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 13.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 39.353,
+    "observed_utc": "2026-10-10T18:56:05.4025373Z",
+    "state": {
+      "mode": "live",
+      "frame": 458721,
+      "displayed": 10957,
+      "stats": {
+        "frames": 10958,
+        "bytes": 6944864,
+        "motion_points": 451583,
+        "presence_points": 122590,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458721 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 15 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 32.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 31.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 40.353,
+    "observed_utc": "2026-10-10T18:56:06.4024780Z",
+    "state": {
+      "mode": "live",
+      "frame": 458742,
+      "displayed": 10978,
+      "stats": {
+        "frames": 10978,
+        "bytes": 6948072,
+        "motion_points": 451680,
+        "presence_points": 122752,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458742 | Received: 6 motion / 0 presence | Selected now: 6 | Display: 29 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 18.4,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 17.1,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 41.356,
+    "observed_utc": "2026-10-10T18:56:07.4051393Z",
+    "state": {
+      "mode": "live",
+      "frame": 458762,
+      "displayed": 10998,
+      "stats": {
+        "frames": 10998,
+        "bytes": 6951556,
+        "motion_points": 451785,
+        "presence_points": 122929,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458762 | Received: 10 motion / 0 presence | Selected now: 10 | Display: 36 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 17.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.7,
+      "ui_queue_ms": 15.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 42.362,
+    "observed_utc": "2026-10-10T18:56:08.4114147Z",
+    "state": {
+      "mode": "live",
+      "frame": 458782,
+      "displayed": 11018,
+      "stats": {
+        "frames": 11019,
+        "bytes": 6954780,
+        "motion_points": 451843,
+        "presence_points": 123131,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458782 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 19 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 2.2,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 0.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 43.367,
+    "observed_utc": "2026-10-10T18:56:09.4162204Z",
+    "state": {
+      "mode": "live",
+      "frame": 458803,
+      "displayed": 11039,
+      "stats": {
+        "frames": 11039,
+        "bytes": 6957844,
+        "motion_points": 451877,
+        "presence_points": 123344,
+        "callback_fps": 20.224,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458803 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 13 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 13.1,
+      "max_age_ms": 192.3,
+      "file_age_ms": 12.7,
+      "ui_queue_ms": 0.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 44.369,
+    "observed_utc": "2026-10-10T18:56:10.4181146Z",
+    "state": {
+      "mode": "live",
+      "frame": 458823,
+      "displayed": 11059,
+      "stats": {
+        "frames": 11059,
+        "bytes": 6963284,
+        "motion_points": 452103,
+        "presence_points": 123563,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458823 | Received: 8 motion / 0 presence | Selected now: 8 | Display: 26 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 56.7,
+      "max_age_ms": 192.3,
+      "file_age_ms": 6.5,
+      "ui_queue_ms": 50.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 45.384,
+    "observed_utc": "2026-10-10T18:56:11.4337918Z",
+    "state": {
+      "mode": "live",
+      "frame": 458843,
+      "displayed": 11079,
+      "stats": {
+        "frames": 11079,
+        "bytes": 6966840,
+        "motion_points": 452178,
+        "presence_points": 123776,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458843 | Received: 4 motion / 0 presence | Selected now: 4 | Display: 34 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 31.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.3,
+      "ui_queue_ms": 30.3,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 46.388,
+    "observed_utc": "2026-10-10T18:56:12.4371729Z",
+    "state": {
+      "mode": "live",
+      "frame": 458863,
+      "displayed": 11099,
+      "stats": {
+        "frames": 11100,
+        "bytes": 6972804,
+        "motion_points": 452395,
+        "presence_points": 124047,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458863 | Received: 20 motion / 0 presence | Selected now: 20 | Display: 46 (motion 5 frames) | 1 human candidates | confirmed motion cluster",
+      "armed": true,
+      "last_age_ms": 27.0,
+      "max_age_ms": 192.3,
+      "file_age_ms": 6.4,
+      "ui_queue_ms": 20.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 47.389,
+    "observed_utc": "2026-10-10T18:56:13.4388200Z",
+    "state": {
+      "mode": "live",
+      "frame": 458885,
+      "displayed": 11121,
+      "stats": {
+        "frames": 11121,
+        "bytes": 6976772,
+        "motion_points": 452474,
+        "presence_points": 124290,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458885 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 27 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 5.2,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 4.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 48.395,
+    "observed_utc": "2026-10-10T18:56:14.4443276Z",
+    "state": {
+      "mode": "live",
+      "frame": 458905,
+      "displayed": 11141,
+      "stats": {
+        "frames": 11141,
+        "bytes": 6979908,
+        "motion_points": 452516,
+        "presence_points": 124501,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458905 | Received: 4 motion / 0 presence | Selected now: 4 | Display: 19 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 14.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 13.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 49.396,
+    "observed_utc": "2026-10-10T18:56:15.4457280Z",
+    "state": {
+      "mode": "live",
+      "frame": 458925,
+      "displayed": 11161,
+      "stats": {
+        "frames": 11162,
+        "bytes": 6983420,
+        "motion_points": 452600,
+        "presence_points": 124701,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458925 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 25 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 19.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.7,
+      "ui_queue_ms": 18.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 50.415,
+    "observed_utc": "2026-10-10T18:56:16.4647745Z",
+    "state": {
+      "mode": "live",
+      "frame": 458945,
+      "displayed": 11181,
+      "stats": {
+        "frames": 11182,
+        "bytes": 6986652,
+        "motion_points": 452630,
+        "presence_points": 124932,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458945 | Received: 7 motion / 0 presence | Selected now: 7 | Display: 9 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 33.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 7.0,
+      "ui_queue_ms": 26.6,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 51.443,
+    "observed_utc": "2026-10-10T18:56:17.4929464Z",
+    "state": {
+      "mode": "live",
+      "frame": 458966,
+      "displayed": 11202,
+      "stats": {
+        "frames": 11202,
+        "bytes": 6991420,
+        "motion_points": 452779,
+        "presence_points": 125172,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458966 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 3 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 1.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 0.4,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 52.459,
+    "observed_utc": "2026-10-10T18:56:18.5084594Z",
+    "state": {
+      "mode": "live",
+      "frame": 458987,
+      "displayed": 11223,
+      "stats": {
+        "frames": 11223,
+        "bytes": 6994908,
+        "motion_points": 452823,
+        "presence_points": 125410,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 458987 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 8 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 16.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.4,
+      "ui_queue_ms": 14.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 53.473,
+    "observed_utc": "2026-10-10T18:56:19.5228529Z",
+    "state": {
+      "mode": "live",
+      "frame": 459006,
+      "displayed": 11242,
+      "stats": {
+        "frames": 11243,
+        "bytes": 6998056,
+        "motion_points": 452851,
+        "presence_points": 125636,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459006 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 3 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 27.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 26.9,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 54.478,
+    "observed_utc": "2026-10-10T18:56:20.5271053Z",
+    "state": {
+      "mode": "live",
+      "frame": 459026,
+      "displayed": 11262,
+      "stats": {
+        "frames": 11263,
+        "bytes": 7001504,
+        "motion_points": 452887,
+        "presence_points": 125879,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459026 | Received: 8 motion / 0 presence | Selected now: 8 | Display: 19 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 56.3,
+      "max_age_ms": 192.3,
+      "file_age_ms": 22.1,
+      "ui_queue_ms": 34.2,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 55.492,
+    "observed_utc": "2026-10-10T18:56:21.5411688Z",
+    "state": {
+      "mode": "live",
+      "frame": 459047,
+      "displayed": 11283,
+      "stats": {
+        "frames": 11283,
+        "bytes": 7005720,
+        "motion_points": 452916,
+        "presence_points": 126193,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459047 | Received: 3 motion / 0 presence | Selected now: 3 | Display: 5 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 16.2,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.2,
+      "ui_queue_ms": 15.0,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 56.507,
+    "observed_utc": "2026-10-10T18:56:22.5564074Z",
+    "state": {
+      "mode": "live",
+      "frame": 459067,
+      "displayed": 11303,
+      "stats": {
+        "frames": 11304,
+        "bytes": 7011804,
+        "motion_points": 453076,
+        "presence_points": 126531,
+        "callback_fps": 20.222,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459067 | Received: 6 motion / 0 presence | Selected now: 6 | Display: 32 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 29.5,
+      "max_age_ms": 192.3,
+      "file_age_ms": 1.0,
+      "ui_queue_ms": 28.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 57.515,
+    "observed_utc": "2026-10-10T18:56:23.5646505Z",
+    "state": {
+      "mode": "live",
+      "frame": 459088,
+      "displayed": 11324,
+      "stats": {
+        "frames": 11324,
+        "bytes": 7015372,
+        "motion_points": 453118,
+        "presence_points": 126778,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459088 | Received: 3 motion / 44 presence | Selected now: 47 | Display: 51 (motion 5 frames) | 2 human candidates | confirmed presence cluster, confirmed presence cluster",
+      "armed": true,
+      "last_age_ms": 18.4,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 17.5,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 58.519,
+    "observed_utc": "2026-10-10T18:56:24.5683777Z",
+    "state": {
+      "mode": "live",
+      "frame": 459109,
+      "displayed": 11345,
+      "stats": {
+        "frames": 11345,
+        "bytes": 7018572,
+        "motion_points": 453156,
+        "presence_points": 126998,
+        "callback_fps": 20.223,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459109 | Received: 1 motion / 0 presence | Selected now: 1 | Display: 11 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 27.6,
+      "max_age_ms": 192.3,
+      "file_age_ms": 0.9,
+      "ui_queue_ms": 26.7,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  },
+  {
+    "elapsed_s": 59.534,
+    "observed_utc": "2026-10-10T18:56:25.5831604Z",
+    "state": {
+      "mode": "live",
+      "frame": 459129,
+      "displayed": 11365,
+      "stats": {
+        "frames": 11365,
+        "bytes": 7021588,
+        "motion_points": 453202,
+        "presence_points": 127195,
+        "callback_fps": 20.224,
+        "driver_log_lines": 2,
+        "nonconsecutive": 1
+      },
+      "details": "Frame 459129 | Received: 2 motion / 0 presence | Selected now: 2 | Display: 19 (motion 5 frames) | 0 human candidates | ",
+      "armed": true,
+      "last_age_ms": 15.8,
+      "max_age_ms": 192.3,
+      "file_age_ms": 12.0,
+      "ui_queue_ms": 3.8,
+      "source": "direct CH347 SPI",
+      "external_calls": false
+    }
+  }
+]

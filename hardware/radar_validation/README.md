@@ -276,6 +276,12 @@ The separate CH347 dev-kit radar, reported by the user as flashed with Posture_m
 
 ## Direct SPI desktop fall tracker — 2026-10-11
 
+### User-reported seated-still test
+
+After direct-SPI startup, the user reported sitting still. Sixty approximately one-second UI snapshots covered 59.47 seconds between endpoints: 1,201 incoming frames (20.20 FPS), 4,996 motion points and 13,766 presence points accumulated, with zero additional nonconsecutive indices. Presence was nonzero in 8/60 sampled displayed frames, and 6/60 snapshots reported a confirmed presence cluster. Candidate counts were zero in 44/60 snapshots, one in 13/60, and multiple in 3/60. Maximum sampled callback-to-display age was 56.9 ms. Evidence: [stillness snapshots](posture_stillness_samples.json).
+
+Result: presence transport works, but continuous seated-person tracking failed this spot test. These are once-per-second UI samples, not a per-frame presence duty-cycle measurement; cumulative point totals cover all incoming callbacks. Candidate identities are not verified ground truth, and multiple candidates may include clutter or split clusters. Per-frame presence cadence, filter rejection, and track association need further testing before changing persistence thresholds. No configuration was changed during this test.
+
 Launch `firmware/esp32s3_radar_poc/desktop_tracker/Start-DevKit-Tracker.ps1 -DirectSpi` with RadarDebugTool disconnected. The adapter uses the local vendor HifMsgDataCollectionLib DLL, OpenSpiDevice(0,3), and point-cloud callbacks through a local pipe. Selector 3 requests 7.5 MHz; electrical timing is not measured. The sibling workspace's `live_tracker` and `resources/hif_library` remain required dependencies. The recording-based launch remains available.
 
 Live validation received and displayed 1,311 frames over approximately 64.75 seconds at 20.232 FPS, with no reported duplicate or nonconsecutive indices, UI queue drops, or stale frames. Both motion and presence points were decoded. Latest host callback-to-display age was 21.4 ms; maximum was 71.7 ms. This measures host delivery latency, not radar acquisition-to-display latency. Evidence: [live snapshot](posture_direct_spi_live.json). The 200-frame recorded callback parser regression also passed continuity and malformed-length checks.
