@@ -1,0 +1,60 @@
+{
+  "source": "baseline_frame_info.csv",
+  "rows": 2221,
+  "host_timestamp_span_seconds": 109.742,
+  "received_fps": 20.229265003371545,
+  "first_index": 25050,
+  "last_index": 27270,
+  "duplicates": 0,
+  "forward_missing_indices": 0,
+  "backward_or_reset_transitions": 0,
+  "host_interval_ms": {
+    "min": 14,
+    "median": 51,
+    "p99": 75,
+    "max": 84
+  },
+  "columns_3_to_8_unique": [
+    {
+      "4": 2221
+    },
+    {
+      "50": 2221
+    },
+    {
+      "6400": 2221
+    },
+    {
+      "256": 2221
+    },
+    {
+      "1600": 2221
+    },
+    {
+      "32": 2221
+    }
+  ],
+  "diagnostics": {
+    "processing_duration_raw_sdk_comment_0p1ms": {
+      "min": 60.0,
+      "max": 266.0,
+      "mean": 110.58487167942369
+    },
+    "minimum_ever_free_heap_KiB": {
+      "min": 7.0,
+      "max": 7.0,
+      "mean": 7.0
+    },
+    "motion_points": {
+      "min": 0.0,
+      "max": 173.0,
+      "mean": 33.04907699234579
+    },
+    "presence_points": {
+      "min": 0.0,
+      "max": 114.0,
+      "mean": 15.841062584421431
+    }
+  },
+  "limitations": "Host arrival timestamps, not electrical frame timing. Scene occupancy unknown. No fall accuracy inference."
+}
