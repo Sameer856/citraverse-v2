@@ -1,0 +1,44 @@
+{
+  "target": "T3",
+  "samples": 300,
+  "duration_s": 301.5158704,
+  "distinct_snapshots": 299,
+  "present": 243,
+  "missing": 57,
+  "fresh_within_350ms": 213,
+  "max_evidence_age_s": 1.914,
+  "first_missing_s": 114.9125334,
+  "presence_only_mode": true,
+  "presence_only_evidence": true,
+  "selected_throughout": true,
+  "saved_state_span_s": 301.9934277534485,
+  "max_snapshot_update_gap_s": 2.0247790813446045,
+  "position_bounds": {
+    "x": [
+      -0.5566666666666666,
+      0.18333333333333335
+    ],
+    "y": [
+      0.5733333333333334,
+      1.48
+    ],
+    "z": [
+      -1.42,
+      1.5066666666666666
+    ]
+  },
+  "stationary_focus_anchor": [
+    -0.2402809604,
+    1.025518486,
+    0
+  ],
+  "callback_fps": 20.226,
+  "counter_deltas": {
+    "frames": 6108,
+    "presence_points": 67813,
+    "nonconsecutive": 0,
+    "queue_drops": 0,
+    "stale_frames": 0
+  },
+  "limitation": "One-second state samples; selected stationary region is not independently verified human identity."
+}

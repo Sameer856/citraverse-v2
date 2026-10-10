@@ -17,6 +17,13 @@ class PresenceTracker:
         self.last = None
         self.focus = None
 
+    def reserve_seat(self, ident, x, y):
+        # Explicit seat label restoration is not a restored detection.
+        self.next_id = max(self.next_id, ident+1)
+        self.focus = dict(id=ident, anchor=(x,y,0), track=dict(
+            pos=[x,y,0], points=[], last=float('-inf'), evidence_time=float('-inf'),
+            hits=0, state='temporarily unobserved', trail=deque(maxlen=40)))
+
     def focus_presence(self, ident):
         """Reserve a stationary selected seat; never claim evidence in an empty ROI."""
         if ident is None:
@@ -115,7 +122,10 @@ class PresenceTracker:
             if i not in used: q['state']='temporarily unobserved'
         if self.focus is not None and self.use_presence:
             q = self.focus['track']
-            if len(focus_points) >= 3:
+            # Birth/reacquisition needs three points. Two independent current
+            # returns can maintain a recently established stationary target.
+            required = 2 if 0 <= t-q['last'] <= .5 else 3
+            if len(focus_points) >= required:
                 q.update(pos=[sum(p[k] for p in focus_points)/len(focus_points) for k in ('x','y','z')],
                          points=focus_points,last=t,evidence_time=t,
                          hits=q['hits']+1,state='selected stationary presence region')

@@ -89,3 +89,19 @@ assert tr.tracks[ident]['last']==25
 tr.focus_presence(None)
 assert tr.focus is None
 print('PASS: stationary region selection, neighboring exclusion, true absence and fresh return')
+
+# Sparse continuation uses new evidence, not persistence of old points.
+tr=PresenceTracker(use_presence=True)
+tr.reserve_seat(3,0,1)
+pts=[dict(x=x,y=1,z=0,snr=20,cloud='presence') for x in (-.1,0,.1)]
+assert not tr.update(pts[:2],0)  # Two cannot create occupancy.
+assert 3 in tr.update(pts,.2)
+assert tr.update(pts[:2],.4)[3]['last']==.4
+assert len(tr.tracks[3]['points'])==2
+tr.update(pts[:1],.6)
+assert tr.tracks[3]['last']==.4
+tr.update(pts[:2],1.1)
+assert tr.tracks[3]['last']==.4  # Old target needs full reacquisition.
+assert 3 not in tr.update([],2.5)
+assert tr.update(pts,2.7)[3]['last']==2.7
+print('PASS: sparse fresh continuation with strict birth/reacquisition and no single-point refresh')

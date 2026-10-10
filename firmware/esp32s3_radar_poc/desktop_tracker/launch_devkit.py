@@ -7,6 +7,7 @@ import threading
 import time
 import types
 import copy
+import math
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -18,7 +19,12 @@ parser.add_argument('--recording', type=Path)
 parser.add_argument('--presence-only', action='store_true', help='Exclude motion from tracking and fall inputs, not only drawing')
 parser.add_argument('--library', type=Path, default=REPO.parent/'resources/hif_library/HifMsgDataCollectionLib.dll')
 parser.add_argument('--tracker', type=Path, default=REPO.parent / 'live_tracker')
+parser.add_argument('--seat', nargs=3, type=float, metavar=('ID','X','Y'))
+parser.add_argument('--presence-audit', type=Path)
 args = parser.parse_args()
+if args.seat and (not args.presence_only or not all(math.isfinite(v) for v in args.seat)
+                  or args.seat[0] < 1 or not args.seat[0].is_integer()):
+    parser.error('--seat requires presence-only mode, a positive integer ID and finite XY coordinates')
 stub = types.ModuleType('fall_call')
 class DisabledCaller:
     def __init__(self): self.results = queue.Queue()
@@ -158,6 +164,10 @@ class Desktop(legacy.App):
         self.stop_event = threading.Event()
         self.mode = 'live'
         self.reset_tracks()
+        if args.presence_only and args.seat:
+            ident, x, y = args.seat
+            self.tracker.reserve_seat(int(ident), x, y)
+            self.target_view.set(f'T{int(ident)}')
         self.fall.reset('POSTURE DEV KIT / '+('BUFFERED PREVIEW' if args.recording else 'DIRECT SPI')+' — verify mounting')
         self.received = time.monotonic()
         self.control_status.set('Radar control remains in RadarDebugTool; Auto save must stay enabled' if args.recording else 'Direct SPI active — keep RadarDebugTool disconnected')
@@ -165,9 +175,16 @@ class Desktop(legacy.App):
         self.worker.start()
 
     def read(self, feed, stop):
+        audit = None
+        audit_start = time.monotonic()
         try:
+            if args.presence_audit: audit = args.presence_audit.open('w',encoding='utf-8')
             while not stop.is_set():
                 for frame in feed.read_frames():
+                    if audit and time.monotonic()-audit_start <= 660:
+                        audit.write(json.dumps(dict(frame=frame['frame'],time_s=frame['time_s'],
+                            points=[p for p in frame['points'] if p['cloud']=='presence']))+'\n')
+                        audit.flush()
                     frame['file_arrival_age_ms'] = time.time()*1000-frame['host_timestamp_ms']
                     try: self.events.put_nowait(frame)
                     except queue.Full: feed.stats['queue_drops'] += 1
@@ -176,6 +193,8 @@ class Desktop(legacy.App):
             if not stop.is_set():
                 try: self.events.put_nowait(str(e))
                 except queue.Full: pass
+        finally:
+            if audit: audit.close()
 
     def show(self, frame, t):
         if args.presence_only:
