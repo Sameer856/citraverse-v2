@@ -30,6 +30,14 @@ import fall_ui
 
 class DevKitRoom(fall_ui.RoomView):
     def draw(self):
+        self.capture()
+        if getattr(self,'paint_pending',False): return
+        self.paint_pending=True
+        self.canvas.after(33,self.paint_latest)
+
+    def paint_latest(self):
+        self.paint_pending=False
+        if not self.canvas.winfo_exists(): return
         super().draw()
         for item in self.canvas.find_all():
             if self.canvas.type(item) == 'text' and self.canvas.itemcget(item,'text') == 'RS6130':
@@ -48,6 +56,9 @@ class Desktop(legacy.App):
         self.last_frame = None
         self.last_age_ms = None
         self.max_age_ms = 0
+        self.paint_pending = False
+        self.file_age_ms = None
+        self.ui_queue_ms = None
         super().__init__(root)
         root.title('Possumic Fall Tracker - Posture dev kit (buffered preview)')
         self.port.set('Dev kit / vendor recording')
@@ -84,6 +95,7 @@ class Desktop(legacy.App):
         try:
             while not stop.is_set():
                 for frame in feed.read_frames():
+                    frame['file_arrival_age_ms'] = time.time()*1000-frame['host_timestamp_ms']
                     try: self.events.put_nowait(frame)
                     except queue.Full: feed.stats['queue_drops'] += 1
                 stop.wait(.01)
@@ -96,6 +108,8 @@ class Desktop(legacy.App):
         if self.mode == 'live':
             age = time.time()*1000-frame['host_timestamp_ms']
             self.last_age_ms = round(age,1)
+            self.file_age_ms = round(frame.get('file_arrival_age_ms',age),1)
+            self.ui_queue_ms = round(age-self.file_age_ms,1)
             self.max_age_ms = max(self.max_age_ms,age)
             # Vendor file output is buffered. Analyze by original source time,
             # with an explicit bounded delay; never retimestamp a backlog as now.
@@ -110,12 +124,22 @@ class Desktop(legacy.App):
         self.last_frame = frame['frame']
         super().show(frame,t)
 
+    def draw(self):
+        if self.paint_pending: return
+        self.paint_pending=True
+        self.root.after(33,self.paint_latest)
+
+    def paint_latest(self):
+        self.paint_pending=False
+        if self.canvas.winfo_exists(): super().draw()
+
     def save_state(self):
         BUILD.mkdir(exist_ok=True)
         state = dict(mode=self.mode,frame=self.last_frame,displayed=self.displayed,
                      stats=dict(self.stream.stats) if hasattr(self,'stream') else {},
                      details=self.info.cget('text'),armed=self.fall.armed.get(),
                      last_age_ms=self.last_age_ms,max_age_ms=round(self.max_age_ms,1),
+                     file_age_ms=self.file_age_ms,ui_queue_ms=self.ui_queue_ms,
                      source=str(args.recording),external_calls=False)
         (BUILD/'devkit_tracker_state.json').write_text(json.dumps(state,indent=2))
         self.root.after(1000,self.save_state)
