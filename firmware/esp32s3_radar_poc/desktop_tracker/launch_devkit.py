@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 import types
+import copy
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -36,6 +37,8 @@ legacy.Tracker = PresenceTracker
 fall_detection.Tracker = PresenceTracker
 
 class DevKitRoom(fall_ui.RoomView):
+    def capture(self):
+        if not getattr(self,'rendering_preview',False): super().capture()
     def draw(self):
         self.capture()
         if getattr(self,'paint_pending',False): return
@@ -45,8 +48,48 @@ class DevKitRoom(fall_ui.RoomView):
     def paint_latest(self):
         self.paint_pending=False
         if not self.canvas.winfo_exists(): return
-        super().draw()
+        original = self.panel
+        app = original.app
+        preview = copy.copy(original)
+        preview.detector = copy.copy(original.detector)
+        settings = original.detector.settings
+        # Render a separate snapshot: cloud toggles must never modify fall inputs.
+        pts = [
+            fall_detection.world_point(p,settings) for p in app.current
+            if (app.presence.get() if p['cloud']=='presence' else app.motion.get())]
+        preview.detector.world = pts
+        preview.detector.histories = {}  # Display track IDs are independent of fall-track IDs.
+        preview.detector.visible = {}
+        for ident,q in app.tracks.items():
+            if app.target_view.get() not in ('All candidates',f'T{ident}'): continue
+            members = [fall_detection.world_point(p,settings) for p in q['points']
+                       if (app.presence.get() if p['cloud']=='presence' else app.motion.get())]
+            if not members: continue
+            item = dict(q,points=members)
+            center = fall_detection.world_point(dict(zip(('x','y','z'),q['pos'])),settings)
+            item['pos'] = [center[k] for k in ('x','y','z')]
+            item['trail'] = [item['pos']]
+            preview.detector.visible[ident] = item
+        # Point inspection stays independent of arming and candidate filtering.
+        preview.app = copy.copy(app)
+        preview.app.raw_points = types.SimpleNamespace(get=lambda:True)
+        self.panel = preview
+        self.rendering_preview = True
+        try: super().draw()
+        finally:
+            self.panel = original
+            self.rendering_preview = False
+        self.canvas.create_text(18,42,anchor='w',fill='#e1e7ed',text=
+            f"Shown: {sum(p['cloud']=='motion' for p in pts)} motion / {sum(p['cloud']=='presence' for p in pts)} presence | latest presence age: {app.preview_age_text}")
         for item in self.canvas.find_all():
+            if self.canvas.type(item) == 'text':
+                label = self.canvas.itemcget(item,'text')
+                if label == 'MONITORING' and not original.detector.visible:
+                    self.canvas.itemconfigure(item,text='NO FRESH FALL TARGET')
+                if label.startswith('Current clusters:'):
+                    self.canvas.itemconfigure(item,text=f'Displayed candidates: {len(preview.detector.visible)} | Points: {len(pts)}')
+            if self.canvas.type(item) == 'rectangle' and not original.detector.visible and self.canvas.itemcget(item,'fill') == '#27a344':
+                self.canvas.itemconfigure(item,fill='#7a8591')
             if self.canvas.type(item) == 'text' and self.canvas.itemcget(item,'text') == 'RS6130':
                 self.canvas.itemconfigure(item,text='MRS6240')
 
@@ -60,6 +103,7 @@ class Desktop(legacy.App):
 
     def __init__(self, root):
         self.presence_preview = PresencePreview()
+        self.preview_age_text = 'none'
         self.displayed = 0
         self.last_frame = None
         self.last_age_ms = None
@@ -72,6 +116,15 @@ class Desktop(legacy.App):
         self.port.set('Dev kit / vendor recording' if args.recording else 'CH347 direct SPI')
         self.raw_points.set(True)
         self.snr.set(0)
+        self.motion.set(False)
+        self.presence.set(True)
+        self.target_view = legacy.tk.StringVar(value='All candidates')
+        target_row = ttk.Frame(root)
+        target_row.pack(fill='x')
+        ttk.Label(target_row,text='3D target marker (select your candidate; clouds stay visible):').pack(side='left')
+        self.target_choice = ttk.Combobox(target_row,textvariable=self.target_view,
+            values=['All candidates'],state='readonly',width=20)
+        self.target_choice.pack(side='left')
         self.fall.call_status.set(('Buffered dev-kit preview (up to 1.5 s)' if args.recording else 'Direct SPI acquisition')+' — external calls disabled')
         for panel in root.winfo_children():
             for widget in panel.winfo_children():
@@ -82,6 +135,7 @@ class Desktop(legacy.App):
                     elif label == 'Connect both': widget.configure(text='Connect dev kit')
                 if isinstance(widget, (ttk.Entry, ttk.Combobox)):
                     widget.configure(state='disabled')
+        self.target_choice.configure(state='readonly')
         self.root.after(1000, self.save_state)
 
     def connect(self):
@@ -132,6 +186,7 @@ class Desktop(legacy.App):
         self.last_frame = frame['frame']
         super().show(frame,t)
         burst, age = self.presence_preview.update([p for p in self.current if p['cloud']=='presence'], t)
+        self.preview_age_text = 'none' if age is None else f'{age*1000:.0f} ms'
         if self.presence.get() and burst:
             self.current = [p for p in self.current if p['cloud']!='presence'] + list(burst)
             self.info.configure(text=self.info.cget('text')+f' | Presence preview: {len(burst)} points, age {age*1000:.0f} ms')
@@ -141,6 +196,7 @@ class Desktop(legacy.App):
             self.info.configure(text=self.info.cget('text')+f' | {len(retained)} recently seen (latest {age:.1f}s ago; not fresh detection)')
             # Keep the location marker across burst gaps, not old point clouds or fall samples.
             self.tracks = dict(self.tracker.tracks)
+        self.target_choice.configure(values=['All candidates']+[f'T{i}' for i in self.tracker.tracks])
 
     def draw(self):
         if self.paint_pending: return
