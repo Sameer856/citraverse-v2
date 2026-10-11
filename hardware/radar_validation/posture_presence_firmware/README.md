@@ -67,3 +67,16 @@ User confirmed the same seat about four feet ahead and readiness to sit still. A
 The raw window bounded by the first/last snapshot frame IDs contains 6102 frames over 301.656 seconds. Sparse-continuation replay accepts 1523 bursts; its maximum internal evidence gap is 0.411 seconds. It counts 6099 fresh frames, with three initial frames lacking replay context at the cropped window boundary (the running UI already had prior evidence). Fixed three-point replay accepts 1517 bursts and has a 0.612-second maximum gap. One-second snapshots cannot exclude all between-sample gaps, and neither measure verifies human identity.
 
 This seated baseline run was stronger than the single-side run (300/300 versus 295/300 fresh snapshots). The evidence therefore does not support promoting the single-side change as the remedy. Sequential scene trials are not sufficient to isolate causality; empty-seat baseline testing is pending user confirmation of leaving view. The rebuilt both-side baseline remains installed and falls remain disarmed. Local evidence: both_side_5min.json, both_side_5min_summary.json, both_side_seated_raw.jsonl.gz and its audit summary.
+
+### Both-side baseline: confirmed empty-seat test
+
+The user confirmed leaving the seat and moving out of view before sampling. Over 61.420 seconds, 62 distinct state snapshots showed T3 present in 55/62 and fresh within 350 ms in 38/62; it was missing in only 7/62. First missing sample was 11.283 seconds after sampling began, followed by subsequent detections. Maximum sampled retained-evidence age was 1.619 seconds. This FAILS empty-seat rejection. Reported callback rate was 20.225 FPS, with 1241 new frames and no new reported nonconsecutive/queue-drop/stale-frame counts. Selection, anchor and presence-only mode stayed unchanged; falls remained disarmed.
+
+Local evidence: both_side_empty_seat.json, both_side_empty_seat_summary.json and both_side_empty_raw.jsonl.gz. The raw window covers frame indices 17274 through 18516, 1243 records, matching the snapshot bounds. These sensitive detailed captures remain local; only written findings are pushed.
+
+| Trial | Seated fresh snapshots | Empty-seat label present | Empty-seat fresh evidence |
+| --- | --- | --- | --- |
+| Single-side CFAR | 295/300 | 62/62 | 56/62 |
+| Both-side CFAR baseline | 300/300 | 55/62 | 38/62 |
+
+Both-side was stronger in these sequential tests, but both falsely accepted empty-seat returns. This does not isolate a firmware defect or prove a general performance ranking across scenes. Keep the rebuilt both-side baseline installed for further diagnosis; do not promote single-side as a fix. The next required work is discrimination of person returns from background, followed by an independent seated/empty/re-entry validation. Any background model must be calibrated only from a confirmed empty scene and must not silently learn away a still occupant. No classifier thresholds were tuned on these results and no claim of solved human occupancy or fall detection is made.
