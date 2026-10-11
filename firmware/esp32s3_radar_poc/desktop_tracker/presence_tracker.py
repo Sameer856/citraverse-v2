@@ -18,8 +18,11 @@ class PresenceTracker:
         self.focus = None
         self.background_minimum = None
         self.background_anchor = None
+        self.background_window = None
+        self.background_counts = deque()
 
     def reserve_seat(self, ident, x, y):
+        self.background_counts.clear()
         # Explicit seat label restoration is not a restored detection.
         self.next_id = max(self.next_id, ident+1)
         self.focus = dict(id=ident, anchor=(x,y,0), track=dict(
@@ -29,8 +32,10 @@ class PresenceTracker:
     def focus_presence(self, ident):
         """Reserve a stationary selected seat; never claim evidence in an empty ROI."""
         if ident is None:
+            self.background_counts.clear()
             self.focus = None
         elif self.focus is None or self.focus['id'] != ident:
+            self.background_counts.clear()
             q = self.tracks.get(ident)
             if q and all(p.get('cloud') == 'presence' for p in q['points']):
                 self.focus = dict(id=ident, anchor=tuple(q['pos']), track=dict(q))
@@ -38,6 +43,8 @@ class PresenceTracker:
     def update(self, points, t, radius=.6, minimum=3, horizontal=True):
         if self.last is not None and t <= self.last:
             return self.tracks
+        if self.last is not None and t-self.last > .5:
+            self.background_counts.clear()
         self.last = t
         # Keep bounded identity memory separately from visible/fresh detections.
         self.dormant.update({i:q for i,q in self.tracks.items() if t-q['last'] > 2})
@@ -127,10 +134,19 @@ class PresenceTracker:
             # Birth/reacquisition needs three points. Two independent current
             # returns can maintain a recently established stationary target.
             required = 2 if 0 <= t-q['last'] <= .5 else 3
+            accepted = len(focus_points) >= required
             if (self.background_minimum is not None
                     and tuple(self.focus['anchor'][:2]) == self.background_anchor):
-                required = max(required, self.background_minimum)
-            if len(focus_points) >= required:
+                if self.background_window is None:
+                    accepted = len(focus_points) >= max(required, self.background_minimum)
+                else:
+                    self.background_counts.append((t,len(focus_points)))
+                    while self.background_counts and t-self.background_counts[0][0] > self.background_window:
+                        self.background_counts.popleft()
+                    # History supports classification, never supplies current points.
+                    accepted = (len(focus_points) >= 2 and
+                                sum(n for _,n in self.background_counts) >= self.background_minimum)
+            if accepted:
                 q.update(pos=[sum(p[k] for p in focus_points)/len(focus_points) for k in ('x','y','z')],
                          points=focus_points,last=t,evidence_time=t,
                          hits=q['hits']+1,state='selected stationary presence region')

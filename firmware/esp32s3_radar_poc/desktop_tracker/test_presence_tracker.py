@@ -121,3 +121,20 @@ assert 3 not in tr.update(seat_points(6),2.3)
 assert 3 in tr.update(seat_points(7),2.5)
 assert tr.background_minimum==7
 print('PASS: fixed background gate, no sparse bypass, expiry and fresh reacquisition')
+
+# Temporal context may classify fresh weak points, never empty/single returns.
+tr=PresenceTracker(use_presence=True)
+tr.reserve_seat(3,0,1)
+tr.background_anchor=(0,1);tr.background_minimum=10;tr.background_window=1.5
+tr.update(seat_points(8),0)
+assert 3 not in tr.tracks
+tr.update(seat_points(2),.2)
+assert tr.tracks[3]['last']==.2
+assert len(tr.tracks[3]['points'])==2
+tr.update([], .4);tr.update(seat_points(1),.6)
+assert tr.tracks[3]['last']==.2
+tr.update(seat_points(2),1.2)  # transport gap clears context
+assert tr.tracks[3]['last']==.2
+assert 3 not in tr.update([],2.3)
+assert sum(n for _,n in tr.background_counts)==0
+print('PASS: temporal context requires fresh points, does not retimestamp history, clears on gaps')

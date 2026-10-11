@@ -28,12 +28,14 @@ if args.seat_calibration:
     try:
         calibration = json.loads(args.seat_calibration.read_text())
         if (not args.presence_only or not args.seat
-                or calibration['method'] != 'fixed_empty_seat_max_plus_one_v1'
+                or calibration['method'] not in ('fixed_empty_seat_max_plus_one_v1','fixed_empty_seat_window_v2')
                 or calibration['anchor'] != list(args.seat[1:])
                 or calibration['radius_m'] != .5 or calibration['snr_min'] != 18
                 or type(calibration['minimum_points']) is not int
                 or not 3 <= calibration['minimum_points'] <= 256):
             raise ValueError('calibration does not match selected seat and gates')
+        if calibration['method'] == 'fixed_empty_seat_window_v2' and calibration.get('window_s') != 1.5:
+            raise ValueError('window calibration requires bounded 1.5-second history')
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.error(str(exc))
 if args.seat and (not args.presence_only or not all(math.isfinite(v) for v in args.seat)
@@ -86,6 +88,8 @@ class DevKitRoom(fall_ui.RoomView):
             if (app.tracker.background_minimum is not None and app.tracker.focus is not None
                     and tuple(app.tracker.focus['anchor'][:2]) == app.tracker.background_anchor):
                 shown_age += f' | fixed empty-seat gate: {app.tracker.background_minimum} points'
+                if app.tracker.background_window:
+                    shown_age += f' / {app.tracker.background_window}s; 2 fresh required'
         # Render a separate snapshot: cloud toggles must never modify fall inputs.
         pts = [
             fall_detection.world_point(p,settings) for p in source_points
@@ -188,6 +192,8 @@ class Desktop(legacy.App):
             if calibration:
                 self.tracker.background_minimum = calibration['minimum_points']
                 self.tracker.background_anchor = tuple(calibration['anchor'])
+                if calibration['method'] == 'fixed_empty_seat_window_v2':
+                    self.tracker.background_window = calibration['window_s']
             self.target_view.set(f'T{int(ident)}')
         self.fall.reset('POSTURE DEV KIT / '+('BUFFERED PREVIEW' if args.recording else 'DIRECT SPI')+' — verify mounting')
         self.received = time.monotonic()
