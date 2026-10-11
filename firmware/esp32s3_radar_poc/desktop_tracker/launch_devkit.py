@@ -21,7 +21,21 @@ parser.add_argument('--library', type=Path, default=REPO.parent/'resources/hif_l
 parser.add_argument('--tracker', type=Path, default=REPO.parent / 'live_tracker')
 parser.add_argument('--seat', nargs=3, type=float, metavar=('ID','X','Y'))
 parser.add_argument('--presence-audit', type=Path)
+parser.add_argument('--seat-calibration', type=Path, help='Fixed empty-seat point-count calibration; selected region only')
 args = parser.parse_args()
+calibration = None
+if args.seat_calibration:
+    try:
+        calibration = json.loads(args.seat_calibration.read_text())
+        if (not args.presence_only or not args.seat
+                or calibration['method'] != 'fixed_empty_seat_max_plus_one_v1'
+                or calibration['anchor'] != list(args.seat[1:])
+                or calibration['radius_m'] != .5 or calibration['snr_min'] != 18
+                or type(calibration['minimum_points']) is not int
+                or not 3 <= calibration['minimum_points'] <= 256):
+            raise ValueError('calibration does not match selected seat and gates')
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        parser.error(str(exc))
 if args.seat and (not args.presence_only or not all(math.isfinite(v) for v in args.seat)
                   or args.seat[0] < 1 or not args.seat[0].is_integer()):
     parser.error('--seat requires presence-only mode, a positive integer ID and finite XY coordinates')
@@ -69,6 +83,9 @@ class DevKitRoom(fall_ui.RoomView):
             source_points = q['points'] if q and age <= .35 else []
             shown_age = f'{age*1000:.0f} ms' if age is not None else 'track lost'
             if app.tracker.focus is not None: shown_age += ' | stationary region lock (0.5 m)'
+            if (app.tracker.background_minimum is not None and app.tracker.focus is not None
+                    and tuple(app.tracker.focus['anchor'][:2]) == app.tracker.background_anchor):
+                shown_age += f' | fixed empty-seat gate: {app.tracker.background_minimum} points'
         # Render a separate snapshot: cloud toggles must never modify fall inputs.
         pts = [
             fall_detection.world_point(p,settings) for p in source_points
@@ -130,6 +147,7 @@ class Desktop(legacy.App):
         super().__init__(root)
         root.title('Possumic Fall Tracker - Posture dev kit' + (' (buffered preview)' if args.recording else ' / direct SPI'))
         if args.presence_only: root.title(root.title()+' / PRESENCE-ONLY TRACKING')
+        if calibration: root.title(root.title()+' / FIXED EMPTY-SEAT CALIBRATION')
         self.port.set('Dev kit / vendor recording' if args.recording else 'CH347 direct SPI')
         self.raw_points.set(True)
         self.snr.set(0)
@@ -167,6 +185,9 @@ class Desktop(legacy.App):
         if args.presence_only and args.seat:
             ident, x, y = args.seat
             self.tracker.reserve_seat(int(ident), x, y)
+            if calibration:
+                self.tracker.background_minimum = calibration['minimum_points']
+                self.tracker.background_anchor = tuple(calibration['anchor'])
             self.target_view.set(f'T{int(ident)}')
         self.fall.reset('POSTURE DEV KIT / '+('BUFFERED PREVIEW' if args.recording else 'DIRECT SPI')+' — verify mounting')
         self.received = time.monotonic()
@@ -251,6 +272,7 @@ class Desktop(legacy.App):
                      file_age_ms=self.file_age_ms,ui_queue_ms=self.ui_queue_ms,
                      source=str(args.recording) if args.recording else 'direct CH347 SPI',external_calls=False)
         state['presence_only_tracking'] = args.presence_only
+        state['seat_calibration'] = calibration
         state['selected_target'] = self.target_view.get()
         state['stationary_focus_anchor'] = self.tracker.focus['anchor'] if self.tracker.focus else None
         state['saved_at'] = time.time()

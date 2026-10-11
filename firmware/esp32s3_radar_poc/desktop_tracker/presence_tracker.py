@@ -16,6 +16,8 @@ class PresenceTracker:
         self.next_id = 1
         self.last = None
         self.focus = None
+        self.background_minimum = None
+        self.background_anchor = None
 
     def reserve_seat(self, ident, x, y):
         # Explicit seat label restoration is not a restored detection.
@@ -125,6 +127,9 @@ class PresenceTracker:
             # Birth/reacquisition needs three points. Two independent current
             # returns can maintain a recently established stationary target.
             required = 2 if 0 <= t-q['last'] <= .5 else 3
+            if (self.background_minimum is not None
+                    and tuple(self.focus['anchor'][:2]) == self.background_anchor):
+                required = max(required, self.background_minimum)
             if len(focus_points) >= required:
                 q.update(pos=[sum(p[k] for p in focus_points)/len(focus_points) for k in ('x','y','z')],
                          points=focus_points,last=t,evidence_time=t,

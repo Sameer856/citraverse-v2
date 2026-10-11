@@ -105,3 +105,19 @@ assert tr.tracks[3]['last']==.4  # Old target needs full reacquisition.
 assert 3 not in tr.update([],2.5)
 assert tr.update(pts,2.7)[3]['last']==2.7
 print('PASS: sparse fresh continuation with strict birth/reacquisition and no single-point refresh')
+
+# Fixed empty-seat gate never lowers for continuation and never learns occupants.
+tr=PresenceTracker(use_presence=True)
+tr.reserve_seat(3,0,1)
+tr.background_minimum=7
+tr.background_anchor=(0,1)
+def seat_points(n):
+    return [dict(x=.01*i,y=1,z=0,snr=25,cloud='presence',velocity=0) for i in range(n)]
+assert 3 not in tr.update(seat_points(6),0)
+assert 3 in tr.update(seat_points(7),.2)
+tr.update(seat_points(6),.4)
+assert tr.tracks[3]['last']==.2
+assert 3 not in tr.update(seat_points(6),2.3)
+assert 3 in tr.update(seat_points(7),2.5)
+assert tr.background_minimum==7
+print('PASS: fixed background gate, no sparse bypass, expiry and fresh reacquisition')
