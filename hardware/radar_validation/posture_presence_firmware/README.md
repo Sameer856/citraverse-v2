@@ -1,6 +1,6 @@
 # Posture presence firmware audit — 2026-10-11
 
-Status: experimental image built and packaged successfully on 2026-10-11. Download failed at synchronization (0%); successful flashing and post-change hardware testing remain pending. The shipped image has not been proven byte-for-byte equivalent to this SDK source.
+Status: experimental image built, downloaded successfully, and tested on 2026-10-11. Seated continuity improved, but empty-seat rejection FAILED. This is not a validated presence fix. The shipped image has not been proven byte-for-byte equivalent to this SDK source.
 
 ## Verified source findings
 
@@ -37,3 +37,17 @@ The isolated SDK copy is in ignored firmware/esp32s3_radar_poc/build/posture_sin
 RadarDebugTool connected to CH347 device 0 with requested 7.5 MHz SPI after stopping the tracker to release SPI. Downloading the candidate stopped at 0% with “The baud rate synchronization is abnormal.Please confirm if it has entered the buring mode.” Enter Burn Mode was clicked, but no confirmation of mode entry appeared. Automatic approval review blocked a retry because burn mode was unconfirmed. The user must perform the known physical UPD/power-on sequence before another attempt. No successful flash or post-change five-minute test is claimed. The tracker is stopped while this is pending.
 
 The earlier raw capture proves a lack of enough decoded points at the selected seat, not a root cause inside the firmware. CFAR/noise suppression, angular displacement/multipath and setup geometry remain hypotheses. A successful build does not validate continuous seated detection or empty-seat rejection.
+
+## Successful download and physical tests
+
+After the user confirmed physical burn mode, RadarDebugTool downloaded the candidate and reported `Download successful!` (tool log 2026-10-11 12:23:24). Its SPI dropdown displayed 60 MHz for this successful attempt; this is a requested setting, not a measured clock. Download progress was observed at 80% before success. The tool was disconnected and the direct-SPI tracker restarted at its established requested 7.5 MHz. Frames then arrived near 20.2 FPS. No independent flash readback/hash verification was performed. The experimental image remains installed; the original rollback image remains available. Falls are disarmed and external calls disabled.
+
+User confirmed sitting still in the same seat about four feet in front. Tracking remained presence-only, selected T3, with the same anchor and gates as before. The five-minute UI capture has 300 distinct snapshots spanning 300.811 seconds of sampling (301.521 seconds of saved-state timestamps): T3 present 300/300, fresh evidence within 350 ms in 295/300. Callback rate 20.224 FPS; 6097 frames advanced without new reported nonconsecutive, queue-drop or stale-frame counters. Raw transport counts motion points but these are excluded from tracking and presence audit.
+
+The separate first-302-second raw window contains 6108 frames over 301.967 seconds. Existing sparse continuation rules yield fresh evidence in 6000/6108 frames (98.23%), a retained marker in all frames, and a maximum internal qualifying-evidence gap of 1.772 seconds. The fixed three-point rule gives 5912 fresh frames and a 1.981-second maximum gap. Thus continuous fresh detection still fails; marker continuity alone is not a pass. The prior shipped-image capture had a 27.295-second gap, but these sequential trials are not a controlled proof of root cause and rebuilding the SDK is not byte-equivalent to the shipped image.
+
+The user then confirmed leaving the seat and moving out of view. A 61.425-second empty-seat capture has 62 distinct snapshots: T3 remained present in 62/62, with fresh evidence in 56/62. This FAILS empty-seat rejection, even with unchanged host thresholds. It demonstrates that qualifying presence returns in this region cannot be treated as a person. Room clutter/multipath is plausible; exact reflection sources are not identified. Do not promote this experiment as a successful person detector or fall detector, and do not hide the problem by extending display persistence.
+
+Evidence: `single_side_5min.json`, `single_side_5min_summary.json`, `single_side_raw.jsonl.gz`, `single_side_raw_audit_summary.json`, `single_side_empty_seat.json`, `single_side_empty_seat_summary.json`, and `single_side_empty_raw.jsonl.gz`. Raw windows and UI windows start separately; empty raw data is bounded by the UI capture's first/last frame indices. Reproduce with the parent folder's audit_presence_frames.py and summarize_presence_test.py. No KiCad changes.
+
+Next unresolved work: compare an identically rebuilt both-side baseline with occupied/empty scenes; identify stable clutter and assess geometry/background calibration without suppressing a still person; validate reacquisition and absence before using T3 as human occupancy. Sensor-coordinate Z varied widely and mounting/floor calibration remains unvalidated. The stationary ID represents a reserved region, not verified human identity.
