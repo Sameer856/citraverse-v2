@@ -1,6 +1,6 @@
 # Posture presence firmware audit — 2026-10-11
 
-Status: source audit and an UNBUILT experimental patch. No new radar image has been flashed and no post-change hardware test has occurred. The shipped image has not been proven byte-for-byte equivalent to this SDK source.
+Status: experimental image built and packaged successfully on 2026-10-11. Download failed at synchronization (0%); successful flashing and post-change hardware testing remain pending. The shipped image has not been proven byte-for-byte equivalent to this SDK source.
 
 ## Verified source findings
 
@@ -22,6 +22,18 @@ Build the MRS6240_P2512_CPUF project in an isolated SDK copy, inspect link/memor
 
 ## Build availability
 
-Installed-software and compiler checks did not locate vendor CDK. ESP32 RISC-V compilers are present but are not treated as verified substitutes for the project's XTGccElfNewlib toolchain. A local CDK installer archive was found at C:/Users/msame/Downloads/cdk-windows-V2.24.11-20250612-1933.zip. It identifies itself as C-Sky Development Kit; setup.exe reports NotSigned. It has been extracted into ignored local build storage only. Installation approval was requested because it changes the laptop. No installer was executed as part of this audit.
+The user approved installation of the local CDK package and completed the administrator prompt. CDK is installed under AppData/Roaming/C-Sky/CDK. Its CDKRepo/Toolchain/XTGccElfNewlib/V3.1.0/R compiler reports Xuantie-900 elf newlib GCC V3.1.0 B-20250522, GCC 14.1.1 20240710. Execution inside the sandbox produced an Illegal System DLL Relocation error; the same compiler ran successfully outside the sandbox.
 
-The earlier raw capture proves a lack of enough decoded points at the selected seat, not a root cause inside the firmware. CFAR/noise suppression, angular displacement/multipath and setup geometry remain hypotheses. The existing tracker and radar configuration remain running unchanged during this audit.
+The isolated SDK copy is in ignored firmware/esp32s3_radar_poc/build/posture_single_side_sdk. A local presence.cdkws selects project.cdkproj with configuration psdf (not Debug). From project/mmwave/mmwave_application/Posture/cdk_6240_cpuf, the successful command was `cdk-make.exe -w presence.cdkws -c psdf -d build -v`. The vendor post-build script packaged the image; it did not flash hardware.
+
+- ELF text/data/BSS: 147386/1684/124252 bytes.
+- Package SRAM report: 223.50 KB of 294 KB (76.02%).
+- Image: 282432 bytes; package version R0.0-M0.0.0-V2.1.2.
+- Candidate: firmware/esp32s3_radar_poc/build/posture_single_side_experiment.img.
+- SHA256: `2a678c4e3277cf18b60a43ad8dd55cc739b7a7e65e98b659bf1a0a19d7da6671`.
+- Lst/psdf.asm contains the call at 0x5081e4 to mmw_psic_micro_cfar_doa_single_side at 0x50b364, confirming the selected compiled branch.
+- Full build.log, ELF, map and assembly remain in the isolated local build directory. Vendor SDK and binaries are not committed.
+
+RadarDebugTool connected to CH347 device 0 with requested 7.5 MHz SPI after stopping the tracker to release SPI. Downloading the candidate stopped at 0% with “The baud rate synchronization is abnormal.Please confirm if it has entered the buring mode.” Enter Burn Mode was clicked, but no confirmation of mode entry appeared. Automatic approval review blocked a retry because burn mode was unconfirmed. The user must perform the known physical UPD/power-on sequence before another attempt. No successful flash or post-change five-minute test is claimed. The tracker is stopped while this is pending.
+
+The earlier raw capture proves a lack of enough decoded points at the selected seat, not a root cause inside the firmware. CFAR/noise suppression, angular displacement/multipath and setup geometry remain hypotheses. A successful build does not validate continuous seated detection or empty-seat rejection.
