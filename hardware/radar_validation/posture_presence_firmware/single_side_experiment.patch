@@ -1,0 +1,15 @@
+--- a/project/mmwave/mmwave_application/Posture/src/prj_config.h
++++ b/project/mmwave/mmwave_application/Posture/src/prj_config.h
+@@ -113,6 +113,12 @@
+ 
+ /* HIF configuration defined in file radar_framework_default_config.h */
+ 
++/* EXPERIMENT ONLY: select actual single-side CFAR (0), not the misleading
++ * framework default comment. Keep threshold/cadence/geometry unchanged for A/B.
++ * Requires vendor build, link/memory checks and physical seated/empty-seat tests.
++ */
++#define CONFIG_MMW_MICRO_POINT_CLOUD_CFAR_MODE 0
++
+ #include "radar_framework_default_config.h"
+ 
+ #endif /* _PRJ_CONFIG_H */

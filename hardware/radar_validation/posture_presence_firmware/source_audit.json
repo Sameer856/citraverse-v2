@@ -1,0 +1,58 @@
+{
+  "status": "source audit; not runtime readback",
+  "sources": {
+    "project/mmwave/mmwave_application/Posture/src/prj_config.h": "c31d69b1df9f699c859470237859409b78d6de31bdf475cbf98c910857c9bb2e",
+    "project/mmwave/common/radar_framework/inc/radar_framework_presence_pointcloud_config.h": "88528b1dd060329453a1ae703786b09d8e171f1ac190c83c55b746c92da6d032",
+    "project/mmwave/common/radar_framework/src/radar_framework_hif_handler.c": "6544573475b00de35c95fc0a9e1ee69535d52b25c95bc349fa021e7a6017b7a3",
+    "subsys/mmw/mmw_application/mmw_app_micro_pointcloud.h": "e66e65d58708d2cc34ee1b6a8f8f832a850f3af17d58e66679a17c01c84d973d",
+    "subsys/mmw/mmw_application/mmw_app_micro_pointcloud.c": "629c7e8fb823c280d0b59145f2d7780e45b7bc98e0d6b4c3ba35058b81965aa6",
+    "subsys/mmw/mmw_application/mmw_app_pointcloud_config.h": "ced789d48fae2bcfeac5213a54b512bdd4cd41aa8a188f272f5ef987c1d8dba0",
+    "platform/boards/mrs6240_p2512/mrs6240_p2512_config.h": "df14d83db583e238ea7a071893cfe32eee57fe3063e65aba4ac1afed09567288"
+  },
+  "images": {
+    "Posture_mrs6240_p2512.img": {
+      "sha256": "86be055da54f7d8b22f2672cbeb292d27c2c1b792f4ae98adacf2e7a34af4b65",
+      "bytes": 282432,
+      "shell_command_strings": {
+        "micro_snr": false,
+        "micro_frame": false,
+        "micro_range": false,
+        "mmwc": false
+      }
+    },
+    "radar_analysis_mrs6240_p2512.img": {
+      "sha256": "8650c4119d2b7eafb749c83bb127f07b3d9c56d739a0d0546be91b16bccd0af5",
+      "bytes": 290624,
+      "shell_command_strings": {
+        "micro_snr": true,
+        "micro_frame": true,
+        "micro_range": true,
+        "mmwc": true
+      }
+    }
+  },
+  "compiled_source_defaults": {
+    "presence_enabled": 1,
+    "hardware_clutter_removal": "NONE",
+    "motion_static_removal": "disabled",
+    "autogain": 1,
+    "cfar_method": 1,
+    "cfar_mode": 1,
+    "cfar_mode_meaning": "BOTH_SIDE",
+    "cfar_threshold_db": 8.5,
+    "cfar_linear_threshold_offset_db": 1.5,
+    "micro_frame_divisor": 4,
+    "frame_period_ms": 50,
+    "chirps": 8,
+    "doppler_fft_length": 16,
+    "range_decimation": 2,
+    "presence_point_limit": 256,
+    "shell_default": 0
+  },
+  "limitations": [
+    "No live configuration readback",
+    "Source-to-shipped-image identity unverified",
+    "CFAR implementation is provided by vendor library, not visible C source",
+    "No compiler/build/flash or post-change hardware test performed"
+  ]
+}
