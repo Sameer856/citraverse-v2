@@ -354,3 +354,18 @@ An opt-in, frozen point-count gate was calibrated from 60 seconds of user-confir
 ### Temporal seat rule follow-up
 
 A fixed 1.5-second evidence window now requires a sum of 34 point observations plus at least two unique current presence points. It does not refresh from old points or extend display lifetimes. Independent seated testing yielded 297/299 fresh snapshots, but still a 1.380-second maximum raw evidence gap. After the user left view, an independent one-minute check showed T3 absent in all 62 snapshots while the feed continued at 20.224 FPS. The bounded raw recorder had expired, so empty-seat evidence is one-second snapshots only; brief between-sample detections and departure latency are not measured. This is improved sampled empty-seat rejection, not a complete continuous-person-detection fix. Full notes are in posture_presence_firmware/README.md; raw/personal captures remain local, alerts disarmed.
+
+## Custom runtime development, 2026-10-12
+
+The first configurable radar-side runtime is documented in
+[`firmware/mrs6240_custom`](../../firmware/mrs6240_custom/README.md).
+The laptop/dev kit remains the development controller; ESP32 integration is the
+later target. The image builds, software checks pass, and the vendor tool reported
+successful flashing. Live SPI GET/SET/readback, invalid-setting rejection and SAVE
+passed. After a normal software restart, settings loaded from flash and GET
+matched the saved values. A one-minute empty-scene calibration completed on the
+radar (311 samples, maximum 39, threshold 40); saving and software restarting
+preserved that threshold. A short 21.434-second follow-up showed no detection in
+eight sampled empty-scene statuses. Seated detection and cold-power recovery
+remain unvalidated. This does not supersede the recorded
+presence-detection failures. Raw command evidence remains in the ignored build folder.
