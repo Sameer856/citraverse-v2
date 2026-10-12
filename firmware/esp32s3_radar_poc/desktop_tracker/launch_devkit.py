@@ -22,7 +22,13 @@ parser.add_argument('--tracker', type=Path, default=REPO.parent / 'live_tracker'
 parser.add_argument('--seat', nargs=3, type=float, metavar=('ID','X','Y'))
 parser.add_argument('--presence-audit', type=Path)
 parser.add_argument('--seat-calibration', type=Path, help='Fixed empty-seat point-count calibration; selected region only')
+parser.add_argument('--spatial-model', type=Path, help='Frozen 3-D spatial/temporal presence model; laptop development mode')
 args = parser.parse_args()
+spatial_model = None
+if args.spatial_model:
+    if not args.presence_only or args.seat_calibration or not args.seat:
+        parser.error('--spatial-model requires --presence-only and --seat; cannot combine count calibration')
+    spatial_model = json.loads(args.spatial_model.read_text())
 calibration = None
 if args.seat_calibration:
     try:
@@ -57,6 +63,9 @@ from direct_spi import DirectSpi
 import fall_ui
 import fall_detection
 from presence_tracker import PresenceTracker
+if spatial_model:
+    from spatial_adapter import tracker_class
+    PresenceTracker = tracker_class(spatial_model)
 from presence_preview import PresencePreview
 legacy.Tracker = PresenceTracker
 fall_detection.Tracker = PresenceTracker
@@ -86,7 +95,9 @@ class DevKitRoom(fall_ui.RoomView):
             age = app.tracker.last-q['last'] if q else None
             source_points = q['points'] if q and age <= .35 else []
             shown_age = f'{age*1000:.0f} ms' if age is not None else 'track lost'
-            if app.tracker.focus is not None: shown_age += ' | stationary region lock (0.5 m)'
+            if spatial_model:
+                shown_age += ' | 3D presence region | '+(app.tracker.spatial_status or {}).get('state','unobserved')
+            elif app.tracker.focus is not None: shown_age += ' | stationary region lock (0.5 m)'
             if (app.tracker.background_minimum is not None and app.tracker.focus is not None
                     and tuple(app.tracker.focus['anchor'][:2]) == app.tracker.background_anchor):
                 shown_age += f' | fixed empty-seat gate: {app.tracker.background_minimum} points'
@@ -156,6 +167,7 @@ class Desktop(legacy.App):
         root.title('Possumic Fall Tracker - Posture dev kit' + (' (buffered preview)' if args.recording else ' / direct SPI'))
         if args.presence_only: root.title(root.title()+' / PRESENCE-ONLY TRACKING')
         if calibration: root.title(root.title()+' / FIXED EMPTY-SEAT CALIBRATION')
+        if spatial_model: root.title(root.title()+' / SPATIAL PRESENCE — LAPTOP FILTER')
         self.port.set('Dev kit / vendor recording' if args.recording else 'CH347 direct SPI')
         self.raw_points.set(True)
         self.snr.set(0)
@@ -285,6 +297,9 @@ class Desktop(legacy.App):
                      source=str(args.recording) if args.recording else 'direct CH347 SPI',external_calls=False)
         state['presence_only_tracking'] = args.presence_only
         state['seat_calibration'] = calibration
+        if spatial_model:
+            state['spatial_model_method'] = spatial_model['method']
+            state['spatial_presence'] = {k:v for k,v in (self.tracker.spatial_status or {}).items() if k!='points'}
         state['selected_target'] = self.target_view.get()
         state['stationary_focus_anchor'] = self.tracker.focus['anchor'] if self.tracker.focus else None
         state['saved_at'] = time.time()

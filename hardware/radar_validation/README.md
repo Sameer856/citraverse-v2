@@ -372,3 +372,17 @@ unchanged threshold 40 and approximately 20.245 FPS from advancing radar counter
 The count-based calibration rule is not an acceptable still-person detector.
 Cold-power recovery remains unvalidated. This does not supersede the recorded
 presence-detection failures. Raw command evidence remains in the ignored build folder.
+
+### Spatial presence filtering on the laptop
+
+A frozen 3-D voxel background and bounded temporal presence-only filter now runs
+in the direct-SPI viewer. An independent one-minute empty-seat test produced zero
+detections across 1,207 frames. With the same frozen model, a confirmed seated
+five-minute capture produced 6,066 frames at 20.248 FPS: acquisition in 0.458 s,
+then occupancy in every remaining frame (5,875 fresh, 182 retained). Maximum
+evidence gap was 1.180 s, close to the fixed 1.2 s retention limit. This supports
+tracking continuity for this selected seat, not continuous fresh returns or a
+general human classifier. Radar firmware STATUS still uses the failed count-only
+rule; the spatial filter has not been ported or flashed. See
+[spatial presence development](../../firmware/mrs6240_custom/SPATIAL_PRESENCE.md)
+for methodology and limits. Captures and personal calibration remain local.

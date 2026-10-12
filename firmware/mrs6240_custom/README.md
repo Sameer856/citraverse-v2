@@ -1,5 +1,10 @@
 # MRS6240-P2512 custom firmware — development 1
 
+For the subsequent laptop-side spatial/temporal detector and its separate live
+validation, see [SPATIAL_PRESENCE.md](SPATIAL_PRESENCE.md). The firmware STATUS
+occupancy bit below still uses the failed count-based rule; the optional viewer
+mode evaluates raw presence points independently.
+
 Development uses the laptop and CH347 dev kit. The finished device will use the
 ESP32 as the controller. Both can use the same CVR1 payload over the vendor HIF
 transport. The initial flash installs executable code; subsequent configuration
