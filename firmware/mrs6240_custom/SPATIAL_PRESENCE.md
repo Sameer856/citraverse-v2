@@ -1,5 +1,10 @@
 # Spatial and temporal presence development
 
+**Superseded acceptance result:** the subsequent user-confirmed ten-minute empty
+room run reported occupancy in 12,084/12,140 frames (99.54%). The short empty check
+below did not generalize. This model is a failed diagnostic candidate, not a
+reliable person detector. See [overnight experiments](OVERNIGHT_EXPERIMENTS.md).
+
 This is a laptop-side filter over the custom firmware's unchanged raw presence
 stream. It is not yet embedded in radar firmware and does not change the firmware
 STATUS occupancy bit. Validate the algorithm before porting it; the count-only
@@ -61,8 +66,8 @@ coordinates, not verified height above the floor.
   close to the fixed 1.2-second retention limit; robustness remains unproven.
 - Viewer restored on direct SPI with T1 selected and presence-only tracking;
   state readback confirmed the spatial model, live approximately 20.25 FPS,
-  presence-only track and disarmed fall alerts. A post-seated empty check is
-  awaiting user confirmation of leaving view.
+  presence-only track and disarmed fall alerts. The subsequent confirmed-empty
+  ten-minute check failed as recorded above; the viewer was then left stopped.
 
 Raw captures, calibrated spatial model and
 per-frame outputs remain local in the ignored `esp32s3_radar_poc/build/custom_commands`

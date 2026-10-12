@@ -375,6 +375,11 @@ presence-detection failures. Raw command evidence remains in the ignored build f
 
 ### Spatial presence filtering on the laptop
 
+**Subsequent failure:** a confirmed ten-minute empty-room run reported occupancy
+in 12,084/12,140 frames (99.54%). The short pass below is not a reliable acceptance
+result. Recalibration variants also failed; see
+[overnight experiments](../../firmware/mrs6240_custom/OVERNIGHT_EXPERIMENTS.md).
+
 A frozen 3-D voxel background and bounded temporal presence-only filter now runs
 in the direct-SPI viewer. An independent one-minute empty-seat test produced zero
 detections across 1,207 frames. With the same frozen model, a confirmed seated

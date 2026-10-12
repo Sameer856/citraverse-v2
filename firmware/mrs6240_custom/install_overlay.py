@@ -10,7 +10,11 @@ def replace_once(text, pattern, replacement):
         raise ValueError(f"SDK layout mismatch: {pattern}")
     return text
 
-def install(sdk):
+def install(sdk, cfar_mode=1, range_dec=2, interval_log2=3, frame_dec=4):
+    if cfar_mode not in (0, 1):
+        raise ValueError('CFAR mode must be 0 or 1')
+    if range_dec not in (1,2) or interval_log2 not in (3,4) or frame_dec not in (2,4):
+        raise ValueError('Unsupported experimental presence geometry')
     source = sdk / "project/mmwave/mmwave_application/Posture/src"
     entry = source / "mmw_app_entry.c"
     text = entry.read_text()
@@ -29,12 +33,22 @@ def install(sdk):
     text = config.read_text()
     name = "CONFIG_MMW_MICRO_POINT_CLOUD_CFAR_MODE"
     if re.search(r"^#define\s+"+name+r"\s+", text, re.M):
-        text = re.sub(r"^#define\s+"+name+r"\s+\d+", "#define "+name+" 1", text, flags=re.M)
+        text = re.sub(r"^#define\s+"+name+r"\s+\d+", "#define "+name+" "+str(cfar_mode), text, flags=re.M)
     else:
         index = text.rfind("#endif")
         if index < 0:
             raise ValueError("Missing prj_config guard")
-        text = text[:index]+"#define "+name+" 1\n"+text[index:]
+        text = text[:index]+"#define "+name+" "+str(cfar_mode)+"\n"+text[index:]
+    config.write_text(text)
+    for macro, value in [('CONFIG_MMW_PRESENCE_POINT_CLOUD_RANGE_DEC',range_dec),
+                         ('CONFIG_MMW_PRESENCE_INTERVAL_NUM_LOG2',interval_log2),
+                         ('CONFIG_MMW_PRESENCE_POINT_CLOUD_INTERVAL_DEC',frame_dec)]:
+        pattern = r'^#define\s+'+macro+r'\s+[^\r\n]+'
+        if re.search(pattern,text,re.M):
+            text = re.sub(pattern,'#define '+macro+' '+str(value),text,flags=re.M)
+        else:
+            index=text.rfind('#endif')
+            text=text[:index]+'#define '+macro+' '+str(value)+'\n'+text[index:]
     config.write_text(text)
     shutil.copyfile(pathlib.Path(__file__).with_name("citraverse_runtime.c"), source/"citraverse_runtime.c")
     workspace = source.parent / "cdk_6240_cpuf/presence.cdkws"
@@ -44,4 +58,10 @@ def install(sdk):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("sdk", type=pathlib.Path, help="Disposable writable SDK copy, never the original download")
-    install(parser.parse_args().sdk.resolve())
+    parser.add_argument('--cfar-mode', type=int, choices=(0,1), default=1,
+                        help='Experimental CFAR build variant: 0 single-side, 1 both-side (default)')
+    parser.add_argument('--range-dec', type=int, choices=(1,2), default=2)
+    parser.add_argument('--interval-log2', type=int, choices=(3,4), default=3)
+    parser.add_argument('--frame-dec', type=int, choices=(2,4), default=4)
+    args = parser.parse_args()
+    install(args.sdk.resolve(), args.cfar_mode, args.range_dec, args.interval_log2, args.frame_dec)
