@@ -155,16 +155,36 @@ between-sample false detections. The threshold was saved; after a second normal
 software restart, GET still returned 40. No reflashing occurred for either
 calibration or persistence testing.
 
-Cold-power-loss, interrupted-write and independent seated accuracy remain
-untested. The saved model applies only to this configured region and scene.
+### Independent seated test: FAILED
+
+After the user confirmed being seated about four feet directly ahead, ran the
+unchanged saved threshold 40 for 302.303 seconds. All 115 status queries returned
+valid correlated replies; only 1/115 reported occupied (0.87%). Snapshot endpoints
+span 299.684 seconds, with 6,067 new radar frames, approximately 20.245 FPS. The
+largest sampled evidence age was 215,460 ms; this is time since the last accepted
+burst, not a measured raw-point gap. No settings changed during the test.
+
+This fails continuous seated presence detection. A healthy frame stream and
+working calibration commands do not make the count-based classifier accurate.
+The empty-scene maximum-plus-one rule rejects nearly all sampled seated states.
+It does not establish that the sensor produced no presence points. Status samples
+are about 2.6 seconds apart and cannot establish between-sample continuity.
+Detailed evidence remains local in `build/custom_commands/seated_5min_samples.json`
+and `seated_5min_summary.json` under the ESP32 proof-of-concept directory.
+
+Do not promote threshold 40 as a usable detector or silently lower it against this
+test. Next work is to compare spatial/temporal presence evidence from occupied and
+empty scenes, rather than classify solely by total point count. The experimental
+image and saved threshold remain installed for reproducibility; fall output is
+unsupported. Cold-power-loss and interrupted-write recovery remain untested.
 
 ## Remaining work / acceptance gates
 
 1. Integrate commands with the viewer's single SPI owner; current command CLI
    requires exclusive access and is separate from the live viewer.
-2. Confirm empty room, calibrate, save, power-cycle and compare readback. Then
-   independently test five minutes seated and one minute empty. Keep raw evidence
-   local. A calibration trained on a person is invalid.
+2. Validate cold-power recovery and a full independent one-minute empty test after
+   revising the failed detector. Repeat the seated test without tuning on its
+   validation data. Keep raw evidence local. A calibration trained on a person is invalid.
 3. Tune or replace this count-based detector against independent evidence. It
    counts vendor points without desktop deduplication and does not solve missing
    radar returns. Do not claim the previous detection gaps are fixed.

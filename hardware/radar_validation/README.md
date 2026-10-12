@@ -366,6 +366,9 @@ passed. After a normal software restart, settings loaded from flash and GET
 matched the saved values. A one-minute empty-scene calibration completed on the
 radar (311 samples, maximum 39, threshold 40); saving and software restarting
 preserved that threshold. A short 21.434-second follow-up showed no detection in
-eight sampled empty-scene statuses. Seated detection and cold-power recovery
-remain unvalidated. This does not supersede the recorded
+eight sampled empty-scene statuses. The subsequent confirmed-seated test FAILED:
+only 1/115 valid status checks reported occupied during 302.303 seconds, with
+unchanged threshold 40 and approximately 20.245 FPS from advancing radar counters.
+The count-based calibration rule is not an acceptable still-person detector.
+Cold-power recovery remains unvalidated. This does not supersede the recorded
 presence-detection failures. Raw command evidence remains in the ignored build folder.
