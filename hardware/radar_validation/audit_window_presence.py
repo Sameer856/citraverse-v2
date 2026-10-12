@@ -10,12 +10,14 @@ p = argparse.ArgumentParser()
 p.add_argument('capture', type=Path)
 p.add_argument('--x', type=float, default=-.2402809604)
 p.add_argument('--y', type=float, default=1.025518486)
+p.add_argument('--bounded-continuation', action='store_true')
 a = p.parse_args()
 opener = gzip.open if a.capture.suffix == '.gz' else open
 with opener(a.capture, 'rt') as f:
     rows = [json.loads(line) for line in f if line.strip()]
 history = deque()
 last = previous = None
+strong = None
 accepted = []
 fresh = visible = 0
 for row in rows:
@@ -24,6 +26,7 @@ for row in rows:
         raise ValueError('nonmonotonic capture')
     if previous is not None and t-previous > .5:
         history.clear()
+        strong = None
     previous = t
     n = len({tuple(round(q[k],2) for k in ('x','y','z')) for q in row['points']
              if all(math.isfinite(q.get(k,float('nan'))) for k in ('x','y','z','snr'))
@@ -31,7 +34,11 @@ for row in rows:
     history.append((t,n))
     while history and t-history[0][0] > 1.5:
         history.popleft()
-    if n >= 2 and sum(v for _,v in history) >= 34:
+    score = sum(v for _,v in history)
+    if n >= 2 and score >= 34:
+        strong = t
+    if n >= 2 and (score >= 34 or (a.bounded_continuation and strong is not None
+                                  and 0 <= t-strong <= 2 and score >= 26)):
         last = t
         accepted.append(t)
     age = t-last if last is not None else float('inf')
@@ -42,6 +49,7 @@ result = dict(frames=len(rows), duration_s=rows[-1]['time_s']-rows[0]['time_s'],
               max_internal_gap_s=max((y-x for x,y in zip(accepted,accepted[1:])),default=None),
               tail_age_s=rows[-1]['time_s']-last if last is not None else None,
               rule='34 observations in 1.5 seconds plus 2 unique current points; SNR>=18; 0.5m seat',
+              bounded_continuation=a.bounded_continuation,
               limitation='Cropped replay lacks prior history; selected region is not human identity')
 a.capture.with_name(a.capture.name.split('.')[0]+'_window_audit.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result,indent=2))

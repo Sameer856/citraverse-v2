@@ -138,3 +138,17 @@ assert tr.tracks[3]['last']==.2
 assert 3 not in tr.update([],2.3)
 assert sum(n for _,n in tr.background_counts)==0
 print('PASS: temporal context requires fresh points, does not retimestamp history, clears on gaps')
+
+tr=PresenceTracker(use_presence=True)
+tr.reserve_seat(3,0,1)
+tr.background_anchor=(0,1);tr.background_minimum=34;tr.background_window=1.5;tr.background_weak=26
+for i in range(8): tr.update(seat_points(4),i*.2)
+assert 3 not in tr.tracks  # weak empty background cannot start a track
+tr.update(seat_points(10),1.6)
+assert tr.background_strong_time==1.6
+for i in range(9,50): tr.update(seat_points(4),i*.2)
+assert 3 not in tr.tracks  # weak returns cannot sustain an established track forever
+assert tr.background_strong_time <= 3
+tr.reserve_seat(3,0,1)
+assert tr.background_strong_time is None
+print('PASS: weak evidence cannot acquire or perpetually sustain; reselection clears confirmation')
