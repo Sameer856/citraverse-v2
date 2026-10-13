@@ -375,6 +375,14 @@ presence-detection failures. Raw command evidence remains in the ignored build f
 
 ### Spatial presence filtering on the laptop
 
+2026-10-13 longer-integration follow-up: flash/readback and both five-minute
+captures completed. With the unchanged laptop model, seated occupancy was
+2,704/6,067 frames (44.57%), with 16 tracking gaps and a longest terminal gap of
+75.038 s. Confirmed-empty occupancy was 0/6,064 frames. Main streaming remained
+about 20.25 FPS and nonempty presence updates about 5.06/s. This still fails
+continuous seated detection despite improved coverage relative to the faster
+image. See [longer-integration test](../../firmware/mrs6240_custom/LONG_INTEGRATION_TEST.md).
+
 2026-10-13 faster-presence firmware follow-up: flash and command readback passed;
 presence callbacks increased to approximately 10.12/s while the main stream stayed
 at 20.25 FPS. With the unchanged laptop model, a five-minute seated capture reported
