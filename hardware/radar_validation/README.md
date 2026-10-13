@@ -375,6 +375,14 @@ presence-detection failures. Raw command evidence remains in the ignored build f
 
 ### Spatial presence filtering on the laptop
 
+2026-10-13 faster-presence firmware follow-up: flash and command readback passed;
+presence callbacks increased to approximately 10.12/s while the main stream stayed
+at 20.25 FPS. With the unchanged laptop model, a five-minute seated capture reported
+occupancy in only 117/6,066 frames (1.93%). The matching confirmed-empty run reported
+zero detections in 6,065 frames. This pair fails still-person sensitivity. The first
+seated attempt stalled and was excluded; a normal software reset preceded the full
+retry. See [faster-presence test](../../firmware/mrs6240_custom/FASTER_PRESENCE_TEST.md).
+
 **Subsequent failure:** a confirmed ten-minute empty-room run reported occupancy
 in 12,084/12,140 frames (99.54%). The short pass below is not a reliable acceptance
 result. Recalibration variants also failed; see
