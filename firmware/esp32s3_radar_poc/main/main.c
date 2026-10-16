@@ -102,6 +102,7 @@ static bool programmer_gate(DEV_HANDLE dev) {
     uart_driver_delete(UART_NUM_0);
     return true;
 }
+#include "radar_audio.h"
 void app_main(void) {
     /* Match vendor ordering: initialize networking before the host driver. */
     ESP_ERROR_CHECK(radar_wifi_init());
@@ -125,6 +126,8 @@ void app_main(void) {
     esp_err_t wifi_result=radar_wifi_start();
     if(wifi_result!=ESP_OK) ESP_LOGW(TAG,"Wi-Fi unavailable (%s); provision at next boot with WIFI JSON",esp_err_to_name(wifi_result));
     ESP_ERROR_CHECK(radar_control_start());
+    esp_err_t audio_result=radar_audio_start();
+    ESP_LOGI(TAG,"Microphone WS4 SCK5 SD6: %s; audio page at http://<ESP-IP>:81/",esp_err_to_name(audio_result));
     uint32_t last_frames;
     portENTER_CRITICAL(&lock);last_frames=stats.frames;portEXIT_CRITICAL(&lock);
     int64_t last_time=esp_timer_get_time();
