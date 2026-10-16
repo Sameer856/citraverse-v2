@@ -1,8 +1,8 @@
 # Simultaneous INMP441 and radar test
 
 INMP441 WS → GPIO4, SCK → GPIO5, SD → GPIO6, VDD → 3.3 V,
-GND → common ground. Strap L/R to GND (left) or 3.3 V (right); do not
-leave it floating. Select the corresponding channel on the listening page.
+GND → common ground. Strap L/R to GND (left); do not leave it floating. This build targets the
+left channel measured on this board. Right-channel requests are rejected.
 Existing radar GPIOs and external radar supply remain as documented in README.
 No SD card is used. This change updates the ESP32 application, not radar firmware.
 
@@ -13,18 +13,29 @@ use a trusted network. There is no recording or cloud upload in this feature.
 
 I2S captures 16 kHz, stereo 32-bit Philips slots (1.024 MHz requested BCLK).
 The selected INMP441 slot carries 24-bit data; the high 16 bits become PCM16.
-Both slots are transported so L/R can be selected without reflashing.
-DMA capture uses its own task and a bounded 100 ms RAM ring. A separate
+Both I2S slots are clocked, but only the verified left channel is retained and transported.
+DMA capture uses its own task and a bounded 2000 ms RAM ring. A separate
 HTTP server handles audio, avoiding radar HTTP server send stalls. Network
 congestion can still affect both streams; this is a test implementation.
 
-`GET :81/pcm?after=N` returns newest blocks after sequence N, maximum five.
-The 20-byte little-endian header has five uint32 fields: magic `0x31445541`
-(AUD1), first block sequence, sample rate (16000), stereo frame count,
-cumulative I2S read errors. Interleaved left/right signed PCM16 follows.
-Each block is 320 stereo frames (20 ms). Empty responses have zero frames.
+The listening page uses `ws://<ESP-IP>:81/ws`, sending `next N C` where N is
+the last received block sequence (0 at startup) and C must be 0 for left. Each binary response uses the AUD2 format below. The next request is
+sent on receipt, without a browser polling timer. The audio server briefly
+waits for new samples when the client has caught up.
+
+The diagnostic `GET :81/pcm?after=N&channel=0` also returns retained blocks after sequence N, maximum five
+per response. Up to one hundred blocks can be recovered over successive requests;
+a new listener starts at the most recent five. Audio sockets use TCP_NODELAY
+to avoid small-response delays. The network socket allowance is 20 to cover
+both HTTP servers, the command service, browser tabs and test clients.
+The 20-byte little-endian header has five uint32 fields: magic `0x32445541`
+(AUD2), first block sequence, sample rate (16000), mono sample count,
+cumulative I2S read errors. Left-channel signed PCM16 follows.
+Each block is 320 mono samples (20 ms). Empty responses have zero frames.
 Sequence discontinuities indicate discarded blocks, not interpolated audio.
-Browser playback uses a bounded scheduling lead and reports RMS and gaps.
+Browser playback starts with a 1600 ms jitter reserve and reports RMS, sequence
+gaps, playback underruns and current buffer length. It never rewinds already
+scheduled audio merely because the buffer exceeds 200 ms.
 
 Hardware audio quality and simultaneous radar throughput must be measured;
 a successful build alone does not validate the microphone connection.
@@ -44,3 +55,38 @@ counts, peak 959; right channel was zero. Use left/GND on the listening page.
 Only metrics were retained; audio was not saved. This confirms concurrent
 data delivery, not perceptual audio quality or lossless streaming. Browser
 listening and sustained/high-point-count radar stress testing remain open.
+
+The radar send staging buffer is 16 KiB; its 64 KiB retained history remains unchanged. This releases 48 KiB for TCP and audio. Radar callbacks wait at most one scheduler tick for a copy-only lock, rather than dropping immediately on contention. No network send holds that lock. Browser requests are paced by fresh data on the audio server (at most two scheduler ticks of waiting), avoiding background-tab polling timers. Playback starts with 1600 ms of reserve.
+
+## Dropout regression — 2026-10-17
+
+Final transport test: 30.016 seconds radar-only, then 120 seconds with one
+audio WebSocket listener and radar WebSocket streaming concurrently.
+
+| Metric | Radar only | Audio + radar |
+|---|---:|---:|
+| Acquisition FPS | 20.0893 | 20.0500 |
+| Delivered radar FPS | 20.0227 | 20.0250 |
+| Delivered radar frames | 601 | 2,403 |
+| Radar sequence gaps / copy drops | 0 / 0 | 0 / 0 |
+| Audio blocks (320 samples each) | — | 6,000 |
+| Audio sequence gaps / read errors | — | 0 / 0 |
+| Simulated playback reserve exhaustion | — | 0 |
+| Free heap at end | 31,336 bytes | 29,116 bytes |
+
+The acquisition rate differed by 0.20%, with no missing radar indices.
+`tests/compare_live_streams.py --host <ESP-IP>` reproduces this test and fails
+on frame gaps, audio gaps, read errors, reserve exhaustion or >2% FPS loss.
+It requires Python websocket-client and saves no audio or radar payloads.
+
+Earlier HTTP-based and smaller-buffer tests failed, including with two audio
+listeners. Only the final one-listener configuration passed this acceptance
+run. A two-second bounded history cannot cover arbitrary Wi-Fi outages.
+The continuity trade-off is approximately 1.6 seconds of initial audio delay;
+this is not a low-latency intercom. A browser-only startup-reserve correction
+followed the transport test; acquisition and transport were unchanged.
+
+Browser follow-up after the startup-reserve fix: 2,141 audio blocks received,
+zero skipped blocks, zero capture read errors and zero playback underruns.
+The displayed playback buffer was 1,969 ms. This is a short continuity check,
+not a guarantee against future wireless outages.

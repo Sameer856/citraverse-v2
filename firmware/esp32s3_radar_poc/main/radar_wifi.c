@@ -19,7 +19,8 @@ static const char *TAG="radar_wifi";
 static SemaphoreHandle_t guard;
 #define PREVIEW_DEPTH 128
 #define HISTORY_BYTES 65536
-static uint8_t history[HISTORY_BYTES], outgoing[65536];
+/* Bound a send batch, not retention: reserve heap for concurrent audio/TCP. */
+static uint8_t history[HISTORY_BYTES], outgoing[16384];
 static uint32_t lengths[PREVIEW_DEPTH], times_ms[PREVIEW_DEPTH], offsets[PREVIEW_DEPTH];
 static uint32_t retained, used_bytes, write_offset, client_overruns;
 static void history_copy(uint8_t *destination,uint32_t offset,uint32_t size) {
@@ -64,7 +65,9 @@ esp_err_t radar_wifi_provision(const char *text) {
 }
 void radar_wifi_frame(const uint8_t *data,uint32_t len) {
     if(!guard || len>8192 || !len) return;
-    if(xSemaphoreTake(guard,0)!=pdTRUE) { __atomic_add_fetch(&skipped,1,__ATOMIC_RELAXED);return; }
+    /* Copy-only critical sections; network sends occur after release. Allow
+       one scheduler tick for contention instead of discarding a valid frame. */
+    if(xSemaphoreTake(guard,1)!=pdTRUE) { __atomic_add_fetch(&skipped,1,__ATOMIC_RELAXED);return; }
     while(retained && (retained==PREVIEW_DEPTH || used_bytes+len>HISTORY_BYTES)) {
         used_bytes-=lengths[(received-retained)%PREVIEW_DEPTH];retained--;
     }
