@@ -90,3 +90,38 @@ Browser follow-up after the startup-reserve fix: 2,141 audio blocks received,
 zero skipped blocks, zero capture read errors and zero playback underruns.
 The displayed playback buffer was 1,969 ms. This is a short continuity check,
 not a guarantee against future wireless outages.
+
+## Lower-delay investigation — 2026-10-17
+
+The pre-existing browser session had reached 94,093 received blocks with
+98 skipped blocks and one playback underrun. This supersedes any assumption
+that the earlier short acceptance test established long-term reliability.
+
+A fresh 30-second radar-only baseline measured 20.0333 acquisition FPS.
+The following 120.016-second simultaneous run received 2,404 radar frames
+and 6,002 audio blocks, with zero radar gaps/copy drops, audio gaps or audio
+read errors. Acquisition was 20.0390 FPS; delivered radar was 20.0307 FPS.
+The longest interval between nonempty audio arrivals was 1,594 ms.
+
+The same arrivals were evaluated with several playback reserves:
+
+| Reserve (ms) | Simulated underruns |
+|---:|---:|
+| 100 | 3 |
+| 200 | 2 |
+| 300 | 1 |
+| 500 | 1 |
+| 800 | 1 |
+| 1,000 | 1 |
+| 1,200 | 1 |
+| 1,600 | 0 |
+
+Firmware and the 1.6-second default were deliberately left unchanged because
+none of the lower reserves passed this run. These are timing simulations,
+not acoustic end-to-end latency measurements. The arrival stall does not by
+itself identify whether the cause is radio contention, host scheduling or
+device/network transport. Repeat near the router to isolate radio effects.
+
+The regression tool now accepts `--reserve-ms` and reports candidate underruns
+and maximum inter-arrival gap without saving microphone samples. A candidate
+must pass both this check and real browser playback before becoming default.

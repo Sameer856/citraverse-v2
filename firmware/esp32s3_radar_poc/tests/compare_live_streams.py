@@ -4,6 +4,7 @@ p=argparse.ArgumentParser()
 p.add_argument('--host',required=True)
 p.add_argument('--baseline-seconds',type=int,default=30)
 p.add_argument('--combined-seconds',type=int,default=120)
+p.add_argument('--reserve-ms',type=int,default=1600)
 a=p.parse_args()
 HOST=a.host
 def health():
@@ -29,6 +30,8 @@ def run(seconds,audio):
  t=threading.Thread(target=radar);t.start()
  if audio:
   c=websocket.create_connection('ws://'+HOST+':81/ws',timeout=3);after=0;next_play=0
+  candidates={ms:{'next':0,'underruns':0} for ms in [100,200,300,500,800,1000,1200,1600]}
+  last_audio=None;max_gap=0
   try:
    while time.monotonic()<end:
     c.send('next '+str(after)+' 0');b=c.recv()
@@ -40,11 +43,20 @@ def run(seconds,audio):
      now=time.monotonic()
      if next_play<now:
       if next_play:s['simulated_playback_underruns']+=1
-      next_play=now+1.6
+      next_play=now+a.reserve_ms/1000
      next_play+=n/rate
+     if last_audio is not None:max_gap=max(max_gap,now-last_audio)
+     last_audio=now
+     for ms,v in candidates.items():
+      if v['next']<now:
+       if v['next']:v['underruns']+=1
+       v['next']=now+ms/1000
+      v['next']+=n/rate
 
   except Exception as e:s['audio_error']=str(e)
   c.close()
+  s['reserve_ms']=a.reserve_ms;s['max_audio_arrival_gap_ms']=round(max_gap*1000,1)
+  s['candidate_underruns']={ms:v['underruns'] for ms,v in candidates.items()}
  else:
   while time.monotonic()<end:time.sleep(.1)
  t.join();elapsed=time.monotonic()-start;after=health()
