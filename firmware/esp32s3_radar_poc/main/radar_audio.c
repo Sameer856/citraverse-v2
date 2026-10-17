@@ -2,6 +2,7 @@
 #include "driver/i2s_std.h"
 #include "esp_http_server.h"
 #include "esp_timer.h"
+#include "esp_heap_caps.h"
 #include "lwip/sockets.h"
 #include "lwip/tcp.h"
 #include "freertos/FreeRTOS.h"
@@ -13,14 +14,25 @@
 #include <string.h>
 
 /* Independent DMA/task and HTTP server: no network work in radar callbacks.
- * Retain 2000 ms for network jitter; send at most 100 ms per response. */
+ * Keep history in PSRAM, leaving internal RAM for DMA and networking.
+ * Retain 10.24 seconds; send at most 100 ms per response. */
 #define SAMPLES 320
-#define DEPTH 100
+#define DEPTH 512
 #define BATCH 5
 static i2s_chan_handle_t rx;
 static SemaphoreHandle_t mutex;
-static uint32_t sequence, errors;
-static struct {uint32_t seq, ms; int16_t pcm[SAMPLES];} ring[DEPTH];
+static uint32_t sequence, errors, retained;
+static uint32_t requests,send_errors,max_send_ms,last_request_ms;
+void radar_audio_stats(radar_audio_stats_t *out) {
+    memset(out,0,sizeof(*out));
+    if(mutex){xSemaphoreTake(mutex,portMAX_DELAY);out->blocks=sequence;out->read_errors=errors;xSemaphoreGive(mutex);}
+    out->requests=__atomic_load_n(&requests,__ATOMIC_RELAXED);
+    out->send_errors=__atomic_load_n(&send_errors,__ATOMIC_RELAXED);
+    out->max_send_ms=__atomic_load_n(&max_send_ms,__ATOMIC_RELAXED);
+    out->last_request_ms=__atomic_load_n(&last_request_ms,__ATOMIC_RELAXED);
+}
+typedef struct {int16_t pcm[SAMPLES];} audio_block_t;
+static audio_block_t *ring;
 static void capture(void *unused) {
     int32_t raw[SAMPLES*2];
     while(1) {
@@ -34,7 +46,7 @@ static void capture(void *unused) {
         if(total!=sizeof(raw)) continue;
         xSemaphoreTake(mutex,portMAX_DELAY);
         unsigned slot=sequence%DEPTH;
-        ring[slot].seq=++sequence;ring[slot].ms=esp_timer_get_time()/1000;
+        ++sequence;if(retained<DEPTH)++retained;
         for(unsigned i=0;i<SAMPLES;i++) ring[slot].pcm[i]=(int16_t)(raw[i*2]>>16);
         xSemaphoreGive(mutex);
     }
@@ -50,9 +62,10 @@ static size_t pack_audio(uint32_t after,unsigned channel,uint8_t *output) {
     (void)channel; /* This build targets the measured INMP441 left/GND wiring. */
     /* Pace on data, not browser timers, which background tabs throttle.
        Only the audio server waits; never wait while holding the mutex. */
-    for(unsigned attempt=0;attempt<2 && after;attempt++) {
+    int64_t deadline=esp_timer_get_time()+100000;
+    while(after && esp_timer_get_time()<deadline) {
         xSemaphoreTake(mutex,portMAX_DELAY);
-        bool fresh=sequence!=after;
+        bool fresh=(uint32_t)(sequence-after)>=BATCH;
         xSemaphoreGive(mutex);
         if(fresh) break;
         vTaskDelay(1);
@@ -61,7 +74,7 @@ static size_t pack_audio(uint32_t after,unsigned channel,uint8_t *output) {
     uint32_t pending=sequence-after;
     /* New listeners start near live, reconnecting listeners recover history. */
     if(!after && pending>BATCH) pending=BATCH;
-    if(pending>DEPTH) pending=sequence<DEPTH?sequence:DEPTH;
+    if(pending>retained) pending=retained;
     uint32_t first=sequence-pending+1;
     if(pending>BATCH) pending=BATCH;
     uint32_t header[5]={0x32445541,first,16000,pending*SAMPLES,errors};
@@ -99,16 +112,25 @@ static esp_err_t audio_ws(httpd_req_t *r) {
     if(err!=ESP_OK) return err;
     unsigned long after=0;unsigned channel=0;
     if(sscanf((char*)command,"next %lu %u",&after,&channel)!=2 || channel!=0) return ESP_ERR_INVALID_ARG;
+    __atomic_add_fetch(&requests,1,__ATOMIC_RELAXED);
+    __atomic_store_n(&last_request_ms,(uint32_t)(esp_timer_get_time()/1000),__ATOMIC_RELAXED);
     static uint8_t output[20+BATCH*SAMPLES*2];
     size_t size=pack_audio((uint32_t)after,channel,output);
     httpd_ws_frame_t response={.type=HTTPD_WS_TYPE_BINARY,.payload=output,.len=size};
-    return httpd_ws_send_frame(r,&response);
+    int64_t start=esp_timer_get_time();
+    err=httpd_ws_send_frame(r,&response);
+    uint32_t elapsed=(uint32_t)((esp_timer_get_time()-start)/1000);
+    if(elapsed>__atomic_load_n(&max_send_ms,__ATOMIC_RELAXED))__atomic_store_n(&max_send_ms,elapsed,__ATOMIC_RELAXED);
+    if(err!=ESP_OK)__atomic_add_fetch(&send_errors,1,__ATOMIC_RELAXED);
+    return err;
 }
 static esp_err_t socket_open(httpd_handle_t server,int fd) {
     (void)server;int enabled=1;
     return setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&enabled,sizeof(enabled))==0?ESP_OK:ESP_FAIL;
 }
 esp_err_t radar_audio_start(void) {
+    ring=heap_caps_calloc(DEPTH,sizeof(*ring),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!ring)return ESP_ERR_NO_MEM;
     mutex=xSemaphoreCreateMutex();if(!mutex) return ESP_ERR_NO_MEM;
     i2s_chan_config_t channel=I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO,I2S_ROLE_MASTER);
     channel.dma_desc_num=8;channel.dma_frame_num=SAMPLES;

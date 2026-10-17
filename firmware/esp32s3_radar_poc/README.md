@@ -1,6 +1,6 @@
 # ESP32-S3 / MRS6240-P2512 bring-up
 
-Branch `radar-bringup`; no KiCad changes. Uses the externally supplied vendor HostSample driver (not redistributed). The connected ESP32-S3 has 16 MB flash and 8 MB embedded PSRAM; this app does not require PSRAM. Console is UART0 at 115200 through CH343 (COM8 in this session).
+Branch `radar-bringup`; no KiCad changes. Uses the externally supplied vendor HostSample driver (not redistributed). The connected ESP32-S3 has 16 MB flash and 8 MB embedded octal PSRAM. The concurrent audio/radar build now requires PSRAM for bounded history buffers, configured at 40 MHz with a boot memory test. Console is UART0 at 115200 through CH343 (COM8 in this session). See [streaming reliability](RELIABILITY.md) for measurements and endurance-test limits.
 
 ## Wiring
 

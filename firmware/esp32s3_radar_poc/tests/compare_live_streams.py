@@ -5,17 +5,19 @@ p.add_argument('--host',required=True)
 p.add_argument('--baseline-seconds',type=int,default=30)
 p.add_argument('--combined-seconds',type=int,default=120)
 p.add_argument('--reserve-ms',type=int,default=1600)
+p.add_argument('--report',default='build/power_comparison.json')
 a=p.parse_args()
 HOST=a.host
 def health():
  c=http.client.HTTPConnection(HOST,timeout=3);c.request('GET','/api/status');v=json.loads(c.getresponse().read());c.close();return v
 def run(seconds,audio):
+ stop_event=threading.Event()
  s={'audio':audio,'radar_frames':0,'radar_gaps':0,'audio_blocks':0,'audio_gaps':0,'audio_read_errors':0,'simulated_playback_underruns':0};before=health();start=time.monotonic();end=start+seconds
  def radar():
-  last=None
+  last=None;w=None
   try:
    w=websocket.create_connection('ws://'+HOST+'/ws',timeout=3)
-   while time.monotonic()<end:
+   while time.monotonic()<end and not stop_event.is_set():
     w.send('next3');b=w.recv()
     if not isinstance(b,bytes):time.sleep(.005);continue
     offset=0
@@ -26,14 +28,17 @@ def run(seconds,audio):
      last=index;s['radar_frames']+=1;offset+=24+words*4
     assert offset==len(b)
    w.close()
-  except Exception as e:s['radar_error']=str(e)
+  except Exception as e:s['radar_error']=str(e);stop_event.set()
+  finally:
+   if w:w.close()
  t=threading.Thread(target=radar);t.start()
  if audio:
-  c=websocket.create_connection('ws://'+HOST+':81/ws',timeout=3);after=0;next_play=0
+  c=None;after=0;next_play=0
   candidates={ms:{'next':0,'underruns':0} for ms in [100,200,300,500,800,1000,1200,1600]}
-  last_audio=None;max_gap=0
+  last_audio=None;max_gap=0;next_report=start+30
   try:
-   while time.monotonic()<end:
+   c=websocket.create_connection('ws://'+HOST+':81/ws',timeout=3)
+   while time.monotonic()<end and not stop_event.is_set():
     c.send('next '+str(after)+' 0');b=c.recv()
     magic,first,rate,n,errors=struct.unpack_from('<5I',b)
     assert magic==0x32445541 and rate==16000 and len(b)==20+2*n and n<=1600
@@ -52,13 +57,16 @@ def run(seconds,audio):
        if v['next']:v['underruns']+=1
        v['next']=now+ms/1000
       v['next']+=n/rate
+     if now>=next_report:
+      print(json.dumps({'stream_progress':dict(s,elapsed_s=round(now-start,1))}),flush=True)
+      next_report=now+30
 
-  except Exception as e:s['audio_error']=str(e)
-  c.close()
+  except Exception as e:s['audio_error']=str(e);stop_event.set()
+  if c:c.close()
   s['reserve_ms']=a.reserve_ms;s['max_audio_arrival_gap_ms']=round(max_gap*1000,1)
   s['candidate_underruns']={ms:v['underruns'] for ms,v in candidates.items()}
  else:
-  while time.monotonic()<end:time.sleep(.1)
+  while time.monotonic()<end and not stop_event.is_set():time.sleep(.1)
  t.join();elapsed=time.monotonic()-start
  try:after=health()
  except Exception as e:

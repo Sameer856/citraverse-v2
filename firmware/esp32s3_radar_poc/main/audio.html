@@ -7,34 +7,42 @@
 <script>
 const status=document.getElementById('status'),start=document.getElementById('start'),stop=document.getElementById('stop');
 document.getElementById('radar').href=`http://${location.hostname}/`;
-let active=false,ctx,socket;
-stop.onclick=()=>{active=false;socket?.close();ctx?.close();start.disabled=false;stop.disabled=true;status.textContent='Stopped';};
+let active=false,ctx,socket,retry,watchdog,run=0;
+const sources=new Set();
+function flush(){for(const s of sources){try{s.stop();}catch{}s.disconnect();}sources.clear();}
+stop.onclick=()=>{active=false;run++;clearTimeout(retry);clearInterval(watchdog);socket?.close();flush();ctx?.close();start.disabled=false;stop.disabled=true;status.textContent='Stopped';};
 start.onclick=async()=>{
- start.disabled=true;stop.disabled=false;active=true;
- let after=0,gaps=0,next=0,blocks=0,underruns=0;
+ start.disabled=true;stop.disabled=false;active=true;const session=++run;
+ let after=0,gaps=0,next=0,blocks=0,underruns=0,reconnects=0,lastMessage=0;
  try {
  ctx=new AudioContext();await ctx.resume();
- socket=new WebSocket(`ws://${location.host}/ws`);socket.binaryType='arraybuffer';
- socket.onopen=()=>socket.send(`next 0 ${document.getElementById('channel').value}`);
- socket.onerror=()=>{if(active){stop.onclick();status.textContent='Connection error. Press Listen to retry.';}};
- socket.onclose=()=>{if(active){stop.onclick();status.textContent='Connection closed. Press Listen to retry.';}};
- socket.onmessage=e=>{try{
-  if(!active)return;const bytes=e.data;
+ if(!active||session!==run)return;
+ function connect(){
+ if(!active||session!==run)return;
+ const ws=new WebSocket(`ws://${location.host}/ws`);socket=ws;ws.binaryType='arraybuffer';lastMessage=performance.now();
+ ws.onopen=()=>{if(!active||session!==run){ws.close();return;}after=0;next=0;flush();ws.send(`next 0 ${document.getElementById('channel').value}`);};
+ ws.onerror=()=>ws.close();
+ ws.onclose=()=>{if(active&&session===run&&socket===ws){reconnects++;status.textContent=`Connection interrupted. Reconnecting… (${reconnects})`;retry=setTimeout(connect,1000);}};
+ ws.onmessage=e=>{try{
+  if(!active||session!==run||socket!==ws)return;lastMessage=performance.now();const bytes=e.data;
   const d=new DataView(bytes);if(bytes.byteLength<20||d.getUint32(0,true)!==0x32445541)throw Error('Invalid audio packet');
   const first=d.getUint32(4,true),rate=d.getUint32(8,true),n=d.getUint32(12,true),errors=d.getUint32(16,true);
   if(rate!==16000||n>1600||n%320||bytes.byteLength!==20+n*2)throw Error('Invalid audio length');
   if(n){
-   if(after&&first!==after+1)gaps+=(first-after-1)>>>0;
+   if(after&&first!==((after+1)>>>0))gaps+=(first-after-1)>>>0;
    after=(first+n/320-1)>>>0;blocks+=n/320;
    // Start with jitter reserve. Never rewind scheduled audio and overlap it.
    if(!next||next<ctx.currentTime){if(next)underruns++;next=ctx.currentTime+1.6;}
    const b=ctx.createBuffer(1,n,rate),a=b.getChannelData(0),ch=Number(document.getElementById('channel').value);let power=0;
    for(let i=0;i<n;i++){a[i]=d.getInt16(20+i*2,true)/32768;power+=a[i]*a[i];}
-   const source=ctx.createBufferSource();source.buffer=b;source.connect(ctx.destination);source.start(next);next+=n/rate;
-   status.textContent=`16 kHz mono listening | blocks ${blocks}\nSkipped blocks: ${gaps} | capture read errors: ${errors}\nPlayback underruns: ${underruns} | buffer: ${Math.round((next-ctx.currentTime)*1000)} ms\nSignal RMS: ${(Math.sqrt(power/n)*100).toFixed(3)}%`;
+   if(next-ctx.currentTime>12)throw Error('Playback queue exceeded 12 seconds');
+   const source=ctx.createBufferSource();source.buffer=b;source.connect(ctx.destination);sources.add(source);source.onended=()=>{source.disconnect();sources.delete(source);};source.start(next);next+=n/rate;
+   status.textContent=`16 kHz mono listening | blocks ${blocks}\nSkipped blocks: ${gaps} | capture read errors: ${errors}\nPlayback underruns: ${underruns} | buffer: ${Math.round((next-ctx.currentTime)*1000)} ms\nReconnects: ${reconnects}\nSignal RMS: ${(Math.sqrt(power/n)*100).toFixed(3)}%`;
   }
-  socket.send(`next ${after} ${document.getElementById('channel').value}`);
+  ws.send(`next ${after} ${document.getElementById('channel').value}`);
  }catch(e){stop.onclick();status.textContent=`Audio stopped: ${e.message}`;}};
- }catch(e){if(active){stop.onclick();status.textContent=`Audio stopped: ${e.message}. Press Listen to retry.`;}}
+ }
+ connect();watchdog=setInterval(()=>{if(active&&session===run&&performance.now()-lastMessage>5000&&socket?.readyState!==WebSocket.CLOSED)socket.close();},1000);
+ }catch(e){if(active&&session===run){stop.onclick();status.textContent=`Audio stopped: ${e.message}. Press Listen to retry.`;}}
 };
 </script></html>

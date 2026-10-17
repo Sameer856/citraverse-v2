@@ -9,6 +9,7 @@ harness=r'''
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #define pdTRUE 1
 #define __atomic_add_fetch(p,n,o) (*(p)+=(n))
 static int guard=1;
@@ -17,6 +18,7 @@ static void xSemaphoreGive(int a){}
 static int64_t esp_timer_get_time(void){return 100000;}
 '''+globals+writer+r'''
 int main(void){
+ history=malloc(HISTORY_BYTES);assert(history);
  uint8_t input[8192],output[8192];
  for(unsigned n=0;n<2000;n++){
   unsigned size=n%13==0?8192:12+(n*997)%8181;
@@ -33,6 +35,7 @@ int main(void){
  }
  unsigned before=received;radar_wifi_frame(input,0);radar_wifi_frame(input,8193);assert(received==before);
  puts("Packed history passed 2000 mixed-size writes, byte wrap, eviction and 8192-byte frames");
+ free(history);
 }
 '''
 build=root/'build';test=build/'test_history.c';test.write_text(harness)

@@ -1,8 +1,11 @@
 #include "radar_power.h"
+#include "radar_audio.h"
 #include "driver/temperature_sensor.h"
 #include "esp_pm.h"
 #include "esp_log.h"
 #include "esp_system.h"
+#include "esp_heap_caps.h"
+#include "esp_timer.h"
 #include "esp_wifi.h"
 #include "nvs.h"
 #include <stdio.h>
@@ -21,11 +24,19 @@ static esp_err_t apply(unsigned mhz) {
 #endif
 }
 static esp_err_t status(httpd_req_t *r) {
-    float temperature=0;char value[24]="null",body[192];
+    float temperature=0;char value[24]="null",body[512];
     if(sensor && temperature_sensor_get_celsius(sensor,&temperature)==ESP_OK)
         snprintf(value,sizeof(value),"%.2f",(double)temperature);
     wifi_ps_type_t ps=WIFI_PS_NONE;esp_wifi_get_ps(&ps);
-    snprintf(body,sizeof(body),"{\"cpu_mhz\":%u,\"chip_temperature_c\":%s,\"wifi_sleep\":%s,\"free_heap\":%lu}",cpu_mhz,value,ps==WIFI_PS_NONE?"false":"true",(unsigned long)esp_get_free_heap_size());
+    radar_audio_stats_t audio;radar_audio_stats(&audio);
+    snprintf(body,sizeof(body),"{\"cpu_mhz\":%u,\"chip_temperature_c\":%s,\"wifi_sleep\":%s,\"free_heap\":%lu,\"internal_free\":%u,\"internal_min\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"uptime_ms\":%lld}",cpu_mhz,value,ps==WIFI_PS_NONE?"false":"true",(unsigned long)esp_get_free_heap_size(),
+        (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
+        (unsigned)heap_caps_get_minimum_free_size(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
+        (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
+        (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(long long)(esp_timer_get_time()/1000));
+    size_t used=strlen(body);
+    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"audio_blocks\":%u,\"audio_read_errors\":%u,\"audio_requests\":%u,\"audio_send_errors\":%u,\"audio_max_send_ms\":%u,\"audio_request_age_ms\":%u}",
+        (unsigned)audio.blocks,(unsigned)audio.read_errors,(unsigned)audio.requests,(unsigned)audio.send_errors,(unsigned)audio.max_send_ms,(unsigned)((uint32_t)(esp_timer_get_time()/1000)-audio.last_request_ms));
     httpd_resp_set_type(r,"application/json");httpd_resp_set_hdr(r,"Cache-Control","no-store");
     return httpd_resp_sendstr(r,body);
 }

@@ -128,3 +128,8 @@ must pass both this check and real browser playback before becoming default.
 
 See [THERMAL.md](THERMAL.md) for the October 17 combined-stream heat trials,
 temperature diagnostics, failed power-saving profiles and restored settings.
+
+The subsequent [reliability update](RELIABILITY.md) moves history into PSRAM,
+extends retained audio to 10.24 seconds, adds internal-memory measurements and
+automatic player reconnection. The 1.6-second initial playback reserve is
+unchanged. Earlier two-second retention figures above describe the old build.

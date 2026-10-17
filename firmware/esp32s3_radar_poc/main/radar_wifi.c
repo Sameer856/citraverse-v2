@@ -12,6 +12,7 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "esp_system.h"
+#include "esp_heap_caps.h"
 #include "nvs_flash.h"
 #include "cJSON.h"
 #include "lwip/sockets.h"
@@ -21,7 +22,8 @@ static SemaphoreHandle_t guard;
 #define PREVIEW_DEPTH 128
 #define HISTORY_BYTES 65536
 /* Bound a send batch, not retention: reserve heap for concurrent audio/TCP. */
-static uint8_t history[HISTORY_BYTES], outgoing[16384];
+static uint8_t *history;
+static uint8_t outgoing[16384];
 static uint32_t lengths[PREVIEW_DEPTH], times_ms[PREVIEW_DEPTH], offsets[PREVIEW_DEPTH];
 static uint32_t retained, used_bytes, write_offset, client_overruns;
 static void history_copy(uint8_t *destination,uint32_t offset,uint32_t size) {
@@ -157,6 +159,8 @@ static void network_event(void *arg,esp_event_base_t base,int32_t id,void *data)
 }
 esp_err_t radar_wifi_init(void) {
     esp_err_t err=settings_init();if(err!=ESP_OK) return err;
+    history=heap_caps_malloc(HISTORY_BYTES,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!history)return ESP_ERR_NO_MEM;
     guard=xSemaphoreCreateMutex();if(!guard) return ESP_ERR_NO_MEM;
     ESP_ERROR_CHECK(esp_netif_init());ESP_ERROR_CHECK(esp_event_loop_create_default());
     if(!esp_netif_create_default_wifi_sta()) return ESP_FAIL;

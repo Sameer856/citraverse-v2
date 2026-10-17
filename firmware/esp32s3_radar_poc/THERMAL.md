@@ -37,8 +37,8 @@ default is awake. CPU changes via POST `80`/`160` require a PM-enabled build;
 fixed-clock builds reject a different clock. Keep this development interface
 on the trusted local network.
 
-`tests/compare_power_profiles.py --host <address>` measures the current profile
-for three minutes without saving it. It writes aggregate metrics to ignored
+`tests/compare_power_profiles.py --host <address> --combined-seconds 180` measures
+the current profile for three minutes without saving it. It writes aggregate metrics to ignored
 `build/power_comparison.json` and fails on gaps, timeouts, playback underruns,
 copy drops, or acquisition below 19.6 FPS. The original 1.6-second audio
 reserve remains unchanged.

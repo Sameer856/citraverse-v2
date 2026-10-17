@@ -407,3 +407,14 @@ general human classifier. Radar firmware STATUS still uses the failed count-only
 rule; the spatial filter has not been ported or flashed. See
 [spatial presence development](../../firmware/mrs6240_custom/SPATIAL_PRESENCE.md)
 for methodology and limits. Captures and personal calibration remain local.
+
+## ESP32 concurrent audio/radar reliability — 2026-10-17
+
+PSRAM-backed history and 100 ms audio batching passed a five-minute combined
+run: 20.0448 radar acquisition FPS, 6,012 delivered radar frames, 15,005 audio
+blocks, no sequence gaps/copy drops/capture errors and no simulated playback
+underruns at the unchanged 1.6-second reserve. Internal free memory stayed
+above 151 KB in sampled readings (128 KB lifetime minimum). Automatic browser
+audio recovery after an intentional ESP32 restart was verified. A full-day
+endurance run has started but is not yet validated. See
+[reliability evidence and limits](../../firmware/esp32s3_radar_poc/RELIABILITY.md).
