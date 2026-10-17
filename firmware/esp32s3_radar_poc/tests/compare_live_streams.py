@@ -59,13 +59,16 @@ def run(seconds,audio):
   s['candidate_underruns']={ms:v['underruns'] for ms,v in candidates.items()}
  else:
   while time.monotonic()<end:time.sleep(.1)
- t.join();elapsed=time.monotonic()-start;after=health()
+ t.join();elapsed=time.monotonic()-start
+ try:after=health()
+ except Exception as e:
+  s.update(seconds=elapsed,status_error=str(e));print(json.dumps(s),flush=True);return s
  s.update(seconds=elapsed,acquisition_fps=(after['frames']-before['frames'])/elapsed,viewer_fps=s['radar_frames']/elapsed,copy_drops=after['viewer_copy_drops']-before['viewer_copy_drops'],free_heap=after['free_heap'])
  print(json.dumps(s),flush=True);return s
-results=[run(a.baseline_seconds,False),run(a.combined_seconds,True)]
-assert all(not any(k.endswith('_error') for k in r) for r in results), 'Connection failed'
-assert all(r['radar_gaps']==0 and r['copy_drops']==0 for r in results), 'Radar dropped frames'
-assert results[1]['audio_gaps']==0 and results[1]['audio_read_errors']==0, 'Audio dropped blocks'
-assert results[1]['simulated_playback_underruns']==0, 'Playback reserve exhausted'
-assert results[1]['acquisition_fps']>=results[0]['acquisition_fps']*.98, 'Radar FPS regressed'
-
+if __name__ == '__main__':
+ results=[run(a.baseline_seconds,False),run(a.combined_seconds,True)]
+ assert all(not any(k.endswith('_error') for k in r) for r in results), 'Connection failed'
+ assert all(r['radar_gaps']==0 and r['copy_drops']==0 for r in results), 'Radar dropped frames'
+ assert results[1]['audio_gaps']==0 and results[1]['audio_read_errors']==0, 'Audio dropped blocks'
+ assert results[1]['simulated_playback_underruns']==0, 'Playback reserve exhausted'
+ assert results[1]['acquisition_fps']>=results[0]['acquisition_fps']*.98, 'Radar FPS regressed'

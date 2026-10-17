@@ -125,3 +125,6 @@ device/network transport. Repeat near the router to isolate radio effects.
 The regression tool now accepts `--reserve-ms` and reports candidate underruns
 and maximum inter-arrival gap without saving microphone samples. A candidate
 must pass both this check and real browser playback before becoming default.
+
+See [THERMAL.md](THERMAL.md) for the October 17 combined-stream heat trials,
+temperature diagnostics, failed power-saving profiles and restored settings.

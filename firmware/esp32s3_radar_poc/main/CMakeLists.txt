@@ -1,6 +1,6 @@
-idf_component_register(SRCS "main.c" "radar_payload.c" "radar_control.c" "radar_wifi.c" "radar_audio.c"
+idf_component_register(SRCS "main.c" "radar_payload.c" "radar_control.c" "radar_wifi.c" "radar_audio.c" "radar_power.c"
     INCLUDE_DIRS "." PRIV_REQUIRES host_driver esp_timer esp_driver_uart esp_driver_gpio spiffs esp_wifi esp_event esp_netif nvs_flash esp_http_server json
-    REQUIRES esp_driver_i2s
+    REQUIRES esp_driver_i2s esp_driver_tsens esp_pm
     EMBED_TXTFILES "viewer.html" "fall.js" "audio.html")
 if(NOT DEFINED RADAR_IMAGE)
     set(RADAR_IMAGE "$ENV{RADAR_IMAGE}" CACHE FILEPATH "Vendor P2512 radar image")

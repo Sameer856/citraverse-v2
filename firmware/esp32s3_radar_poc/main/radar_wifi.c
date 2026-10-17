@@ -1,4 +1,5 @@
 #include "radar_wifi.h"
+#include "radar_power.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -146,6 +147,8 @@ static void network_event(void *arg,esp_event_base_t base,int32_t id,void *data)
     (void)arg;
     if(base==WIFI_EVENT && id==WIFI_EVENT_STA_START) esp_wifi_connect();
     else if(base==WIFI_EVENT && id==WIFI_EVENT_STA_DISCONNECTED) {
+        wifi_event_sta_disconnected_t *event=data;
+        ESP_LOGW(TAG,"Wi-Fi disconnect reason=%u",(unsigned)event->reason);
         ESP_LOGW(TAG,"Wi-Fi disconnected; retrying");esp_wifi_connect();
     } else if(base==IP_EVENT && id==IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event=data;
@@ -190,6 +193,7 @@ esp_err_t radar_wifi_start(void) {
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&detector));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&health));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server,&stream));
+    ESP_ERROR_CHECK(radar_power_start(server));
     ESP_ERROR_CHECK(esp_wifi_start());
-    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));return ESP_OK;
+    ESP_ERROR_CHECK(radar_power_wifi_start());return ESP_OK;
 }
