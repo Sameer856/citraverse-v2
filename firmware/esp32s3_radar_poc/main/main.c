@@ -14,6 +14,7 @@
 #include "radar_payload.h"
 #include "radar_control.h"
 #include "radar_wifi.h"
+#include "radar_storage.h"
 #include "sdkconfig.h"
 static const char *TAG="radar_poc";
 static portMUX_TYPE lock=portMUX_INITIALIZER_UNLOCKED;
@@ -128,6 +129,8 @@ void app_main(void) {
     ESP_ERROR_CHECK(radar_control_start());
     esp_err_t audio_result=radar_audio_start();
     ESP_LOGI(TAG,"Microphone WS4 SCK5 SD6: %s; audio page at http://<ESP-IP>:81/",esp_err_to_name(audio_result));
+    esp_err_t storage_result=radar_storage_start();
+    ESP_LOGI(TAG,"SD SPI3 CS21 SCK14 MISO15 MOSI16: %s",esp_err_to_name(storage_result));
     uint32_t last_frames;
     portENTER_CRITICAL(&lock);last_frames=stats.frames;portEXIT_CRITICAL(&lock);
     int64_t last_time=esp_timer_get_time();
@@ -144,6 +147,8 @@ void app_main(void) {
                snapshot.motion,snapshot.presence,snapshot.max_bytes,snapshot.first_us,
                snapshot.frames?(now-snapshot.last_us)/1000:-1,gpio_get_level(7),esp_get_free_heap_size());
         if(!snapshot.frames || now-snapshot.last_us>3000000) ESP_LOGW(TAG,"No recent frame: check radar power, SPI/report mode, common ground and PA6.");
+        if(radar_storage_ready() && (snapshot.frames % 20u) == 0u)
+            radar_storage_log_health(snapshot.frames,snapshot.invalid,snapshot.nonconsecutive,esp_get_free_heap_size());
         last_frames=snapshot.frames;last_time=now;
     }
 }

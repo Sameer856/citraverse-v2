@@ -21,6 +21,12 @@ User reports a bare, previously unflashed MRS6240-P2512 powered from the ESP32 b
 
 GPIO8 is only driven during the vendor programming/reset sequence and is released afterward. GPIO18 stays an input during programming. Do not attach a second host that drives these radar signals. Power down before changing wires.
 
+### Microphone and SD card
+
+The INMP441 breakout uses WS=GPIO4, SCK/BCLK=GPIO5 and SD/DOUT=GPIO6; tie its L/R pin to GND for the left channel. The microSD module is a separate SPI3 bus: CS=GPIO21, SCK=GPIO14, MISO=GPIO15 and MOSI=GPIO16. Use 3.3 V logic and a common ground. The radar must use its own regulated 3.3 V supply (minimum 1 A); never use the ESP32 dev-kit 3.3 V pin for radar power or tie the two 3.3 V outputs together.
+
+This integration build mounts a FAT-formatted card at `/sdcard` and writes one health record per second to `health.jsonl`. It does **not** yet provide lossless offline buffering of radar frames or audio clips; that requires a bounded spool/replay implementation and an outage test.
+
 ## Build and programming
 
 ESP-IDF 5.5.5 is installed under `C:\Espressif`. Use the matching P2512 radar-analysis image from the vendor SDK. The image is copied into ignored build staging and packaged into a 1 MB SPIFFS partition; it is not committed or redistributed.
