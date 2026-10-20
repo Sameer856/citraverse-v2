@@ -14,6 +14,7 @@
 static const char *TAG = "radar_storage";
 static sdmmc_card_t *card;
 static bool ready;
+static bool health_verified;
 
 esp_err_t radar_storage_start(void) {
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
@@ -52,10 +53,26 @@ esp_err_t radar_storage_log_health(uint32_t frames, uint32_t invalid,
                                    uint32_t gaps, uint32_t free_heap) {
     if (!ready) return ESP_ERR_INVALID_STATE;
     FILE *f = fopen("/sdcard/health.jsonl", "a");
-    if (!f) return ESP_FAIL;
-    fprintf(f, "{\"uptime_ms\":%lld,\"frames\":%lu,\"invalid\":%lu,\"gaps\":%lu,\"free_heap\":%lu}\n",
+    if (!f) { ESP_LOGE(TAG, "Cannot open /sdcard/health.jsonl"); return ESP_FAIL; }
+    int written = fprintf(f, "{\"uptime_ms\":%lld,\"frames\":%lu,\"invalid\":%lu,\"gaps\":%lu,\"free_heap\":%lu}\n",
             (long long)(esp_timer_get_time() / 1000), (unsigned long)frames,
             (unsigned long)invalid, (unsigned long)gaps, (unsigned long)free_heap);
     int close_result = fclose(f);
-    return close_result == 0 ? ESP_OK : ESP_FAIL;
+    if (written < 0 || close_result != 0) {
+        ESP_LOGE(TAG, "Health log write/close failed");
+        return ESP_FAIL;
+    }
+    if (!health_verified) {
+        FILE *check = fopen("/sdcard/health.jsonl", "r");
+        if (!check) { ESP_LOGE(TAG, "Health log reopen failed"); return ESP_FAIL; }
+        int seek_result = fseek(check, 0, SEEK_END);
+        long size = ftell(check);
+        int check_close = fclose(check);
+        if (seek_result || size < written || check_close) {
+            ESP_LOGE(TAG, "Health log verification failed"); return ESP_FAIL;
+        }
+        health_verified = true;
+        ESP_LOGI(TAG, "Verified /sdcard/health.jsonl after append: %ld bytes", size);
+    }
+    return ESP_OK;
 }
