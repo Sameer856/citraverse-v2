@@ -46,5 +46,27 @@ but startup recovers. Radar statistics: 95 samples, final 1932 frames, mean stea
 Final firmware SHA-256: `eac9d02741e9343421e46334c33a49c84850e6b61cdfea5fb73868d7f9b93170`.
 Full final output: `validation_logs/final_console.txt`; aggregate results:
 `validation_logs/final_summary.json`. Build and flash logs for all attempts
-are also retained in that folder. Changes remain local on integrated-prototype;
+are also retained in that folder. SD fix committed as 1bf11fc and pushed to origin/integrated-prototype;
 no KiCad files were edited.
+
+## Combined audio/radar/SD test after push
+
+The deployed firmware was restarted on COM8 using RUN (no radar programming).
+During the simultaneous stream test the console confirmed SD mount on SPI3
+and reopened `/sdcard/health.jsonl` after append at 301 bytes (uptime 64.957 s).
+The stream test began at approximately 17.9 s uptime, so this SD write happened
+while both network streams were active.
+
+Duration: 120.063 seconds. Radar acquisition 20.0395 FPS; delivery 20.0228 FPS;
+2404 received frames, zero gaps or copy drops. Audio: 6005 blocks, zero sequence
+gaps, capture errors, send errors or simulated playback underruns with the
+existing 1.6-second reserve. Largest audio arrival gap: 1391.0 ms. Sampled
+internal free memory: 153128–163780 bytes. Final-minute temperature mean: 46.1 C.
+
+The user-requested >=20 FPS aggregate threshold passed separately from the
+helper's older 19.6 FPS acceptance threshold. Per-second rates fluctuate;
+this is a two-minute combined test, not an every-instant or 24/7 guarantee.
+The recovered vendor wake error remains; no brownout or SD write error was
+observed during the combined capture inspected. Raw console/stream metrics
+remain local in validation_logs/combined_console.txt and combined_streams.json;
+no audio samples were saved or pushed.
