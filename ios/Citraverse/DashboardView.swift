@@ -12,9 +12,9 @@ struct DashboardView: View {
     @State private var showClearHistory = false
     @State private var is3D = false
     @Environment(\.scenePhase) private var scenePhase
-    private let ink = Color(red: 0.08, green: 0.24, blue: 0.23)
-    private let accent = Color(red: 0.10, green: 0.43, blue: 0.37)
-    private let paper = Color(red: 0.96, green: 0.96, blue: 0.92)
+    private let ink = CitraverseTheme.ink
+    private let accent = CitraverseTheme.accent
+    private let paper = CitraverseTheme.paper
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -68,11 +68,10 @@ struct DashboardView: View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("CITRAVERSE").font(.caption.weight(.bold)).tracking(3).foregroundStyle(accent)
+                        CitraverseBrand()
                         Text("Your space, at a glance.").font(.largeTitle.bold()).foregroundStyle(ink)
                     }
                     Spacer(minLength: 0)
-                    Image(systemName: "leaf.circle.fill").font(.system(size: 36)).foregroundStyle(accent).accessibilityHidden(true)
                 }
                 statusCard
                 if let alert = stream.alert { fallCard(alert) }
@@ -210,7 +209,7 @@ struct DashboardView: View {
                     Text(event.detail).font(.subheadline)
                     Text(event.date.formatted(date: .abbreviated, time: .standard)).font(.caption).foregroundStyle(.secondary)
                     if event.title == "Possible fall" {
-                        if event.acknowledged { Label("Acknowledged", systemImage: "checkmark.circle").font(.caption).foregroundStyle(.teal) }
+                        if event.acknowledged { Label("Acknowledged", systemImage: "checkmark.circle").font(.caption).foregroundStyle(CitraverseTheme.accent) }
                         else { Button("Acknowledge after checking") { if stream.alert?.id == event.id { stream.acknowledgeAlert() } else { store.acknowledge(event.id) } } }
                     }
                 }.padding(.vertical, 6)

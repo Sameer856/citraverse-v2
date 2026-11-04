@@ -32,10 +32,11 @@ struct RoomSetupView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                CitraverseBrand().padding(.top, 8)
                 HStack {
                     ForEach(0..<3) { i in
                         VStack(spacing: 6) {
-                            Capsule().fill(i <= step ? Color.teal : Color.gray.opacity(0.2)).frame(height: 4)
+                            Capsule().fill(i <= step ? CitraverseTheme.accent : Color.gray.opacity(0.2)).frame(height: 4)
                             Text(stages[i]).font(.caption.weight(i == step ? .bold : .regular))
                         }
                     }
@@ -48,6 +49,8 @@ struct RoomSetupView: View {
                     }
                 }
                 .scrollDismissesKeyboard(.interactively)
+                .scrollContentBackground(.hidden)
+                .background(CitraverseTheme.paper)
                 HStack {
                     if step > 0 { Button("Back") { step -= 1 }.buttonStyle(.bordered) }
                     Spacer()
@@ -58,7 +61,7 @@ struct RoomSetupView: View {
                             host = address
                             store.save(draft); dismiss()
                         }
-                    }.buttonStyle(.borderedProminent).tint(.teal)
+                    }.buttonStyle(.borderedProminent).tint(CitraverseTheme.accent)
                     .disabled(step == 0 ? !canContinueConnection : !draft.isValid)
                 }.padding(20)
             }
@@ -114,7 +117,7 @@ struct RoomSetupView: View {
                     .onChange(of: address) { _, value in if value != testedHost { sensor.disconnect() } }
                 Button(sensor.isConnecting ? "Connecting…" : "Find my sensor at this address") { testedHost = address; sensor.connect(host: address) }
                     .disabled(SensorClient.statusURL(host: address) == nil || sensor.isConnecting)
-                if sensor.isConnected { Label("Sensor connected", systemImage: "checkmark.circle.fill").foregroundStyle(.teal) }
+                if sensor.isConnected { Label("Sensor connected", systemImage: "checkmark.circle.fill").foregroundStyle(CitraverseTheme.accent) }
                 else if store.room.configured && address == host { Text("You can edit your saved room layout offline.").font(.footnote).foregroundStyle(.secondary) }
                 if let error = sensor.errorMessage { Text(error).foregroundStyle(.orange) }
             } footer: { Text("Search checks this Wi-Fi network only. If your sensor isn’t found, enter the address shown by your installer or USB setup tool, for example 192.168.1.11.") }

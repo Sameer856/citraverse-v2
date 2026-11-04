@@ -16,7 +16,7 @@ struct RoomMapView: View {
                 TopDownRoomView(room: room, people: people)
             }
         }
-        .background(Color(red: 0.95, green: 0.96, blue: 0.93))
+        .background(CitraverseTheme.paper)
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(is3D ? "Three dimensional" : "Top-down") map of \(room.name), \(room.width.formatted()) by \(room.length.formatted()) metres. \(people.count) tracked person candidates. Human figures indicate estimated positions.")
@@ -27,8 +27,8 @@ struct RoomMapView: View {
 private struct TopDownRoomView: View {
     let room: RoomConfiguration
     let people: [TrackedPerson]
-    private let ink = Color(red: 0.10, green: 0.28, blue: 0.26)
-    private let teal = Color(red: 0.10, green: 0.48, blue: 0.40)
+    private let ink = CitraverseTheme.ink
+    private let accent = CitraverseTheme.accent
 
     var body: some View {
         GeometryReader { geometry in
@@ -56,7 +56,7 @@ private struct TopDownRoomView: View {
                 }.stroke(ink.opacity(0.06), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
 
                 sensorCone(bounds)
-                    .fill(teal.opacity(0.10))
+                    .fill(accent.opacity(0.10))
                     .mask(Rectangle().frame(width: bounds.width, height: bounds.height).position(x: bounds.midX, y: bounds.midY))
 
                 ZStack(alignment: .topLeading) {
@@ -74,7 +74,7 @@ private struct TopDownRoomView: View {
                             if index == 0 { path.move(to: p) } else { path.addLine(to: p) }
                         }
                     }
-                    .stroke(person.isFall ? .red.opacity(0.4) : teal.opacity(0.30), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [3, 4]))
+                    .stroke(person.isFall ? .red.opacity(0.4) : accent.opacity(0.30), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [3, 4]))
                     .mask(Rectangle().frame(width: bounds.width, height: bounds.height).position(x: bounds.midX, y: bounds.midY))
                     personView(person)
                         .opacity(person.isObserved ? 1 : 0.5)
@@ -85,7 +85,7 @@ private struct TopDownRoomView: View {
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(width: 30, height: 30)
-                    .background(teal, in: RoundedRectangle(cornerRadius: 9))
+                    .background(accent, in: RoundedRectangle(cornerRadius: 9))
                     .rotationEffect(.degrees(room.heading))
                     .position(location(room.sensorX, room.sensorY, bounds))
 
@@ -135,7 +135,7 @@ private struct TopDownRoomView: View {
         let excluded = furniture.kind == .excluded
         return ZStack {
             RoundedRectangle(cornerRadius: 5)
-                .fill(excluded ? Color.orange.opacity(0.14) : Color(red: 0.86, green: 0.89, blue: 0.85))
+                .fill(excluded ? Color.orange.opacity(0.14) : Color(red: 0.91, green: 0.87, blue: 0.81))
                 .overlay(RoundedRectangle(cornerRadius: 5).stroke(excluded ? Color.orange.opacity(0.6) : ink.opacity(0.18), style: StrokeStyle(lineWidth: 1, dash: excluded ? [4, 3] : [])))
             if width > 35 && height > 30 {
                 VStack(spacing: 3) {
@@ -153,10 +153,10 @@ private struct TopDownRoomView: View {
     private func personView(_ person: TrackedPerson) -> some View {
         VStack(spacing: 3) {
             ZStack {
-                Circle().fill((person.isFall ? Color.red : teal).opacity(0.12)).frame(width: 46, height: 46)
+                Circle().fill((person.isFall ? Color.red : accent).opacity(0.12)).frame(width: 46, height: 46)
                 Image(systemName: person.isFall ? "figure.fall" : "figure.stand")
                     .font(.system(size: 28, weight: .semibold))
-                    .foregroundStyle(person.isFall ? .red : teal)
+                    .foregroundStyle(person.isFall ? .red : accent)
             }
             Text("P\(person.id)")
                 .font(.system(size: 10, weight: .bold)).foregroundStyle(person.isFall ? .red : ink)
@@ -175,7 +175,7 @@ private struct RoomSceneView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> SCNView {
         let view = SCNView()
-        view.backgroundColor = UIColor(red: 0.95, green: 0.96, blue: 0.93, alpha: 1)
+        view.backgroundColor = UIColor(CitraverseTheme.paper)
         view.autoenablesDefaultLighting = true
         view.allowsCameraControl = true
         view.antialiasingMode = .multisampling4X
@@ -199,7 +199,7 @@ private struct RoomSceneView: UIViewRepresentable {
             let floor = box(width: room.width, height: 0.06, length: room.length, color: UIColor.white)
             floor.position = SCNVector3(room.width / 2, -0.03, -room.length / 2)
             scene.rootNode.addChildNode(floor)
-            let wallColor = UIColor(red: 0.72, green: 0.80, blue: 0.75, alpha: 0.75)
+            let wallColor = UIColor(red: 0.85, green: 0.79, blue: 0.70, alpha: 0.75)
             let back = box(width: room.width + 0.08, height: 0.55, length: 0.06, color: wallColor)
             back.position = SCNVector3(room.width / 2, 0.25, -room.length)
             scene.rootNode.addChildNode(back)
@@ -207,7 +207,7 @@ private struct RoomSceneView: UIViewRepresentable {
             side.position = SCNVector3(0, 0.25, -room.length / 2)
             scene.rootNode.addChildNode(side)
 
-            let gridColor = UIColor(red: 0.30, green: 0.47, blue: 0.39, alpha: 0.10)
+            let gridColor = UIColor(red: 0.40, green: 0.32, blue: 0.23, alpha: 0.10)
             for x in 1..<max(1, Int(ceil(room.width))) {
                 let line = box(width: 0.008, height: 0.002, length: room.length, color: gridColor)
                 line.position = SCNVector3(Double(x), 0.002, -room.length / 2)
@@ -228,17 +228,17 @@ private struct RoomSceneView: UIViewRepresentable {
                 case .door: height = 0.04
                 case .excluded: height = 0.012
                 }
-                let color = furniture.kind == .excluded ? UIColor.systemOrange.withAlphaComponent(0.28) : UIColor(red: 0.65, green: 0.74, blue: 0.67, alpha: 1)
+                let color = furniture.kind == .excluded ? UIColor.systemOrange.withAlphaComponent(0.28) : UIColor(red: 0.77, green: 0.69, blue: 0.59, alpha: 1)
                 // Clip the rotated footprint, rather than just its centre, to the room.
                 let node = furnitureNode(furniture, height: height, color: color)
                 scene.rootNode.addChildNode(node)
                 if furniture.kind == .bed || furniture.kind == .sofa {
-                    let cushion = furnitureNode(furniture, height: 0.08, base: height, widthFactor: 0.85, lengthFactor: 0.75, color: UIColor(red: 0.85, green: 0.88, blue: 0.81, alpha: 1))
+                    let cushion = furnitureNode(furniture, height: 0.08, base: height, widthFactor: 0.85, lengthFactor: 0.75, color: UIColor(red: 0.93, green: 0.87, blue: 0.78, alpha: 1))
                     scene.rootNode.addChildNode(cushion)
                 }
             }
 
-            let sensor = box(width: 0.18, height: 0.22, length: 0.08, color: UIColor.systemTeal)
+            let sensor = box(width: 0.18, height: 0.22, length: 0.08, color: UIColor(CitraverseTheme.accent))
             sensor.position = SCNVector3(room.sensorX, room.height, -room.sensorY)
             // Sensor forward is local -Z. Clockwise heading in room XY is -yaw.
             sensor.eulerAngles.y = Float(-room.heading * .pi / 180)
@@ -253,7 +253,7 @@ private struct RoomSceneView: UIViewRepresentable {
             let orientationTriangle = [origin,
                 CGPoint(x: forward.x - cos(heading) * 0.25, y: forward.y + sin(heading) * 0.25),
                 CGPoint(x: forward.x + cos(heading) * 0.25, y: forward.y - sin(heading) * 0.25)]
-            scene.rootNode.addChildNode(footprintNode(orientationTriangle, height: 0.006, color: UIColor.systemTeal.withAlphaComponent(0.15)))
+            scene.rootNode.addChildNode(footprintNode(orientationTriangle, height: 0.006, color: UIColor(CitraverseTheme.accent).withAlphaComponent(0.15)))
             let lookAt = SCNNode()
             lookAt.position = SCNVector3(room.width / 2, 0, -room.length / 2)
             scene.rootNode.addChildNode(lookAt)
@@ -296,7 +296,7 @@ private struct RoomSceneView: UIViewRepresentable {
                 label.position.y = person.isFall ? 0.55 : 1.82
             }
             body.enumerateChildNodes { child, _ in
-                child.geometry?.firstMaterial?.diffuse.contents = person.isFall ? UIColor.systemRed : UIColor(red: 0.05, green: 0.48, blue: 0.39, alpha: 1)
+                child.geometry?.firstMaterial?.diffuse.contents = person.isFall ? UIColor.systemRed : UIColor(CitraverseTheme.accent)
             }
         }
         SCNTransaction.commit()
@@ -399,7 +399,7 @@ private struct RoomSceneView: UIViewRepresentable {
         let body = SCNNode()
         body.name = "body"
         root.addChildNode(body)
-        let color = UIColor(red: 0.05, green: 0.48, blue: 0.39, alpha: 1)
+        let color = UIColor(CitraverseTheme.accent)
         let head = SCNSphere(radius: 0.13)
         head.firstMaterial?.diffuse.contents = color
         let headNode = SCNNode(geometry: head)
@@ -426,7 +426,7 @@ private struct RoomSceneView: UIViewRepresentable {
         let text = SCNText(string: "P\(id)", extrusionDepth: 0)
         text.font = .systemFont(ofSize: 1, weight: .bold)
         text.flatness = 0.3
-        text.firstMaterial?.diffuse.contents = UIColor(red: 0.05, green: 0.25, blue: 0.21, alpha: 1)
+        text.firstMaterial?.diffuse.contents = UIColor(CitraverseTheme.ink)
         let label = SCNNode(geometry: text)
         label.name = "label"
         label.scale = SCNVector3(0.20, 0.20, 0.20)
