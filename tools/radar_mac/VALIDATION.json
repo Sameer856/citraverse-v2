@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-24",
+  "status": "experimental; direct CH347 radar capture not hardware validated",
+  "native_adapter": {
+    "build": "pass",
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "load_on_this_mac": "pass",
+    "connected_CH347_interfaces": 0
+  },
+  "software_tests": {
+    "passed": 11,
+    "failed": 0
+  },
+  "existing_real_HIF_capture_replay": {
+    "hif_messages": 405,
+    "complete_C3_frames": 202,
+    "first_frame": 4890,
+    "last_frame": 5091,
+    "decoded_points": 9716,
+    "protocol_errors": 0,
+    "leading_incomplete_frame_discarded": 1,
+    "source": "hardware/radar_validation/uart_capture.bin"
+  },
+  "viewer_checks": [
+    "local HTTP viewer opened",
+    "record start/stop controls",
+    "status endpoint",
+    "diagnostic export",
+    "no-device diagnostic",
+    "unauthenticated control rejected"
+  ],
+  "not_validated": [
+    "live CH347 radar acquisition",
+    "dev-kit CS and Notify wiring",
+    "UART profile on teammate firmware",
+    "sustained USB SPI throughput",
+    "Intel runtime (binary cross-compiled only)"
+  ],
+  "vendor_sdk": {
+    "page": "https://www.wch-ic.com/downloads/CH341PAR_MAC_ZIP.html",
+    "version": "1.0",
+    "sha256": "12d9d9bee7b2803c54e2a99b7c1a1381b77b88c8b54aad89507c88ff34c77fcd",
+    "redistributed": false
+  }
+}
