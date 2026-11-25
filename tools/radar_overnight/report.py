@@ -17,6 +17,12 @@ crossover=read('plan-crossover.json',{});crossover_evaluation=read('crossover-ev
 display_runtime=read('display-runtime-replay.json',{});display_policy=read('frozen-display-policy.json',{});software_evaluation=read('software-selection-evaluation.json',{});final_selection=read('final-method-selection.json',{});holdout=read('final-holdout-analysis.json',{})
 deployment=read('dashboard-deployment.json',{})
 return_maps=read('return-map-analysis.json',{})
+late_health=[];late_health_errors=0
+health_file=OUT/'late-health-snapshots.jsonl'
+if health_file.exists():
+ for line in health_file.read_text().splitlines():
+  try:late_health.append(json.loads(line))
+  except json.JSONDecodeError:late_health_errors+=1
 runtime=read('runtime-replay.json',{});frozen=read('frozen-bed-method-v2.json',{});suspension=read('plan-suspension.json',{})
 boot_ids=set()
 def collect_boot_ids(value):
@@ -210,6 +216,17 @@ if failures:
  for f in failures:para(f"{f['label']}: {f['error']}")
 else:para('No rejected profile is recorded in completed comparison metadata so far. In-progress operations are not represented by that statement.')
 para('Capture-complete marker: '+('present' if finished else 'not present')+'. Original-profile restoration: '+str(completion.get('baseline_restored','not yet due / not verified'))+'.')
+h('Late passive telemetry')
+if late_health:
+ para('Local diagnostic retention began at '+late_health[0]['time']+'. It copies the collector\'s existing minute snapshots and adds no network or device requests. It cannot recover telemetry for earlier restarts.')
+ names=list(dict.fromkeys(r['segment'] for r in late_health));rows=[]
+ for name in names:
+  records=[r for r in late_health if r['segment']==name];heap=[r['free_heap'] for r in records if isinstance(r.get('free_heap'),(int,float))];rtt=[r.get('cloud',{}).get('ack_rtt_ms') for r in records if isinstance(r.get('cloud',{}).get('ack_rtt_ms'),(int,float))]
+  rows.append([name,len(records),f'{min(heap)/1048576:.3f}' if heap else 'Unknown',f'{max(heap)/1048576:.3f}' if heap else 'Unknown',str(min(rtt)) if rtt else 'Unknown',str(max(rtt)) if rtt else 'Unknown'])
+ table(['Window','Samples','Reported heap min MiB','Reported heap max MiB','Last ACK RTT min ms','Last ACK RTT max ms'],rows,[145,40,66,66,66,66])
+ para('These are ranges of minute-sampled status values, not continuous peaks or latency distributions. Reported heap has no internal-memory/PSRAM or fragmentation breakdown. The current device status exposes no reset reason, and no USB serial device was available for a boot log. Neither a stable heap range nor an ACK range establishes the cause of a restart.','SmallCustom')
+ if late_health_errors:para(str(late_health_errors)+' unreadable snapshot lines were excluded from this supplementary table.','SmallCustom')
+else:para('No late passive snapshots were retained in this report snapshot.')
 h('What the results cannot establish')
 for text in ['A validated two-person count, sleeping state, breathing or vital signs.','False-positive rate without an empty-bed test; false-negative rate without synchronized annotations.','Full body height while lying down; observed point height is posture-dependent.','Performance in another room, mounting, bedding arrangement or body position.','Fall-detection performance: the current fall prototype is single-person, and no deliberate fall trial was performed.']:para(text)
 h('Next controlled validation')
@@ -223,7 +240,7 @@ for text in [
 ]:para(text)
 h('Reproducibility and rollback')
 para('Evidence folder: output/radar_overnight_20261125. baseline.json preserves the original active and saved profiles. events.jsonl records all requested profiles and complete command replies. Each completed segment has a JSON summary, compressed processed-point packet archive and per-frame metric archive. replay-analysis.json and profile-summary.json contain independent offline results. No access keys are included in this report.')
-para('Source: Sameer856/citraverse-v2, branch codex/radar-dashboard-room, tools/radar_overnight. Dashboard rollback milestones: dashboard-v1.0.0 (before bed), dashboard-v1.1.0 (bed layout), dashboard-v1.2.0 (experimental bed groups), dashboard-v1.2.1 (bounded display continuity). Restore source with a new revert commit and redeploy; checking out a Git tag alone does not change the live Site.')
+para('Source: Sameer856/citraverse-v2, branch codex/radar-dashboard-room, tools/radar_overnight. Dashboard rollback milestones: dashboard-v1.0.0 (before bed), dashboard-v1.1.0 (bed layout), dashboard-v1.2.0 (experimental bed groups), dashboard-v1.2.1 (bounded display prototype), dashboard-v1.2.2 (published strict-continuity bed view). Restore source with a new revert commit and redeploy; checking out a Git tag alone does not change the live Site.')
 if deployment:
  para('Dashboard publication: '+str(deployment.get('status','unknown'))+'; version '+str(deployment.get('version','unknown'))+'; source '+str(deployment.get('commit_sha','unknown'))+'. '+str(deployment.get('url','')),'SmallCustom')
  para('Dashboard verification: '+str(deployment.get('verification','not recorded')),'SmallCustom')
