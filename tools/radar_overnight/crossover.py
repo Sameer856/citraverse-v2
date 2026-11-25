@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """One bounded repeat of an already stable flag setting, then baseline observation."""
-import asyncio,json,os,time
+import asyncio,json,os,time,hashlib,pathlib
 import httpx
 import run as r
 async def main():
@@ -13,10 +13,15 @@ async def main():
   if state.get('active')!=r.BASE:raise r.ExternalChange('Expected baseline at crossover handoff; leaving external profile alone')
   expected=os.environ.get('RADAR_CROSSOVER_EXPECTED_BOOT')
   if expected and state.get('boot_id')!=int(expected):raise r.DeviceRestart('New boot since baseline observation; crossover not started')
-  r.EXPECTED_BOOT=state['boot_id']
-  r.dump('plan-crossover.json',{'time':r.stamp(),'reason':'Repeat only the already-tested literal-CFAR static-retention flag after stable baseline observation. No new frequency, range, speed, CFAR format, Wi-Fi, firmware or saved-profile changes. Prior aggressive sweeps remain suspended.','previous_baseline_window':'011-baseline-overnight-observation','sequence':[{'label':label,'profile':p,'seconds':1200} for label,p in [('crossover-static0-first',alternate),('crossover-static0-repeat',alternate),('crossover-baseline',r.BASE)]],'abort':'Any reboot, stale radar status, external change or failed fresh-rate gate stops further alternate captures; restore baseline unless an external operator changed it.'})
+  start_boot=state['boot_id'];expected_active=dict(r.BASE)
+  r.EXPECTED_BOOT=start_boot
+  r.dump('plan-crossover.json',{'time':r.stamp(),'start_boot':start_boot,'collector_sha256':r.CODE_HASH,'controller_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'reason':'Repeat only the already-tested literal-CFAR static-retention flag after stable baseline observation. No new frequency, range, speed, CFAR format, Wi-Fi, firmware or saved-profile changes. Prior aggressive sweeps remain suspended.','previous_baseline_window':'011-baseline-overnight-observation','sequence':[{'label':label,'profile':p,'seconds':1200} for label,p in [('crossover-static0-first',alternate),('crossover-static0-repeat',alternate),('crossover-baseline',r.BASE)]],'abort':'Any reboot, stale radar status, external change or failed fresh-rate gate stops further alternate captures; restore baseline unless an external operator changed it.'})
   try:
    for label,profile in [('crossover-static0-first',alternate),('crossover-static0-repeat',alternate),('crossover-baseline',r.BASE)]:
+    checkpoint=await r.rpc(client)
+    if checkpoint.get('boot_id')!=start_boot:raise r.DeviceRestart('PCB reboot between crossover windows')
+    if checkpoint.get('active')!=expected_active:raise r.ExternalChange('External profile change between crossover windows')
+    expected_active=dict(profile)
     await r.apply(client,profile,label)
     result=await r.capture(client,profile,label,1200);results.append(result)
     r.dump('comparison.json',{'updated':r.stamp(),'results':results,'failures':failures})
@@ -27,10 +32,14 @@ async def main():
    failed=True;failures.append({'label':'bounded-static-retention-crossover','error':type(e).__name__+': '+str(e)});r.event('crossover_aborted',error=str(e))
   finally:
    if not external:
+    checkpoint=await r.rpc(client)
+    if checkpoint.get('active') not in [r.BASE,alternate]:raise r.ExternalChange('External profile changed before recovery; leaving it alone')
+    if checkpoint.get('boot_id')!=start_boot:failed=True
     await r.apply(client,r.BASE,'crossover-restore-baseline')
     state=await r.rpc(client)
-    r.dump('crossover-complete.json',{'time':r.stamp(),'aborted':failed,'baseline_restored':state.get('active')==r.BASE,'boot_id':state.get('boot_id')})
+    r.dump('crossover-complete.json',{'time':r.stamp(),'start_boot':start_boot,'aborted':failed,'baseline_restored':state.get('active')==r.BASE,'boot_id':state.get('boot_id')})
     r.dump('comparison.json',{'updated':r.stamp(),'results':results,'failures':failures})
+    if state.get('active')!=r.BASE:raise r.ExternalChange('Profile changed after recovery; observer not started')
  os.environ['RADAR_OBSERVE_ONLY']='1'
  await r.main()
 if __name__=='__main__':asyncio.run(main())

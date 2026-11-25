@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Bounded radar-only comparison. Never writes NVS or firmware; preserves baseline."""
 import asyncio, collections, datetime as dt, gzip, json, math, pathlib, statistics, struct, time, uuid
-import subprocess,sys,os
+import subprocess,sys,os,hashlib
 import httpx
 from websockets.asyncio.client import connect
 ROOT=pathlib.Path(__file__).resolve().parents[2]
+CODE_HASH=hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()
 OUT=ROOT/'output/radar_overnight_20261125'; OUT.mkdir(parents=True,exist_ok=True)
 PAIR=json.loads((ROOT/'.cloud-local/pairing.json').read_text())
 ORIGIN='https://citraverse-pcb-route-avebsk4vna-el.a.run.app'
@@ -104,9 +105,12 @@ def next_capture_name(folder,label):
  indices=[int(p.name.split('-',1)[0]) for p in folder.glob('*.rdr.gz') if p.name.split('-',1)[0].isdigit()]
  return f'{max(indices,default=-1)+1:03d}-{label}'
 
+def ensure_fresh_stream(lastfresh,started,now):
+ if now-(started if lastfresh is None else lastfresh)>30:raise RadarStall('No fresh GCP radar frames for 30 seconds')
+
 async def capture(client,profile,label,seconds):
  start=time.monotonic();wall=time.time();name=next_capture_name(OUT,label)
- counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;outages=[];last_status=0;pending_status=None
+ counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;lastfresh=None;outages=[];last_status=0;pending_status=None
  starthealth=await health(client)
  initial=await rpc(client)
  if initial.get('boot_id')!=EXPECTED_BOOT:raise DeviceRestart('PCB reboot before capture')
@@ -115,9 +119,21 @@ async def capture(client,profile,label,seconds):
  event('capture_start',segment=name,seconds=seconds)
  try:
   while time.monotonic()-start<seconds and time.time()<END:
+   ensure_fresh_stream(lastfresh,wall,time.time())
    try:
     async with connect(ORIGIN.replace('https:','wss:')+PREFIX+'/ws',additional_headers=HEAD,open_timeout=15,max_size=2**20) as ws:
      while time.monotonic()-start<seconds and time.time()<END:
+      now=time.time();ensure_fresh_stream(lastfresh,wall,now)
+      if pending_status is not None and pending_status.done():
+       try:
+        h,s=pending_status.result()
+       except Exception as e:event('telemetry_error',segment=name,error=str(e)[:160])
+       else:
+        audit_capture(starthealth,h,s,profile,EXPECTED_BOOT,counts)
+        dump('progress.json',{'time':stamp(),'segment':name,'elapsed_seconds':time.monotonic()-start,'frames':counts['frames'],'fresh':counts['fresh'],'bed_presence_fraction':counts['bed_present']/max(1,counts['fresh']),'both_half_fraction':counts['both_halves']/max(1,counts['fresh']),'active':s.get('active'),'health':h})
+       pending_status=None;raw.flush();metrics.flush()
+      if now-last_status>60 and pending_status is None:
+       pending_status=asyncio.create_task(telemetry(client));last_status=now
       await ws.send('next3');data=await asyncio.wait_for(ws.recv(),12);now=time.time()
       if isinstance(data,str):
        counts['waiting']+=1;await asyncio.sleep(.05);continue
@@ -132,19 +148,10 @@ async def capture(client,profile,label,seconds):
        if lastrecv and now-lastrecv>.5:outages.append(now-lastrecv)
        lastrecv=now;counts['frames']+=1;ages.append(age)
        if age>350:counts['stale']+=1;continue
+       lastfresh=now
        if polar:counts['polar']+=polar
        f=features(pts);counts['fresh']+=1;counts['bed_present']+=f['bed']>=3;counts['both_halves']+=f['left']>=3 and f['right']>=3;counts['bed_points']+=f['bed'];counts['outside_points']+=f['outside'];bedcounts.append(f['bed']);outside.append(f['outside'])
        metrics.write(json.dumps({'epoch':now,'stamp':ts,'index':idx,'age':age,**f})+'\n')
-      if pending_status is not None and pending_status.done():
-       try:
-        h,s=pending_status.result()
-       except Exception as e:event('telemetry_error',segment=name,error=str(e)[:160])
-       else:
-        audit_capture(starthealth,h,s,profile,EXPECTED_BOOT,counts)
-        dump('progress.json',{'time':stamp(),'segment':name,'elapsed_seconds':time.monotonic()-start,'frames':counts['frames'],'fresh':counts['fresh'],'bed_presence_fraction':counts['bed_present']/max(1,counts['fresh']),'both_half_fraction':counts['both_halves']/max(1,counts['fresh']),'active':s.get('active'),'health':h})
-       pending_status=None;raw.flush();metrics.flush()
-      if now-last_status>60 and pending_status is None:
-       pending_status=asyncio.create_task(telemetry(client));last_status=now
    except RuntimeError:raise
    except Exception as e:
     counts['connection_errors']+=1;event('capture_connection_error',segment=name,error=str(e)[:160]);await asyncio.sleep(2)
@@ -169,7 +176,7 @@ async def capture(client,profile,label,seconds):
  reliability=min(1,counts['fresh']/max(1,elapsed*1000/profile['frame_ms']))
  # This is a repeatability proxy, not person-count accuracy. Static clutter can score well.
  score=100*(.4*bedfraction+.2*half+.2*(1-noise)+.2*reliability)
- result={'instrumentation_revision':3,'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
+ result={'collector_sha256':CODE_HASH,'instrumentation_revision':3,'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
  dump('segment-'+name+'.json',result);event('capture_complete',segment=name,score=round(score,2),fps=round(result['fps'],2),bed_fraction=round(bedfraction,3),both_halves=round(half,3));return result
 
 async def main():

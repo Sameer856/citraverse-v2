@@ -2,14 +2,16 @@
 """Replay each completed capture once; never changes PCB settings."""
 import datetime as dt,json,pathlib,time,subprocess
 import analyze,importlib,temporal_analyze
-last=None
+last=None;last_marker=None
 while True:
  files=tuple(sorted(p.name for p in analyze.OUT.glob('segment-*.json')))
  complete=(analyze.OUT/'complete.json').exists()
- if files!=last or complete:
+ marker=(analyze.OUT/'crossover-complete.json').stat().st_mtime if (analyze.OUT/'crossover-complete.json').exists() else None
+ if files!=last or complete or marker!=last_marker:
   importlib.reload(analyze);analyze.main();subprocess.run(['/Users/sameersmacbookair/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3',str(pathlib.Path(__file__).with_name('temporal_analyze.py'))],check=True);subprocess.run(['node',str(pathlib.Path(__file__).with_name('replay_runtime.mjs'))],check=True);
   if (analyze.OUT/'frozen-bed-density.json').exists():subprocess.run(['node',str(pathlib.Path(__file__).with_name('replay_density_runtime.mjs'))],check=True)
-  last=files
+  if (analyze.OUT/'hardware-crossover-criteria.json').exists():subprocess.run(['python3',str(pathlib.Path(__file__).with_name('evaluate_crossover.py'))],check=True)
+  last=files;last_marker=marker
   print(dt.datetime.now().isoformat(),'analyzed',len(files),'completed segments',flush=True)
  if complete:break
  events=analyze.OUT/'events.jsonl'

@@ -13,6 +13,12 @@ class ProtocolTests(unittest.TestCase):
   x,y,z,*_=r.world((0,1,0,0,1,False));self.assertAlmostEqual(x,-.6536357597);self.assertAlmostEqual(y,2.1536357597);self.assertAlmostEqual(z,1.8263518223)
  def test_empty_roi_and_outside_returns(self):
   f=r.features([]);self.assertEqual(f['bed'],0);self.assertIsNone(f['bed_top']);self.assertEqual(r.features([(100,100,100,0,0,False)])['room'],0)
+class FreshStreamTests(unittest.TestCase):
+ def test_no_new_frames_or_only_stale_data_expires(self):
+  with self.assertRaises(r.RadarStall):r.ensure_fresh_stream(None,0,31)
+  with self.assertRaises(r.RadarStall):r.ensure_fresh_stream(10,0,41)
+ def test_recent_empty_point_frames_still_keep_stream_alive(self):
+  r.ensure_fresh_stream(40,0,41)
 class FilenameTests(unittest.TestCase):
  def test_interrupted_raw_windows_cannot_be_overwritten(self):
   import tempfile
