@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {densityGroups,BedDensityPeople} from './bed-density.mjs';
+import {DEFAULT_BED} from '../../sites/citraverse-radar-room-3d/lib/radar/bed.mjs';
+const points=x=>Array.from({length:6},(_,i)=>({x:x+i*.005,y:1,z:.8}));
+test('density never forces two and excludes isolated noise',()=>{assert.equal(densityGroups([],1,1,4).length,0);assert.equal(densityGroups(points(0),.2,1,4).length,1);assert.equal(densityGroups([...points(0),...points(1)],.2,1,4).length,2);assert.equal(densityGroups([{x:0,y:0},{x:1,y:0}],.2,1,4).length,0);});
+test('sparse bridges cannot connect two dense components',()=>{const p=[...points(0),...[.35,.7,1.05,1.4,1.75].map(x=>({x,y:1,z:.8})),...points(2)];assert.equal(densityGroups(p,.4,1,4).length,2);});
+test('repeated position cannot create support and stale/gapped history clears',()=>{const tracker=new BedDensityPeople(),room={width:3,depth:3,roomHeight:3};for(let t=0;t<1000;t+=50)assert.equal(tracker.update([{x:.5,y:1,z:.8}],t,DEFAULT_BED,room).length,0);assert.equal(tracker.update([],2000,DEFAULT_BED,room).length,0);});
+const body=x=>[0,.05,.1].flatMap(dx=>[0,.05].map(dy=>({x:x+dx,y:1+dy,z:.65+dy})));
+test('two supported bodies become recent candidates, then old evidence is weak and expires',()=>{const tracker=new BedDensityPeople(),room={width:3,depth:3,roomHeight:3};let boxes=[];for(const t of [0,50,100])boxes=tracker.update([...body(.4),...body(1)],t,DEFAULT_BED,room);assert.equal(boxes.filter(p=>p.recent).length,2);boxes=tracker.update([],350,DEFAULT_BED,room);assert.equal(boxes.length,2);assert.ok(boxes.every(p=>!p.recent));assert.equal(tracker.update([],1200,DEFAULT_BED,room).length,0);});
+test('one supported body remains one and changing geometry discards history',()=>{const tracker=new BedDensityPeople(),room={width:3,depth:3,roomHeight:3};let boxes=[];for(const t of [0,50,100])boxes=tracker.update(body(.4),t,DEFAULT_BED,room);assert.equal(boxes.length,1);assert.equal(tracker.update(body(.4),150,{...DEFAULT_BED,width:1.5},room).length,0);});
