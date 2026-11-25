@@ -18,5 +18,5 @@ while time.time()<end:
    with target.open('a') as file:file.write(json.dumps(record)+'\n')
    seen.add(key);print('Retained telemetry',record['time'],record['segment'],'heap',record['free_heap'],flush=True)
  except (FileNotFoundError,json.JSONDecodeError) as error:print('Local telemetry unavailable:',type(error).__name__,flush=True)
- if (OUT/'complete.json').exists():break
+ if (OUT/'complete.json').exists() or (OUT/'observation-ended.json').exists():break
  time.sleep(10)

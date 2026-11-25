@@ -2,7 +2,7 @@
 """Audit post-selection holdout data without redefining the frozen candidate."""
 import json,pathlib,datetime as dt
 ROOT=pathlib.Path(__file__).resolve().parents[2];OUT=ROOT/'output/radar_overnight_20261125'
-def evaluate(choice,segments,parents,display,regressions,completion):
+def evaluate(choice,segments,parents,display,regressions,completion,attempt_end=None):
  label=choice['selected_method'];parent=parents.get(label,{})
  limits=choice.get('holdout_criteria',{});reference=choice.get('selection_reference')
  if not limits or not reference:return {'status':'unverified','reason':'Frozen holdout criteria or selection reference missing'}
@@ -40,11 +40,15 @@ def evaluate(choice,segments,parents,display,regressions,completion):
  live_verified=bool(completion.get('active_verified') and completion.get('active_profile')==choice['selected_profile'])
  minimum_met=total_minutes+1e-8>=minimum_minutes
  qualified=capture_complete and minimum_met and live_verified and not current_regressions and not quality and all(behavior.values()) and completion.get('startup_profile_unchanged') is True and not any(v['unknown_windows'] for v in metrics['cloud'].values())
- status=('complete' if qualified else 'complete_with_limits') if capture_complete else ('running' if selected else 'awaiting_windows')
- return {'status':status,'completed_windows':len(selected),'minutes':total_minutes,'minimum_required_minutes':minimum_minutes,'minimum_met':minimum_met,'capture_completed_at_planned_end':capture_complete,'selected_configuration_live_verified':live_verified,'selected_configuration_passed_holdout_gates':bool(qualified),'metrics':metrics,'windows':summary,'other_profile_windows_after_freeze':other,'regressions':current_regressions,'quality_problem_windows':quality,'behavior_gates':behavior,'selection_reference':reference,'startup_profile_unchanged':completion.get('startup_profile_unchanged'),'interpretation':'Fresh-group and transport evidence only. Reported two occupants were not independently annotated; no human-count accuracy is inferred.'}
+ attempt_ended=False
+ if attempt_end and attempt_end.get('incomplete') and attempt_end.get('selection_epoch')==choice['frozen_epoch']:
+  try:attempt_ended=dt.datetime.fromisoformat(attempt_end['time']).timestamp()>=choice['planned_capture_end_epoch']
+  except (KeyError,ValueError,TypeError):pass
+ status=('complete' if qualified else 'complete_with_limits') if capture_complete else ('incomplete_unverified_final_state' if attempt_ended else 'running' if selected else 'awaiting_windows')
+ return {'status':status,'capture_attempt_ended':attempt_ended or capture_complete,'completed_windows':len(selected),'minutes':total_minutes,'minimum_required_minutes':minimum_minutes,'minimum_met':minimum_met,'capture_completed_at_planned_end':capture_complete,'selected_configuration_live_verified':live_verified,'selected_configuration_passed_holdout_gates':bool(qualified),'metrics':metrics,'windows':summary,'other_profile_windows_after_freeze':other,'regressions':current_regressions,'quality_problem_windows':quality,'behavior_gates':behavior,'selection_reference':reference,'startup_profile_unchanged':completion.get('startup_profile_unchanged'),'interpretation':'Fresh-group and transport evidence only. Reported two occupants were not independently annotated; no human-count accuracy is inferred.'}
 def main():
  read=lambda n,d:json.loads((OUT/n).read_text()) if (OUT/n).exists() else d
  if not (OUT/'final-method-selection.json').exists():return
- result=evaluate(read('final-method-selection.json',{}),[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))],{'earlier':read('runtime-replay.json',{}),'density':read('density-runtime-replay.json',{})},read('display-runtime-replay.json',{}),read('final-regressions.json',{}).get('events',[]),read('complete.json',{}))
+ result=evaluate(read('final-method-selection.json',{}),[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))],{'earlier':read('runtime-replay.json',{}),'density':read('density-runtime-replay.json',{})},read('display-runtime-replay.json',{}),read('final-regressions.json',{}).get('events',[]),read('complete.json',{}),read('observation-ended.json',{}))
  target=OUT/'final-holdout-analysis.json';temp=target.with_suffix('.tmp');temp.write_text(json.dumps(result,indent=2));temp.replace(target);print('final holdout:',result['status'],flush=True)
 if __name__=='__main__':main()

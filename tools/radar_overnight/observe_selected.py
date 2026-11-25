@@ -15,7 +15,11 @@ async def main():
   regressions.append(entry);failures.append({'label':'final-observation','error':type(error).__name__+': '+str(error)});r.dump('final-regressions.json',{'events':regressions});r.event('final_candidate_regression',**entry)
   target=dict(r.BASE);fallback=True;needs_apply=True
  async with httpx.AsyncClient(base_url=r.ORIGIN,timeout=20) as client:
-  r.dump('final-observation-start.json',{'time':r.stamp(),'selected_profile':selected,'selection_epoch':choice['frozen_epoch'],'collector_sha256':r.CODE_HASH,'observer_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()})
+  start={'time':r.stamp(),'selected_profile':selected,'selection_epoch':choice['frozen_epoch'],'collector_sha256':r.CODE_HASH,'observer_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()}
+  history=r.OUT/'final-observation-start-history.jsonl';previous=r.OUT/'final-observation-start.json'
+  if not history.exists() and previous.exists():history.write_text(json.dumps(json.loads(previous.read_text()))+'\n')
+  with history.open('a') as file:file.write(json.dumps(start)+'\n')
+  r.dump('final-observation-start.json',start)
   while time.time()<r.END-600:
    try:
     state=await r.rpc(client)
@@ -34,7 +38,11 @@ async def main():
     r.event('stopped_external_change');raise
    except Exception as error:
     regression(error);r.dump('comparison.json',{'updated':r.stamp(),'results':results,'failures':failures});await asyncio.sleep(10)
-  state=await r.rpc(client);h=await r.health(client)
+  state=None;h=None
+  try:state=await r.rpc(client);h=await r.health(client)
+  except Exception as error:
+   ended={'time':r.stamp(),'selection_epoch':choice['frozen_epoch'],'planned_capture_end_epoch':r.END-600,'selected_profile':selected,'target_profile':target,'incomplete':True,'active_verified':False,'startup_profile_unchanged':None,'fallback':fallback,'regressions':len(regressions),'error_class':type(error).__name__,'reason':str(error)}
+   r.dump('final-device-state.json',{'time':r.stamp(),'tuning':state,'health':h,'verification_error':str(error)});r.dump('observation-ended.json',ended);r.event('final_observation_unverified',error_class=ended['error_class'],reason=ended['reason']);return
   verified=state.get('active')==target and state.get('frames_verified') and state.get('frames_recent') and not state.get('busy')
   r.dump('final-device-state.json',{'time':r.stamp(),'tuning':state,'health':h})
   r.dump('complete.json',{'time':r.stamp(),'results':len(results),'selected_observation':True,'selected_profile':selected,'active_profile':state.get('active'),'active_verified':bool(verified),'baseline_restored':state.get('active')==r.BASE,'startup_profile_unchanged':state.get('saved')==baseline_record.get('saved'),'fallback':fallback,'regressions':len(regressions),'boot_id':state.get('boot_id')})

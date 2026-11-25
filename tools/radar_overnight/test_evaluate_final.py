@@ -21,4 +21,10 @@ class HoldoutTests(unittest.TestCase):
   a=self.fixture();a[1][0]['health_after']['cloud'].pop('queue_drops');r=evaluate(*a);self.assertFalse(r['selected_configuration_passed_holdout_gates']);self.assertEqual(r['metrics']['cloud']['queue_drops']['unknown_windows'],1);a=self.fixture();a[1][0]['age_p95_ms']=None;self.assertEqual(evaluate(*a)['status'],'unverified')
  def test_final_active_profile_and_startup_state_must_match_evidence(self):
   a=self.fixture();a[-1]['active_profile']={'static_rm':0};self.assertFalse(evaluate(*a)['selected_configuration_passed_holdout_gates']);a=self.fixture();a[-1].pop('startup_profile_unchanged');self.assertFalse(evaluate(*a)['selected_configuration_passed_holdout_gates'])
+ def test_unverified_end_is_terminal_but_never_a_success(self):
+  a=self.fixture();a[-1]={};end={'incomplete':True,'selection_epoch':100,'time':dt.datetime.fromtimestamp(10000,dt.timezone.utc).isoformat()};r=evaluate(*a,end);self.assertEqual(r['status'],'incomplete_unverified_final_state');self.assertTrue(r['capture_attempt_ended']);self.assertFalse(r['selected_configuration_passed_holdout_gates']);self.assertFalse(r['capture_completed_at_planned_end'])
+ def test_early_or_other_selection_end_marker_cannot_finish_capture(self):
+  a=self.fixture();a[-1]={}
+  for epoch,selection in [(9000,100),(10000,99)]:
+   end={'incomplete':True,'selection_epoch':selection,'time':dt.datetime.fromtimestamp(epoch,dt.timezone.utc).isoformat()};r=evaluate(*a,end);self.assertEqual(r['status'],'running');self.assertFalse(r['capture_attempt_ended'])
 if __name__=='__main__':unittest.main()
