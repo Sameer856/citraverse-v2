@@ -1,5 +1,15 @@
 # Dashboard versions
 
+## dashboard-v1.2.0 — Experimental bed candidates
+
+- Bed-aligned candidate boxes use separate across-bed and along-bed distances, a short source-frame evidence window, and distinct-position support. They never force two people.
+- Candidate settings and the original whole-room box view are available without reflashing; preferences persist in the browser.
+- Fresh candidates are distinguished from weak historical evidence. Gaps, stale frames and geometry changes clear accumulated evidence.
+- Box tops and observed spans remain approximate radar measurements, not full body height or verified human identity. The single-person fall prototype is unchanged.
+- Default method was frozen from development recordings before prospective overnight validation: 0.15 m across, 1 m along, 200 ms, three distinct positions. Detailed overnight results are separate from functional validation.
+- Validation: TypeScript, 35 protocol/mount/bed/people/fall checks, exact runtime replay and live GCP browser preview with persistence and original-view fallback. Production build is recorded with the published source.
+- Rollback: `dashboard-v1.1.0` (bed reference with original room boxes).
+
 ## dashboard-v1.1.0 — Bed room reference
 
 - Bed beside the right wall, head at the far-right corner and foot toward the near-right corner.
