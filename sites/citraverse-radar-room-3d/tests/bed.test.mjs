@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {DEFAULT_BED,normalizeBed,bedPlacement} from '../lib/radar/bed.mjs';
+test('bed head is at far right; foot extends toward near right',()=>{const b=bedPlacement(DEFAULT_BED,{width:4,depth:4,roomHeight:3});assert.equal(b.rightX,1.85);assert.equal(b.farY,3.85);assert.equal(b.x,1.35);assert.equal(b.y,2.85);assert.equal(b.y-b.length/2,1.85);assert.equal(b.fitted,false);});
+test('bed fits entirely inside small and large rooms',()=>{for(const width of [1,4,12])for(const depth of [1,4,12]){const b=bedPlacement({...DEFAULT_BED,width:2.5,length:2.5},{width,depth,roomHeight:3});assert.ok(b.x-b.width/2>=-width/2);assert.ok(b.x+b.width/2<=width/2);assert.ok(b.y-b.length/2>=0);assert.ok(b.y+b.length/2<=depth);}});
+test('invalid bed values are rejected',()=>{for(const p of [{width:NaN},{length:0},{height:2},{inset:-1},{enabled:'yes'}])assert.throws(()=>normalizeBed(p));});

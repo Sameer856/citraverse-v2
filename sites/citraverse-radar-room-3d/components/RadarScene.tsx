@@ -1,12 +1,14 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import * as THREE from 'three';
+import type {Bed} from './BedSettings';
+import {bedPlacement} from '../lib/radar/bed.mjs';
 import {sensorPosition,rotateSensor} from '../lib/radar/mount.mjs';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 export type Point={x:number;y:number;z:number;v:number;snr:number;presence:boolean};
 export type PersonBox={id:number;x:number;y:number;top:number;span:number;count:number;bounds:number[]};
 export type Mount={schemaVersion:number;face:string;rollDeg:number;positionX:number;positionY:number;corner:string;inset:number;aimAtCenter:boolean;mount:string;height:number;tiltDeg:number;yawDeg:number;range:number;width:number;depth:number;roomHeight:number};
-export default function RadarScene({points,people,mount,view,alert}:{points:Point[];people:PersonBox[];mount:Mount;view:{name:string;n:number};alert:boolean}){
+export default function RadarScene({points,people,bed,mount,view,alert}:{bed:Bed;points:Point[];people:PersonBox[];mount:Mount;view:{name:string;n:number};alert:boolean}){
  const host=useRef<HTMLDivElement>(null),live=useRef({points,people,alert}),changeView=useRef<(name:string)=>void>(()=>{});const [error,setError]=useState('');
  useEffect(()=>{live.current={points,people,alert};},[points,people,alert]);
  useEffect(()=>{changeView.current(view.name);},[view]);
@@ -20,6 +22,17 @@ export default function RadarScene({points,people,mount,view,alert}:{points:Poin
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(mount.width,mount.depth),new THREE.MeshBasicMaterial({color:'#18382f',side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.set(0,-.02,-mount.depth/2);scene.add(floor);
   const grid=new THREE.GridHelper(Math.max(mount.width,mount.depth),Math.ceil(Math.max(mount.width,mount.depth)),0x436557,0x294c40);grid.position.z=-mount.depth/2;scene.add(grid);
   const box=new THREE.Box3(new THREE.Vector3(-mount.width/2,0,-mount.depth),new THREE.Vector3(mount.width/2,mount.roomHeight,0));const room=new THREE.Box3Helper(box,0x426154);scene.add(room);
+  if(bed.enabled){
+   const b=bedPlacement(bed,mount),bedGroup=new THREE.Group();bedGroup.position.set(b.x,0,-b.y);scene.add(bedGroup);
+   const part=(w:number,h:number,d:number,x:number,y:number,z:number,color:number)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color}));mesh.position.set(x,y,z);bedGroup.add(mesh);return mesh;};
+   const mattress=Math.min(.18,b.height*.35),frameHeight=Math.max(.08,b.height-mattress-.1);
+   part(b.width,frameHeight,b.length,0,.1+frameHeight/2,0,0x6b7862);
+   part(b.width-.04,mattress,b.length-.04,0,b.height-mattress/2,0,0xd5ddc6);
+   part(b.width*.92,.025,b.length*.65,0,b.height+.012,b.length*.14,0x739a85);
+   part(b.width*.68,.07,Math.min(.42,b.length*.2),0,b.height+.035,-b.length*.34,0xeff0de);
+   part(b.width,.35,.06,0,b.height+.075,-b.length/2+.03,0x829875);
+   const outline=new THREE.Box3Helper(new THREE.Box3(new THREE.Vector3(b.x-b.width/2,.01,-b.y-b.length/2),new THREE.Vector3(b.x+b.width/2,b.height,-b.y+b.length/2)),0xa2b297);scene.add(outline);
+  }
   const origin=sensorPosition(mount),toThree=(p:{x:number;y:number;z:number})=>new THREE.Vector3(p.x,p.z,-p.y);
   const basis=new THREE.Matrix4().makeBasis(toThree(rotateSensor({x:1,y:0,z:0},mount)),toThree(rotateSensor({x:0,y:1,z:0},mount)),toThree(rotateSensor({x:0,y:0,z:1},mount)));
   const sensor=new THREE.Group();sensor.position.copy(toThree(origin));sensor.quaternion.setFromRotationMatrix(basis);scene.add(sensor);
@@ -36,6 +49,6 @@ export default function RadarScene({points,people,mount,view,alert}:{points:Poin
   const animate=()=>{let n=0;for(const p of live.current.points){if(n>=8192)break;const color=live.current.alert?warning:p.presence?presence:motion;positions[n*3]=p.x;positions[n*3+1]=p.z;positions[n*3+2]=-p.y;color.toArray(colors,n*3);n++;}geo.setDrawRange(0,n);geo.attributes.position.needsUpdate=true;geo.attributes.color.needsUpdate=true;controls.update();for(let i=0;i<boxes.length;i++){const {helper,label}=boxes[i],p=live.current.people[i];helper.visible=!!p;label.hidden=true;if(!p)continue;const b=p.bounds;helper.box.min.set(b[0]-.06,Math.max(0,b[4]-.04),-b[3]-.06);helper.box.max.set(b[1]+.06,b[5]+.06,-b[2]+.06);(helper.material as THREE.LineBasicMaterial).color.copy(live.current.alert?warning:presence);projected.set(p.x,b[5]+.18,-p.y).project(camera);if(projected.z>=-1&&projected.z<=1&&Math.abs(projected.x)<=1&&Math.abs(projected.y)<=1){label.hidden=false;label.textContent=`P${p.id} · ~${p.top.toFixed(2)} m top`;label.style.left=`${(projected.x+1)*50}%`;label.style.top=`${(1-projected.y)*50}%`;}}
    renderer.render(scene,camera);raf=requestAnimationFrame(animate);};animate();
   return()=>{cancelAnimationFrame(raf);observer.disconnect();controls.dispose();scene.traverse(o=>{if(o instanceof THREE.Mesh||o instanceof THREE.Line||o instanceof THREE.Points){o.geometry.dispose();const m=o.material;if(Array.isArray(m))m.forEach(x=>x.dispose());else m.dispose();}});renderer.dispose();renderer.domElement.remove();boxLayer.remove();changeView.current=()=>{};};
- },[mount]);
+ },[mount,bed]);
  return <div className="scene" ref={host} aria-label="Interactive live 3D radar point cloud">{error&&<div className="scene-error">{error}</div>}</div>;
 }

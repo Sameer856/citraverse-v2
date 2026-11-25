@@ -1,6 +1,8 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {Activity,Box,ChevronDown,Cloud,Download,Maximize2,Pause,Radio,Settings2,ShieldCheck,TriangleAlert,WifiOff,X} from 'lucide-react';
+import BedSettings,{type Bed} from '../components/BedSettings';
+import {DEFAULT_BED,normalizeBed} from '../lib/radar/bed.mjs';
 import {PersonBoxes} from '../lib/radar/people.mjs';
 import MountSettings from '../components/MountSettings';
 import {DEFAULT_MOUNT,normalizeMount,withinRange,insideRoom} from '../lib/radar/mount.mjs';
@@ -14,6 +16,7 @@ type Feed={people:PersonBox[];points:Point[];total:number;fps:number;age:number;
 const INITIAL:Mount={...DEFAULT_MOUNT};
 const EMPTY:Feed={people:[],points:[],total:0,fps:0,age:0,index:0,gaps:0,stale:0,polar:0,clusters:0};
 export default function RadarRoom(){
+ const [bed,setBed]=useState<Bed>({...DEFAULT_BED});
  const [staticRemoved,setStaticRemoved]=useState(true),[showBoxes,setShowBoxes]=useState(true);
  const [mount,setMount]=useState<Mount>(INITIAL),[setup,setSetup]=useState(false),[confirmed,setConfirmed]=useState(false),[configured,setConfigured]=useState(false);
  const [feed,setFeed]=useState<Feed>(EMPTY),[connection,setConnection]=useState('Connecting'),[snapshot,setSnapshot]=useState({state:'Not armed',reason:'Set mounting and arm monitoring',armed:false,alert:null as null|{drop:number;speed:number;top:number},track:null as null|{smoothedTop?:number;top:number;x:number;y:number}}),[events,setEvents]=useState<Event[]>([]),[notice,setNotice]=useState('');
@@ -21,6 +24,8 @@ export default function RadarRoom(){
  const boxTracker=useRef(new PersonBoxes());
  const detector=useRef(new FallDetector()),settings=useRef(mount),last=useRef<(Frame&{receivedAt:number})|null>(null),frameCount=useRef(0),gapCount=useRef(0),staleCount=useRef(0),lastReceived=useRef(0),lastEvent=useRef<number|null>(null);
  const sync=useCallback(()=>setSnapshot({...detector.current.snapshot()}),[]);
+ useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem('citra-bed')||'null');if(saved)setBed(normalizeBed(saved));}catch{}},[]);
+ const saveBed=(value:Bed)=>{setBed(value);try{localStorage.setItem('citra-bed',JSON.stringify(value));}catch{}};
  useEffect(()=>{settings.current=mount;},[mount]);
  useEffect(()=>{try{const e=JSON.parse(localStorage.getItem('citra-fall-events')||'[]');if(Array.isArray(e))setEvents(e.filter(x=>x&&typeof x.time==='string'&&Number.isFinite(x.drop)&&Number.isFinite(x.speed)&&Number.isFinite(x.top)).slice(0,100));const c=JSON.parse(localStorage.getItem('citra-mount')||'null');if(c){detector.current.configure(c);const migrated=normalizeMount(c) as Mount;settings.current=migrated;setMount(migrated);setConfigured(true);}}catch{/* Untrusted or old browser settings are ignored. */}},[]);
  useEffect(()=>{
@@ -58,7 +63,7 @@ export default function RadarRoom(){
   <header className="header"><a className="brand" href="/" aria-label="Citraverse home"><span className="brand-icon"><Radio size={23}/></span>citraverse<span className="product">RADAR ROOM</span></a><div className="header-right"><span><Cloud size={16}/> GCP · Mumbai</span><span className="private"><ShieldCheck size={15}/> Private workspace</span></div></header>
   <main><div className="heading"><div><div className="eyebrow">SPATIAL INTELLIGENCE</div><h1>Your room, in real time.</h1><p>Live radar points. Clear context. A closer look at movement.</p></div><button className="outline" onClick={()=>{detector.current.disarm();sync();setSetup(true);}}><Settings2 size={17}/> Room & mounting</button></div>
   <div className="workspace"><section className="visual-panel"><div className="scene-toolbar"><div className="live-label"><span className={live?'signal live':'signal'}/>{connection}</div><div className="view-buttons">{['iso','top','front'].map(name=><button key={name} className={view.name===name?'selected':''} onClick={()=>setView(v=>({name,n:v.n+1}))}>{name==='iso'?'3D view':name==='top'?'Top':'Front'}</button>)}<button aria-label="Reset camera" onClick={()=>setView(v=>({name:'iso',n:v.n+1}))}><Maximize2 size={16}/></button></div></div>
-   <RadarScene people={showBoxes?feed.people:[]} points={feed.points} mount={mount} view={view} alert={alert}/>
+   <RadarScene bed={bed} people={showBoxes?feed.people:[]} points={feed.points} mount={mount} view={view} alert={alert}/>
    {!live&&<div className="stream-overlay"><WifiOff size={26}/><strong>{connection==='Connecting'?'Connecting to your sensor':connection==='Invalid data'?'Radar format needs attention':'Waiting for fresh radar frames'}</strong><span>Old points are cleared automatically.</span></div>}
    <div className="scene-bottom"><span className="legend"><i/> Presence points <i className="motion"/> Motion points</span><label className="box-toggle"><input type="checkbox" checked={showBoxes} onChange={e=>setShowBoxes(e.target.checked)}/> Person boxes</label></div>
    <div className="axis-caption">X lateral · Y forward · Z height <span>{mount.width} × {mount.depth} m room · 1 m grid</span></div>
@@ -67,6 +72,7 @@ export default function RadarRoom(){
    <div className="monitor-details"><div><span>Mounting</span><strong>{configured?`${mount.mount} · ${mount.rollDeg}° · ${mount.height} m`:'Needs setup'}</strong></div><div><span>Estimated top</span><strong>{live&&snapshot.track?`${(snapshot.track.smoothedTop??snapshot.track.top).toFixed(2)} m`:'—'}</strong></div><div><span>Coherent clusters</span><strong>{live?feed.clusters:'—'}</strong></div></div>
    <div className="profile-note"><TriangleAlert size={16}/><p>{staticRemoved?'The current CFAR profile removes static returns. A person lying still may disappear.':'Static returns are enabled. Check clutter and mounting before arming fall monitoring.'}</p></div>
   </aside></div>
+  <BedSettings value={bed} room={mount} onSave={saveBed}/>
   <section className="person-readings" aria-label="Person candidate measurements"><div><h2>Person boxes & height</h2><p>Boxes follow coherent radar clusters. IDs are temporary; objects or reflections can also form clusters.</p></div>{live&&feed.people.length?<div className="person-cards">{feed.people.map(p=><article key={p.id}><strong>Candidate P{p.id}</strong><div><span>Estimated top above floor</span><b>~{p.top.toFixed(2)} m</b></div><div><span>Observed vertical span</span><b>{p.span.toFixed(2)} m</b></div><small>{p.count} radar points · X {p.x.toFixed(2)} / Y {p.y.toFixed(2)} m</small></article>)}</div>:<p className="person-empty">{live?'Waiting for a stable person-sized cluster.':'Measurements appear with fresh radar frames.'}</p>}<p className="fine">Top above floor estimates current posture height, not full body stature. Head or feet may be missing from the returns. Correct mounting and floor alignment are required.</p></section>
   <section className="metrics" aria-label="Radar stream health"><div><span>POINTS IN FRAME</span><strong>{live?feed.points.length.toLocaleString():'—'}<small>Cartesian returns</small></strong></div><div><span>RECEIVED RATE</span><strong>{live?feed.fps:'—'}<small>frames / second</small></strong></div><div><span>RELAY FRAME AGE</span><strong>{live?feed.age:'—'}<small>ms · excludes browser transit</small></strong></div><div><span>STREAM CONTINUITY</span><strong>{feed.gaps}<small>gaps / resets · {feed.stale} stale rejected</small></strong></div></section>
   <RadarTuning onChanging={onTuning} onProfile={onProfile}/>
