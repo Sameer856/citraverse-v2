@@ -10,7 +10,7 @@ from reportlab.graphics.shapes import Drawing,Rect,Circle,Line,String
 ROOT=pathlib.Path(__file__).resolve().parents[2];OUT=ROOT/'output/radar_overnight_20261125';PDF=ROOT/'output/pdf';PDF.mkdir(parents=True,exist_ok=True)
 read=lambda name,default:json.loads((OUT/name).read_text()) if (OUT/name).exists() else default
 segments=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))]
-manifest=read('manifest.json',{});summary=read('profile-summary.json',{});replay=read('replay-analysis.json',{});comparison=read('comparison.json',{});completion=read('complete.json',{});recommendation=read('recommendation.json',{})
+manifest=read('manifest.json',{});summary=read('profile-summary.json',{});replay=read('replay-analysis.json',{});comparison=read('comparison.json',{});completion=read('complete.json',{});recommendation=read('recommendation.json',{});ranking=read('candidate-ranking.json',{});temporal=read('temporal-analysis.json',{});aim=read('mount-aim-analysis.json',{})
 finished=bool(completion);title='Citraverse overnight radar report';now=dt.datetime.now(dt.timezone(dt.timedelta(hours=5,minutes=30))).isoformat(timespec='minutes')
 styles=getSampleStyleSheet();styles.add(ParagraphStyle('BodyCustom',fontName='Helvetica',fontSize=10.5,leading=15,spaceAfter=9));styles.add(ParagraphStyle('SmallCustom',fontName='Helvetica',fontSize=8.5,leading=12,spaceAfter=7));styles['Title'].fontSize=23;styles['Title'].leading=28
 story=[]
@@ -20,7 +20,8 @@ def table(headers,rows,widths=None):
  content=[[Paragraph(html.escape(str(c)),styles['SmallCustom']) for c in row] for row in [headers,*rows]]
  t=Table(content,colWidths=widths,repeatRows=1,hAlign='LEFT');t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor('#e5ece6')),('VALIGN',(0,0),(-1,-1),'TOP'),('LINEBELOW',(0,0),(-1,0),.7,colors.HexColor('#8b9a8d')),('LINEBELOW',(0,1),(-1,-1),.25,colors.HexColor('#d7ded7')),('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),4)]));story.append(t)
 def percent(v):return f'{100*v:.1f}%'
-def commands(p):return '\n'.join([f"mmwc freq {p['frequency']}",f"mmwc range {p['range_mm']} {p['resolution_mm']}",f"mmwc veloc {p['speed_mm_s']} {p['speed_step_mm_s']}",f"mmwc frame {p['frame_ms']} 0",f"mmwc cfar {p['static_rm']} {p['cfar_value']}"+(f" {p['cfar_method']}" if p['cfar_method']>=0 else ''),f"mmwc clutter_rm {p['clutter_rm']}"])
+def commands(p):return '\n'.join(['mmwc stop','mmwc comtype 1','mmwc mode 4 2',f"mmwc freq {p['frequency']}",f"mmwc range {p['range_mm']} {p['resolution_mm']}",f"mmwc veloc {p['speed_mm_s']} {p['speed_step_mm_s']}",'mmwc dop_fft 1','mmwc coord cart',f"mmwc clutter_rm {p['clutter_rm']}",f"mmwc cfar {p['static_rm']} {p['cfar_value']}"+(f" {p['cfar_method']}" if p['cfar_method']>=0 else ''),f"mmwc frame {p['frame_ms']} 0",'mmwc report points 0','mmwc start'])
+
 para(title,'Title');para(('FINAL CAPTURE REVIEW' if finished else 'DRAFT - OVERNIGHT CAPTURE STILL RUNNING')+' | generated '+now,'SmallCustom')
 frames=sum(s['counts'].get('fresh',0) for s in segments);minutes=sum(s['duration_s'] for s in segments)/60
 para(f'{len(segments)} completed capture windows; {minutes:.1f} recorded minutes; {frames:,} fresh processed-point frames. In-progress windows are excluded from the figures below.')
@@ -47,6 +48,17 @@ for s in segments:
  r=replays.get(s['segment'],{});f=r.get('cluster_fractions',{});rows.append([s['label'],r.get('sampled_seconds',0),percent(f.get('room3d-two',0)),percent(f.get('r0.3-min6-two',0)),percent(f.get('r0.4-min3-two',0)),percent(f.get('r0.4-min3-many',0))])
 table(['Window','Samples','Room 3D: 2','Bed .3/6: 2','Bed .4/3: 2','Bed .4/3: >2'],rows,[154,45,61,63,63,63])
 para('Column labels show radius/minimum support. Compare merging (one cluster), apparent separation (two), and fragmentation (more than two). A changed clustering algorithm can improve numerical separation while still grouping reflections incorrectly.','SmallCustom')
+h('Temporal replay and prospective validation')
+para('Short accumulation windows use unique 4 cm horizontal voxels, preventing repeated identical samples from manufacturing support. A group must contain at least three distinct voxels refreshed within 200 ms to count as recent. Historical-only groups are excluded from fresh two-group fractions. Windows of 0.2, 0.5 and 1 second are compared.')
+rows=[]
+for c in ranking.get('candidates',[]):
+ holdout=c.get('holdout',[])
+ rows.append([c['label'],c['method'],percent(c['training_two_group_fraction']),'; '.join(percent(h['two_group_fraction']) for h in holdout) or 'Not yet repeated'])
+table(['Profile','Selected replay method','First window: two','Later windows: same method'],rows,[135,135,80,99])
+para('Methods are selected on the first completed window for each hardware profile. Later-window figures are reported separately. Scores are not person-count accuracy. The final prospective shortlist and any subsequent changes must be recorded before interpreting repeat windows as validation.','SmallCustom')
+h('Geometric coverage')
+para('Using the assumed bed footprint, its farthest mattress corner is about 3.66 m from the sensor. A 3.2 m maximum range cannot cover that entire footprint, even if it removes unwanted points. Such a profile is excluded from the recommendation shortlist. Exact dimensions should be confirmed before relying on this gate.')
+para('Aiming directly toward the assumed bed centre would require approximately 114 degrees heading and 26-31 degrees down tilt for targets 0.85-0.55 m high. Current settings describe 135 degrees and 10 degrees. This is a geometric comparison, not a measured antenna field-of-view result. Changing dashboard values does not steer the antenna: physical orientation must match the transformation.')
 h('Failures and recovery')
 failures=comparison.get('failures',[])
 if failures:
@@ -63,7 +75,7 @@ def footer(c,doc):
 path=PDF/('citraverse-overnight-radar-report.pdf' if finished else 'citraverse-overnight-radar-DRAFT.pdf')
 SimpleDocTemplate(str(path),pagesize=A4,leftMargin=42,rightMargin=42,topMargin=40,bottomMargin=42,title=title).build(story,onFirstPage=footer,onLaterPages=footer)
 # All data stays inline; the Canvas performs no fetches and contains no credentials.
-data={'finished':finished,'generated':now,'manifest':manifest,'summary':summary,'segments':segments,'replay':replay,'recommendation':recommendation,'completion':completion}
+data={'finished':finished,'generated':now,'manifest':manifest,'summary':summary,'segments':segments,'replay':replay,'recommendation':recommendation,'completion':completion,'ranking':ranking,'temporal':temporal,'aim':aim}
 # Omit device health and long transcript objects from the visual payload.
 for s in data['segments']:s.pop('health_before',None);s.pop('health_after',None)
 canvas='''import {Stack,H1,H2,Text,Grid,Stat,Table,Divider,Select,useCanvasState,useHostTheme} from 'cursor/canvas';
