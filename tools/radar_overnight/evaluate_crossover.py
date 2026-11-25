@@ -6,6 +6,8 @@ def evaluate(criteria,baseline,segments,methods,completion):
  comparison=criteria['comparison'];before=next((s for s in segments if s['segment']==comparison['baseline_before']),None)
  bylabel={s['label']:s for s in segments};alternate=[bylabel.get(label) for label in comparison['alternate_labels']];after=bylabel.get(comparison['baseline_after_label']);ordered=[before,*alternate,after]
  missing=[name for name,s in zip(['baseline before',*comparison['alternate_labels'],'baseline after'],ordered) if s is None]
+ if completion and completion.get('aborted'):
+  return {'status':'evaluated','alternate_passed':False,'selected_profile':baseline,'gates':[{'name':'crossover completed without a reboot or abort','passed':False,'actual':'aborted','limit':'complete uninterrupted comparison'}],'missing':missing,'aggregate':{},'segments':[s['segment'] for s in ordered if s is not None],'limitation':criteria['limitation'],'interpretation':'Comparison aborted. Retain the original baseline; partial alternate improvements cannot establish a winner.'}
  if missing or not completion:return {'status':'pending','missing':missing+([] if completion else ['crossover recovery confirmation']),'selected_profile':None}
  required=criteria['required'];gates=[]
  def gate(name,passed,actual=None,limit=None):gates.append({'name':name,'passed':bool(passed),'actual':actual,'limit':limit})

@@ -28,11 +28,13 @@ for line in (OUT/'events.jsonl').read_text().splitlines():collect_boot_ids(json.
 observed_restarts=max(0,len(boot_ids)-1)
 finished=bool(completion);title='Citraverse overnight radar report';now=dt.datetime.now(dt.timezone(dt.timedelta(hours=5,minutes=30))).isoformat(timespec='minutes')
 styles=getSampleStyleSheet();styles.add(ParagraphStyle('BodyCustom',fontName='Helvetica',fontSize=10.5,leading=15,spaceAfter=9));styles.add(ParagraphStyle('SmallCustom',fontName='Helvetica',fontSize=8.5,leading=12,spaceAfter=7));styles['Title'].fontSize=23;styles['Title'].leading=28
+styles['Heading2'].keepWithNext=True
+window_names={s['segment']:s['segment'].split('-',1)[0]+' '+{'baseline-overnight-observation':'baseline observation','crossover-static0-first':'static0 comparison 1','crossover-static0-repeat':'static0 comparison 2','crossover-baseline':'baseline after','final-selected':'final candidate','final-baseline-fallback':'baseline fallback'}.get(s['label'],s['label']) for s in segments}
 story=[]
 def para(text,style='BodyCustom'):story.append(Paragraph(html.escape(text),styles[style]))
 def h(text):story.append(Spacer(1,12));story.append(Paragraph(html.escape(text),styles['Heading2']))
 def table(headers,rows,widths=None):
- content=[[Paragraph(html.escape(str(c)),styles['SmallCustom']) for c in row] for row in [headers,*rows]]
+ content=[[Paragraph(html.escape(window_names.get(str(c),str(c))),styles['SmallCustom']) for c in row] for row in [headers,*rows]]
  t=Table(content,colWidths=widths,repeatRows=1,hAlign='LEFT');t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor('#e5ece6')),('VALIGN',(0,0),(-1,-1),'TOP'),('LINEBELOW',(0,0),(-1,0),.7,colors.HexColor('#8b9a8d')),('LINEBELOW',(0,1),(-1,-1),.25,colors.HexColor('#d7ded7')),('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),4)]));story.append(t)
 def percent(v):return f'{100*v:.1f}%'
 def commands(p):return '\n'.join(['mmwc stop','mmwc comtype 1','mmwc mode 4 2',f"mmwc freq {p['frequency']}",f"mmwc range {p['range_mm']} {p['resolution_mm']}",f"mmwc veloc {p['speed_mm_s']} {p['speed_step_mm_s']}",'mmwc dop_fft 1','mmwc coord cart',f"mmwc clutter_rm {p['clutter_rm']}",f"mmwc cfar {p['static_rm']} {p['cfar_value']}"+(f" {p['cfar_method']}" if p['cfar_method']>=0 else ''),f"mmwc frame {p['frame_ms']} 0",'mmwc report points 0','mmwc start'])
@@ -52,7 +54,7 @@ h('Acquisition and comparison method')
 para('Authenticated GCP RPC applies a temporary complete radar profile, logs radar read-back replies, verifies fresh frames, then allows 10 seconds settling. Initial screening windows are 8 minutes. After four observed restarts, aggressive sweeps were suspended. Subsequent 20-minute windows observe the original baseline; any bounded repeat of a previously successful static-return setting is identified separately. Original mode, SPI transport, Cartesian point format and Doppler FFT remain unchanged. No firmware flashing, startup-profile save, or occupied-room noise calibration is performed.')
 para('The local archive retains processed Cartesian radar points in RDR2 packets, not raw ADC samples. Metrics use fresh frames with relay age at most 350 ms. Relay age excludes browser transit. Offline spatial replay samples one frame per receive-second and tests horizontal connected-component radii 0.2-0.65 m with 3 or 6 supporting points. The existing room algorithm uses 3D radius 0.65 m and 6 points.')
 para('Screening proxy: 40% bed-return persistence, 20% both bed-half support, 20% low outside-bed point fraction, 20% fresh-rate reliability. This is not a calibrated detection-accuracy score. Static furniture can increase persistence. Profile order and natural movement introduce time confounding; repeated windows and baseline repeats help expose it.')
-story.append(PageBreak());h('Profile-level results')
+h('Profile-level results')
 rows=[]
 for i,p in enumerate(summary.get('profiles',[]),1):rows.append([f"{i}. {p['labels'][0]}",f"{p['duration_minutes']:.1f}",f"{p['fresh_fps']:.2f}",percent(p['bed_presence_fraction']),percent(p['both_halves_fraction']),percent(p['outside_point_fraction']),str(p['age_p95_segment_max'])])
 table(['Profile','Min','Fresh FPS','Bed support','Both halves','Outside points','P95 age ms'],rows,[130,36,49,58,58,64,54])
@@ -62,7 +64,7 @@ rows=[]
 for entry in summary.get('profiles',[]):
  p=entry['profile'];cfar=f"{p['static_rm']} / {p['cfar_value']} / "+('literal' if p['cfar_method']<0 else str(p['cfar_method']))
  rows.append([entry['labels'][0],p['frequency'],f"{p['range_mm']} / {p['resolution_mm']}",f"{p['speed_mm_s']} / {p['speed_step_mm_s']}",p['frame_ms'],cfar,p['clutter_rm']])
-table(['Profile','Freq MHz','Range / step mm','Speed / step mm/s','Frame ms','CFAR static / value / method','Clutter rm'],rows,[120,45,62,70,40,74,38])
+table(['Profile','Freq MHz','Range / step mm','Speed / step mm/s','Frame ms','CFAR static / value / method','Clutter rm'],rows,[145,45,62,70,40,74,38])
 para('Literal means the two-argument CFAR command; method 0 adds the third argument. Replies reported CFAR SNR 24 for the literal-80 windows and SNR 21 for the explicit-21 window. Request parameters and returned SNR are preserved separately; no unsupported conversion to a linear threshold is assumed.','SmallCustom')
 h('Bounded static-return crossover')
 if crossover:
@@ -71,6 +73,7 @@ if crossover:
  para('Crossover evaluation: '+crossover_evaluation.get('status','pending')+'.')
  if crossover_evaluation.get('status')=='evaluated':
   para('Alternate passed all predeclared gates: '+str(crossover_evaluation.get('alternate_passed'))+'. A passed proxy comparison still requires the final live-state verification reported under Decision.')
+  if crossover_evaluation.get('missing'):para('The comparison is incomplete: '+', '.join(crossover_evaluation['missing'])+'. The abort is a failed selection gate, not evidence that the baseline caused the restart.')
   rows=[]
   for method,values in crossover_evaluation.get('aggregate',{}).items():
    rows.append([method,percent(values['two']['baseline']),percent(values['two']['alternate']),f"{100*values['two']['difference']:+.1f} points",percent(values['many']['baseline']),percent(values['many']['alternate'])])
@@ -132,6 +135,7 @@ para('Software-selection status: '+software_evaluation.get('status','pending')+'
 if final_selection:
  para('Final candidate frozen at '+dt.datetime.fromtimestamp(final_selection['frozen_epoch'],dt.timezone(dt.timedelta(hours=5,minutes=30))).isoformat(timespec='minutes')+'. Only complete windows starting afterward on its profile enter the final holdout. No parameters are fitted to that holdout.')
  para('Selected method: '+str(final_selection.get('selected_method'))+'; display policy: '+str(final_selection.get('display_policy'))+'.')
+ if final_selection.get('decision_basis'):para(final_selection['decision_basis'])
 else:para('The final candidate has not been frozen in this snapshot.')
 if holdout:
  para('Holdout status: '+str(holdout.get('status'))+'. '+str(holdout.get('completed_windows',0))+' complete windows, '+f"{holdout.get('minutes',0):.1f}"+' recorded minutes. The detailed results below use the selected method and its actual profile only; any fallback is reported separately.')

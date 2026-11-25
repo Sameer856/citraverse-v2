@@ -21,4 +21,7 @@ class EvaluationTests(unittest.TestCase):
   args=list(self.fixture());args[0]['frozen_epoch']=300;self.assertFalse(evaluate(*args)['alternate_passed'])
  def test_missing_exact_replay_stays_pending(self):
   args=list(self.fixture());args[3]['density']['segments'].pop();self.assertEqual(evaluate(*args)['status'],'pending')
+ def test_abort_without_post_window_is_terminal_baseline_fallback(self):
+  args=list(self.fixture());args[2]=args[2][:-1];args[4]['aborted']=True;args[4]['boot_id']=8
+  result=evaluate(*args);self.assertEqual(result['status'],'evaluated');self.assertFalse(result['alternate_passed']);self.assertEqual(result['selected_profile'],args[1]);self.assertIn('baseline after',result['missing'])
 if __name__=='__main__':unittest.main()
