@@ -36,6 +36,33 @@ def grouped(points,radius,dimensions=2):
  groups=collections.defaultdict(list)
  for i in range(n):groups[find(i)].append(points[i])
  return list(groups.values())
+def density_groups(points,radius,min_samples):
+ # DBSCAN: only dense cores connect components; sparse bridges cannot merge them.
+ grid=collections.defaultdict(list)
+ for i,p in enumerate(points):grid[(math.floor(p[0]/radius),math.floor(p[1]/radius))].append(i)
+ neighbors=[]
+ for p in points:
+  cx,cy=math.floor(p[0]/radius),math.floor(p[1]/radius);ns=[]
+  for dx in [-1,0,1]:
+   for dy in [-1,0,1]:
+    for j in grid[(cx+dx,cy+dy)]:
+     if (p[0]-points[j][0])**2+(p[1]-points[j][1])**2<=radius**2:ns.append(j)
+  neighbors.append(ns)
+ core={i for i,ns in enumerate(neighbors) if len(ns)>=min_samples};labels={};groups=[]
+ for seed in sorted(core):
+  if seed in labels:continue
+  label=len(groups);groups.append([]);queue=[seed];labels[seed]=label
+  for i in queue:
+   groups[label].append(i)
+   for j in neighbors[i]:
+    if j in core and j not in labels:labels[j]=label;queue.append(j)
+ for i,p in enumerate(points):
+  if i in core:continue
+  candidates=[j for j in neighbors[i] if j in core]
+  if candidates:
+   j=min(candidates,key=lambda j:(p[0]-points[j][0])**2+(p[1]-points[j][1])**2);groups[labels[j]].append(i)
+ return [[points[i] for i in g] for g in groups]
+
 def segment_replay(seg):
  file=OUT/(seg['segment']+'.rdr.gz');lastsecond=None;counts=collections.Counter();sampled=0;nearbed=collections.Counter()
  with gzip.open(file,'rb') as f:
@@ -62,6 +89,9 @@ def segment_replay(seg):
     counts['room3d-zero']+=n3==0;counts['room3d-one']+=n3==1;counts['room3d-two']+=n3==2;counts['room3d-many']+=n3>2
     nearbed['strict_present']+=len(strict)>=3;nearbed['expanded_present']+=len(bed)>=3;nearbed['broad_present']+=len(broad)>=3
     for radius in [.2,.3,.4,.5,.65]:
+     for support in [4,6]:
+      dg=density_groups(bed,radius,support);n=len([g for g in dg if len(g)>=6]);prefix=f'db{radius}-core{support}'
+      counts[prefix+'-zero']+=n==0;counts[prefix+'-one']+=n==1;counts[prefix+'-two']+=n==2;counts[prefix+'-many']+=n>2
      groups=grouped(bed,radius)
      for minimum in [3,6]:
       g=[g for g in groups if len(g)>=minimum];n=len(g);prefix=f'r{radius}-min{minimum}'
@@ -73,10 +103,10 @@ def segment_replay(seg):
  return {'segment':seg['segment'],'sampled_seconds':sampled,'zone_presence_fractions':{k:v/max(1,sampled) for k,v in nearbed.items()},'cluster_fractions':{k:v/max(1,sampled) for k,v in counts.items()}}
 def main():
  segments=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];replays=[]
- cachefile=OUT/'replay-analysis.json';cached=json.loads(cachefile.read_text()) if cachefile.exists() else {};cache={r['segment']:r for r in cached.get('segments',[])} if cached.get('version')==2 else {}
+ cachefile=OUT/'replay-analysis.json';cached=json.loads(cachefile.read_text()) if cachefile.exists() else {};cache={r['segment']:r for r in cached.get('segments',[])} if cached.get('version')==3 else {}
  for seg in segments:
   r=cache.get(seg['segment']) or segment_replay(seg);replays.append(r);print(seg['segment'],r['sampled_seconds'],flush=True)
- cachefile.write_text(json.dumps({'version':2,'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
+ cachefile.write_text(json.dumps({'version':3,'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
  grouped_profiles=collections.defaultdict(list)
  for s in segments:grouped_profiles[json.dumps(s['profile'],sort_keys=True)].append(s)
  summary=[]
