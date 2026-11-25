@@ -98,8 +98,12 @@ def audit_capture(starthealth,endhealth,endstate,profile,expected_boot,counts):
 async def telemetry(client):
  h,s=await asyncio.gather(health(client),rpc(client));return h,s
 
+def next_capture_name(folder,label):
+ indices=[int(p.name.split('-',1)[0]) for p in folder.glob('*.rdr.gz') if p.name.split('-',1)[0].isdigit()]
+ return f'{max(indices,default=-1)+1:03d}-{label}'
+
 async def capture(client,profile,label,seconds):
- start=time.monotonic();wall=time.time();name=f'{len(list(OUT.glob("segment-*.json"))):03d}-{label}'
+ start=time.monotonic();wall=time.time();name=next_capture_name(OUT,label)
  counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;outages=[];last_status=0;pending_status=None
  starthealth=await health(client)
  initial=await rpc(client)
@@ -142,6 +146,9 @@ async def capture(client,profile,label,seconds):
    except RuntimeError:raise
    except Exception as e:
     counts['connection_errors']+=1;event('capture_connection_error',segment=name,error=str(e)[:160]);await asyncio.sleep(2)
+ except BaseException as e:
+  dump('interrupted-'+name+'.json',{'profile':profile,'counts':dict(counts),'duration_s':time.monotonic()-start,'started_epoch':wall,'ended_epoch':time.time(),'start_boot':EXPECTED_BOOT,'reason':type(e).__name__+': '+str(e),'valid_comparison':False})
+  event('capture_interrupted',segment=name,reason=type(e).__name__+': '+str(e));raise
  finally:
   if pending_status is not None:
    pending_status.cancel()

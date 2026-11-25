@@ -43,10 +43,26 @@ rows=[]
 for i,p in enumerate(summary.get('profiles',[]),1):rows.append([f"{i}. {p['labels'][0]}",f"{p['duration_minutes']:.1f}",f"{p['fresh_fps']:.2f}",percent(p['bed_presence_fraction']),percent(p['both_halves_fraction']),percent(p['outside_point_fraction']),str(p['age_p95_segment_max'])])
 table(['Profile','Min','Fresh FPS','Bed support','Both halves','Outside points','P95 age ms'],rows,[130,36,49,58,58,64,54])
 para('Bed support = at least three points in the assumed expanded bed volume. Both halves = at least three points on each side of that footprint. Outside points = fraction of room points outside the bed volume. None of these alone establishes human presence or a correct count.','SmallCustom')
+h('Exact requested profile settings')
+rows=[]
+for entry in summary.get('profiles',[]):
+ p=entry['profile'];cfar=f"{p['static_rm']} / {p['cfar_value']} / "+('literal' if p['cfar_method']<0 else str(p['cfar_method']))
+ rows.append([entry['labels'][0],p['frequency'],f"{p['range_mm']} / {p['resolution_mm']}",f"{p['speed_mm_s']} / {p['speed_step_mm_s']}",p['frame_ms'],cfar,p['clutter_rm']])
+table(['Profile','Freq MHz','Range / step mm','Speed / step mm/s','Frame ms','CFAR static / value / method','Clutter rm'],rows,[120,45,62,70,40,74,38])
+para('Literal means the two-argument CFAR command; method 0 adds the third argument. Replies reported CFAR SNR 24 for the literal-80 windows and SNR 21 for the explicit-21 window. Request parameters and returned SNR are preserved separately; no unsupported conversion to a linear threshold is assumed.','SmallCustom')
+h('Transport and recording health')
+def counter_delta(s,group,key):
+ a=s.get('health_before',{}).get(group,{}).get(key);b=s.get('health_after',{}).get(group,{}).get(key)
+ return b-a if isinstance(a,(int,float)) and isinstance(b,(int,float)) and b>=a else 'Unknown / reset'
+rows=[]
+for s in segments:
+ rows.append([s['segment'],s['counts'].get('missing_frames',0),counter_delta(s,'cloud','reconnects'),counter_delta(s,'cloud','queue_drops'),counter_delta(s,'storage','dropped')])
+table(['Window','Stream index misses','Cloud reconnects','Cloud queue drops','SD dropped records'],rows,[175,65,65,65,79])
+para('Counters are within-window differences. Stream index misses include collector/transport gaps and cannot alone identify where a frame was lost. Early synchronous status polling caused some local receive gaps. SD records combine continuous audio and radar; a dropped record is not necessarily a radar frame. SD remained enabled and was not tuned in this experiment.','SmallCustom')
 h('Spatial separation replay')
 replays={r['segment']:r for r in replay.get('segments',[])};rows=[]
 for s in segments:
- r=replays.get(s['segment'],{});f=r.get('cluster_fractions',{});rows.append([s['label'],r.get('sampled_seconds',0),percent(f.get('room3d-two',0)),percent(f.get('r0.3-min6-two',0)),percent(f.get('r0.4-min3-two',0)),percent(f.get('r0.4-min3-many',0))])
+ r=replays.get(s['segment'],{});f=r.get('cluster_fractions',{});rows.append([s['segment'],r.get('sampled_seconds',0),percent(f.get('room3d-two',0)),percent(f.get('r0.3-min6-two',0)),percent(f.get('r0.4-min3-two',0)),percent(f.get('r0.4-min3-many',0))])
 table(['Window','Samples','Room 3D: 2','Bed .3/6: 2','Bed .4/3: 2','Bed .4/3: >2'],rows,[154,45,61,63,63,63])
 para('Column labels show radius/minimum support. Compare merging (one cluster), apparent separation (two), and fragmentation (more than two). A changed clustering algorithm can improve numerical separation while still grouping reflections incorrectly.','SmallCustom')
 h('Temporal replay and prospective validation')
@@ -70,6 +86,11 @@ for r in runtime.get('segments',[]):
  rows.append([r['segment'],percent(r['bed_two_recent_fraction']),*[percent(widths.get(w,0)) for w in [1.5,1.8,2]]])
 table(['Window','Width 1 m','1.5 m','1.8 m','2 m'],rows,[205,61,61,61,61])
 para('Only the assumed bed-zone width changes in this sensitivity replay; grouping and raw frames are identical. These results cannot identify the true bed width. Similar results across widths argue against width alone explaining merging; they do not establish correct calibration.','SmallCustom')
+rows=[]
+for r in runtime.get('segments',[]):
+ rows.append([r['segment'],percent(r.get('both_halves_but_one_fraction',0)),percent(r.get('zero_despite_raw_support_fraction',0))])
+table(['Window','One group with raw support in both halves','Zero groups despite at least 3 raw bed points'],rows,[205,122,122])
+para('These fractions help distinguish geometry/grouping effects from absent point returns. Raw support is counted in the same expanded bed volume; it can include furniture and repeated positions. It is not independent evidence of two humans.','SmallCustom')
 h('Geometric coverage')
 para('Using the assumed bed footprint, its farthest mattress corner is about 3.66 m from the sensor. A 3.2 m maximum range cannot cover that entire footprint, even if it removes unwanted points. Such a profile is excluded from the recommendation shortlist. Exact dimensions should be confirmed before relying on this gate.')
 para('Aiming directly toward the assumed bed centre would require approximately 114 degrees heading and 26-31 degrees down tilt for targets 0.85-0.55 m high. Current settings describe 135 degrees and 10 degrees. This is a geometric comparison, not a measured antenna field-of-view result. Changing dashboard values does not steer the antenna: physical orientation must match the transformation.')
@@ -84,6 +105,15 @@ else:para('No rejected profile is recorded in completed comparison metadata so f
 para('Capture-complete marker: '+('present' if finished else 'not present')+'. Original-profile restoration: '+str(completion.get('baseline_restored','not yet due / not verified'))+'.')
 h('What the results cannot establish')
 for text in ['A validated two-person count, sleeping state, breathing or vital signs.','False-positive rate without an empty-bed test; false-negative rate without synchronized annotations.','Full body height while lying down; observed point height is posture-dependent.','Performance in another room, mounting, bedding arrangement or body position.','Fall-detection performance: the current fall prototype is single-person, and no deliberate fall trial was performed.']:para(text)
+h('Next controlled validation')
+for text in [
+ 'Measure the actual bed width, length and mattress-top height; verify the physical antenna rotation and mounting before changing dashboard coordinates.',
+ 'After the room is empty, collect an empty-bed control, then one person on each side and both people together with synchronized notes. Include lying still, rolling over and sitting up. Use these labels to distinguish merging from false furniture groups.',
+ 'Do not interpret the suggested 114-degree heading and 26-31-degree tilt as a verified optimum. They are calculated aiming directions for the assumed bed. A physical aiming comparison requires repeating the same labeled controls.',
+ 'Capture USB boot/reset logs before resuming aggressive hardware sweeps. The four observed restarts remain unexplained. Keep the original working profile available for immediate recovery.',
+ 'Run any noise-baseline command only when the sensing area is actually empty and still; no such calibration was performed with the occupied bed tonight.',
+ 'Save a startup profile only after a repeatable labeled comparison confirms it. This experiment left the original startup profile unchanged.'
+]:para(text)
 h('Reproducibility and rollback')
 para('Evidence folder: output/radar_overnight_20261125. baseline.json preserves the original active and saved profiles. events.jsonl records all requested profiles and complete command replies. Each completed segment has a JSON summary, compressed processed-point packet archive and per-frame metric archive. replay-analysis.json and profile-summary.json contain independent offline results. No access keys are included in this report.')
 para('Source: Sameer856/citraverse-v2, branch codex/radar-dashboard-room, tools/radar_overnight. Dashboard rollback milestones: dashboard-v1.0.0 (before bed), dashboard-v1.1.0 (bed layout). Restore source with a new revert commit and redeploy; checking out a Git tag alone does not change the live Site.')

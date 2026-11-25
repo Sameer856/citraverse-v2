@@ -13,6 +13,13 @@ class ProtocolTests(unittest.TestCase):
   x,y,z,*_=r.world((0,1,0,0,1,False));self.assertAlmostEqual(x,-.6536357597);self.assertAlmostEqual(y,2.1536357597);self.assertAlmostEqual(z,1.8263518223)
  def test_empty_roi_and_outside_returns(self):
   f=r.features([]);self.assertEqual(f['bed'],0);self.assertIsNone(f['bed_top']);self.assertEqual(r.features([(100,100,100,0,0,False)])['room'],0)
+class FilenameTests(unittest.TestCase):
+ def test_interrupted_raw_windows_cannot_be_overwritten(self):
+  import tempfile
+  with tempfile.TemporaryDirectory() as folder:
+   path=pathlib.Path(folder);self.assertEqual(r.next_capture_name(path,'test'),'000-test')
+   (path/'000-failed.rdr.gz').touch();(path/'009-other-profile.rdr.gz').touch();(path/'handoff-011-partial.rdr.gz').touch()
+   self.assertEqual(r.next_capture_name(path,'test'),'010-test')
 class AuditTests(unittest.TestCase):
  def test_missing_health_is_not_a_reboot(self):
   r.audit_capture({'frames':100},{},{'boot_id':7,'active':{}},{},7,{})
