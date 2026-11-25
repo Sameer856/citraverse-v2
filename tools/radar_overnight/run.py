@@ -144,9 +144,16 @@ async def main():
   else:BASE=initial['active'];dump('baseline.json',initial)
   dump('run-resume-'+str(int(time.time()))+'.json',{'time':stamp(),'boot_id':EXPECTED_BOOT,'active':initial['active']})
   if not (OUT/'manifest.json').exists():dump('manifest.json',{'start':stamp(),'planned_end':dt.datetime.fromtimestamp(END,TZ).isoformat(),'mount':MOUNT,'bed':BED,'condition':'User says two people remain in bed most of night. No synchronized ground truth or empty-bed control.','raw_format':'gzip records: little-endian double epoch, uint32 payload length, RDR2 payload','safety':'Temporary radar profiles only; no NVS save, no firmware flashing, no automatic noise estimation with occupied bed.'})
-  profiles=[('baseline',BASE),('keep-static-legacy80',{**BASE,'static_rm':0})]
-  for db in [18,21,24,27,30]:profiles.append((f'static-dB{db}',{**BASE,'static_rm':0,'cfar_value':db,'cfar_method':0}))
-  profiles.extend([('baseline-repeat',BASE),('clutter-control',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'clutter_rm':1}),('slow-speed-fine',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'speed_mm_s':1600,'speed_step_mm_s':100}),('period100',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'frame_ms':100}),('method1-dB24',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':1}),('method2-dB24',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':2}),('freq57000',{**BASE,'frequency':57000,'static_rm':0,'cfar_value':24,'cfar_method':0}),('range3200',{**BASE,'range_mm':3200,'static_rm':0,'cfar_value':24,'cfar_method':0}),('baseline-final-screen',BASE)])
+  # Revised after repeated reboots during explicit-method CFAR transitions.
+  # Keep the already proven literal CFAR format; test timing/geometry separately.
+  profiles=[('baseline-repeat',BASE),
+   ('legacy-static0-period100',{**BASE,'static_rm':0,'frame_ms':100}),
+   ('legacy-static1-period100',{**BASE,'frame_ms':100}),
+   ('legacy-static1-fine-speed',{**BASE,'speed_mm_s':1600,'speed_step_mm_s':100}),
+   ('legacy-static0-fine-speed100',{**BASE,'static_rm':0,'speed_mm_s':1600,'speed_step_mm_s':100,'frame_ms':100}),
+   ('legacy-static1-freq57000',{**BASE,'frequency':57000}),
+   ('legacy-static1-range3200',{**BASE,'range_mm':3200}),
+   ('baseline-final-screen',BASE)]
   results=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];failures=[]
   if (OUT/'comparison.json').exists():failures=json.loads((OUT/'comparison.json').read_text()).get('failures',[])
   if (OUT/'interruption.json').exists():
@@ -155,6 +162,7 @@ async def main():
   completed={r['label'] for r in results};excluded={f['label'] for f in failures}
   event('run_resumed',completed=len(results),excluded_profiles=sorted(excluded))
   try:
+   suspend=False
    for label,p in profiles:
     if label in completed or label in excluded:continue
     if time.time()>END-1800:break
@@ -164,6 +172,7 @@ async def main():
     except RuntimeError as e:
      if isinstance(e,ExternalChange):RESTORE_ON_EXIT=False;event('stopped_external_change');return
      failures.append({'label':label,'error':str(e)});event('profile_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
+     if isinstance(e,DeviceRestart):suspend=True;event('suspend_new_profiles_after_restart');break
     except Exception as e:
      failures.append({'label':label,'error':str(e)});event('profile_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
     dump('comparison.json',{'updated':stamp(),'results':results,'failures':failures})
@@ -172,17 +181,18 @@ async def main():
    for r in sorted(good,key=lambda r:r['proxy_score'],reverse=True):
     if r['profile'] not in [p for _,p in top]:top.append((r['label'],r['profile']))
     if len(top)==3:break
+   if suspend:top=[('baseline-safe-observation',BASE)]
    if not top:top=[('baseline',BASE)]
    dump('shortlist.json',{'candidates':top,'warning':'Ranking uses radar stability/bed-zone proxies, not verified detection of two people.'})
    cycle=0
    while time.time()<END-900:
     label,p=top[cycle%len(top)];cycle+=1
     try:
-     await apply(client,p,'repeat-'+label)
+     if (await rpc(client)).get('active')!=p:await apply(client,p,'repeat-'+label)
      results.append(await capture(client,p,'repeat-'+label,min(1200,max(60,END-time.time()-600))))
     except Exception as e:
      if isinstance(e,ExternalChange):RESTORE_ON_EXIT=False;event('stopped_external_change');return
-     event('repeat_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
+     event('repeat_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline');top=[('baseline-safe-observation',BASE)]
     dump('comparison.json',{'updated':stamp(),'results':results,'failures':failures})
   finally:
    # Restore the known working profile; keep experimental choices unsaved for review.

@@ -15,7 +15,7 @@ def frames(data):
     for k in range(p,p+n,12):
      x,y,z,v,snr,_=struct.unpack_from('<hhhhHH',data,k)
      x,y,z=x/100,y/100,z/100;x,z=-x,-z;t=math.radians(10);y,z=y*math.cos(t)+z*math.sin(t),z*math.cos(t)-y*math.sin(t);h=math.radians(135)
-     pts.append((x*math.cos(h)+y*math.sin(h)-1.35,-x*math.sin(h)+y*math.cos(h)+2.85,z+2,v/100,snr/100))
+     pts.append((x*math.cos(h)+y*math.sin(h)-1.35,-x*math.sin(h)+y*math.cos(h)+2.85,z+2,v/100,snr/100,bool(flags&2)))
    p+=n
   yield age,pts;off=end
 
@@ -88,6 +88,13 @@ def segment_replay(seg):
     n3=len([g for g in grouped(room,.65,3) if len(g)>=6])
     counts['room3d-zero']+=n3==0;counts['room3d-one']+=n3==1;counts['room3d-two']+=n3==2;counts['room3d-many']+=n3>2
     nearbed['strict_present']+=len(strict)>=3;nearbed['expanded_present']+=len(bed)>=3;nearbed['broad_present']+=len(broad)>=3
+    for snr in [0,20,24,27,30,33]:
+     selected=[p for p in bed if p[4]>=snr or (p[4]==0 and len(p)>5 and p[5])]
+     for radius in [.2,.3,.4]:
+      for method in ['link','density']:
+       groups=grouped(selected,radius) if method=='link' else density_groups(selected,radius,6)
+       g=[g for g in groups if len(g)>=6];n=len(g);prefix=f'snr{snr}-{method}{radius}'
+       counts[prefix+'-zero']+=n==0;counts[prefix+'-one']+=n==1;counts[prefix+'-two']+=n==2;counts[prefix+'-many']+=n>2
     for radius in [.2,.3,.4,.5,.65]:
      for support in [4,6]:
       dg=density_groups(bed,radius,support);n=len([g for g in dg if len(g)>=6]);prefix=f'db{radius}-core{support}'
@@ -103,10 +110,10 @@ def segment_replay(seg):
  return {'segment':seg['segment'],'sampled_seconds':sampled,'zone_presence_fractions':{k:v/max(1,sampled) for k,v in nearbed.items()},'cluster_fractions':{k:v/max(1,sampled) for k,v in counts.items()}}
 def main():
  segments=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];replays=[]
- cachefile=OUT/'replay-analysis.json';cached=json.loads(cachefile.read_text()) if cachefile.exists() else {};cache={r['segment']:r for r in cached.get('segments',[])} if cached.get('version')==3 else {}
+ cachefile=OUT/'replay-analysis.json';cached=json.loads(cachefile.read_text()) if cachefile.exists() else {};cache={r['segment']:r for r in cached.get('segments',[])} if cached.get('version')==4 else {}
  for seg in segments:
   r=cache.get(seg['segment']) or segment_replay(seg);replays.append(r);print(seg['segment'],r['sampled_seconds'],flush=True)
- cachefile.write_text(json.dumps({'version':3,'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
+ cachefile.write_text(json.dumps({'version':4,'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
  grouped_profiles=collections.defaultdict(list)
  for s in segments:grouped_profiles[json.dumps(s['profile'],sort_keys=True)].append(s)
  summary=[]
