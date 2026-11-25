@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bounded radar-only comparison. Never writes NVS or firmware; preserves baseline."""
 import asyncio, collections, datetime as dt, gzip, json, math, pathlib, statistics, struct, time, uuid
-import subprocess,sys
+import subprocess,sys,os
 import httpx
 from websockets.asyncio.client import connect
 ROOT=pathlib.Path(__file__).resolve().parents[2]
@@ -67,6 +67,8 @@ async def health(client):
 async def apply(client,profile,label):
  global EXPECTED_BOOT
  before=await rpc(client)
+ if before.get('active')==profile and before.get('frames_verified') and before.get('frames_recent') and not before.get('busy'):
+  EXPECTED_BOOT=before['boot_id'];event('already_active_verified',label=label,boot_id=EXPECTED_BOOT);return before
  if before['busy']:raise RuntimeError('another tuning operation is active')
  rid=str(uuid.uuid4());event('apply',label=label,request_id=rid,profile=profile)
  try:await rpc(client,'apply',profile=profile,request_id=rid)
@@ -85,56 +87,80 @@ async def apply(client,profile,label):
    EXPECTED_BOOT=s['boot_id'];await asyncio.sleep(10);return s
  raise TimeoutError('profile did not finish in 100 seconds')
 
+def audit_capture(starthealth,endhealth,endstate,profile,expected_boot,counts):
+ if endstate.get('boot_id')!=expected_boot or counts.get('resets',0):
+  raise DeviceRestart('Reset detected by capture audit')
+ first,last=starthealth.get('frames'),endhealth.get('frames')
+ if isinstance(first,(int,float)) and isinstance(last,(int,float)) and last<first:
+  raise DeviceRestart('Frame counter decreased during capture')
+ if endstate.get('active')!=profile:raise ExternalChange('profile changed during capture')
+
+async def telemetry(client):
+ h,s=await asyncio.gather(health(client),rpc(client));return h,s
+
 async def capture(client,profile,label,seconds):
  start=time.monotonic();wall=time.time();name=f'{len(list(OUT.glob("segment-*.json"))):03d}-{label}'
- counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;outages=[];last_status=0
+ counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;outages=[];last_status=0;pending_status=None
  starthealth=await health(client)
  initial=await rpc(client)
  if initial.get('boot_id')!=EXPECTED_BOOT:raise DeviceRestart('PCB reboot before capture')
  if initial.get('active')!=profile:raise ExternalChange('same-boot external profile change')
  raw=gzip.open(OUT/(name+'.rdr.gz'),'wb');metrics=gzip.open(OUT/(name+'.metrics.jsonl.gz'),'wt')
  event('capture_start',segment=name,seconds=seconds)
- while time.monotonic()-start<seconds and time.time()<END:
-  try:
-   async with connect(ORIGIN.replace('https:','wss:')+PREFIX+'/ws',additional_headers=HEAD,open_timeout=15,max_size=2**20) as ws:
-    while time.monotonic()-start<seconds and time.time()<END:
-     await ws.send('next3');data=await asyncio.wait_for(ws.recv(),12);now=time.time()
-     if isinstance(data,str):
-      counts['waiting']+=1;await asyncio.sleep(.05);continue
-     raw.write(struct.pack('<dI',now,len(data))+data)
-     for ts,age,idx,pts,polar in decode(data):
-      if idx==lastidx:counts['duplicate']+=1;continue
-      if lastidx is not None:
-       delta=(idx-lastidx)&0xffffffff
-       if delta>0x7fffffff:counts['resets']+=1
-       elif delta>1:counts['missing_frames']+=delta-1
-      lastidx=idx
-      if lastrecv and now-lastrecv>.5:outages.append(now-lastrecv)
-      lastrecv=now;counts['frames']+=1;ages.append(age)
-      if age>350:counts['stale']+=1;continue
-      if polar:counts['polar']+=polar
-      f=features(pts);counts['fresh']+=1;counts['bed_present']+=f['bed']>=3;counts['both_halves']+=f['left']>=3 and f['right']>=3;counts['bed_points']+=f['bed'];counts['outside_points']+=f['outside'];bedcounts.append(f['bed']);outside.append(f['outside'])
-      metrics.write(json.dumps({'epoch':now,'stamp':ts,'index':idx,'age':age,**f})+'\n')
-     if now-last_status>60:
-      h=await health(client);s=await rpc(client);last_status=now
-      dump('progress.json',{'time':stamp(),'segment':name,'elapsed_seconds':time.monotonic()-start,'frames':counts['frames'],'fresh':counts['fresh'],'bed_presence_fraction':counts['bed_present']/max(1,counts['fresh']),'both_half_fraction':counts['both_halves']/max(1,counts['fresh']),'active':s.get('active'),'health':h})
-      raw.flush();metrics.flush()
-      if s.get('boot_id')!=EXPECTED_BOOT:
-       raw.close();metrics.close();event('capture_interrupted',segment=name,reason='PCB reboot',old_boot=EXPECTED_BOOT,new_boot=s.get('boot_id'));raise DeviceRestart('PCB reboot during capture')
-      if s.get('active')!=profile:
-       raw.close();metrics.close();raise ExternalChange('same-boot external profile change')
-  except RuntimeError:raise
-  except Exception as e:
-   counts['connection_errors']+=1;event('capture_connection_error',segment=name,error=str(e)[:160]);await asyncio.sleep(2)
- raw.close();metrics.close();elapsed=time.monotonic()-start
+ try:
+  while time.monotonic()-start<seconds and time.time()<END:
+   try:
+    async with connect(ORIGIN.replace('https:','wss:')+PREFIX+'/ws',additional_headers=HEAD,open_timeout=15,max_size=2**20) as ws:
+     while time.monotonic()-start<seconds and time.time()<END:
+      await ws.send('next3');data=await asyncio.wait_for(ws.recv(),12);now=time.time()
+      if isinstance(data,str):
+       counts['waiting']+=1;await asyncio.sleep(.05);continue
+      raw.write(struct.pack('<dI',now,len(data))+data)
+      for ts,age,idx,pts,polar in decode(data):
+       if idx==lastidx:counts['duplicate']+=1;continue
+       if lastidx is not None:
+        delta=(idx-lastidx)&0xffffffff
+        if delta>0x7fffffff:counts['resets']+=1
+        elif delta>1:counts['missing_frames']+=delta-1
+       lastidx=idx
+       if lastrecv and now-lastrecv>.5:outages.append(now-lastrecv)
+       lastrecv=now;counts['frames']+=1;ages.append(age)
+       if age>350:counts['stale']+=1;continue
+       if polar:counts['polar']+=polar
+       f=features(pts);counts['fresh']+=1;counts['bed_present']+=f['bed']>=3;counts['both_halves']+=f['left']>=3 and f['right']>=3;counts['bed_points']+=f['bed'];counts['outside_points']+=f['outside'];bedcounts.append(f['bed']);outside.append(f['outside'])
+       metrics.write(json.dumps({'epoch':now,'stamp':ts,'index':idx,'age':age,**f})+'\n')
+      if pending_status is not None and pending_status.done():
+       try:
+        h,s=pending_status.result()
+       except Exception as e:event('telemetry_error',segment=name,error=str(e)[:160])
+       else:
+        audit_capture(starthealth,h,s,profile,EXPECTED_BOOT,counts)
+        dump('progress.json',{'time':stamp(),'segment':name,'elapsed_seconds':time.monotonic()-start,'frames':counts['frames'],'fresh':counts['fresh'],'bed_presence_fraction':counts['bed_present']/max(1,counts['fresh']),'both_half_fraction':counts['both_halves']/max(1,counts['fresh']),'active':s.get('active'),'health':h})
+       pending_status=None;raw.flush();metrics.flush()
+      if now-last_status>60 and pending_status is None:
+       pending_status=asyncio.create_task(telemetry(client));last_status=now
+   except RuntimeError:raise
+   except Exception as e:
+    counts['connection_errors']+=1;event('capture_connection_error',segment=name,error=str(e)[:160]);await asyncio.sleep(2)
+ finally:
+  if pending_status is not None:
+   pending_status.cancel()
+   await asyncio.gather(pending_status,return_exceptions=True)
+  raw.close();metrics.close()
+ elapsed=time.monotonic()-start
  try:endhealth=await health(client)
  except Exception:endhealth={}
+ endstate=await rpc(client)
+ try:audit_capture(starthealth,endhealth,endstate,profile,EXPECTED_BOOT,counts)
+ except DeviceRestart:
+  dump('interrupted-'+name+'.json',{'profile':profile,'counts':dict(counts),'duration_s':elapsed,'start_boot':EXPECTED_BOOT,'end_boot':endstate.get('boot_id'),'reason':'Reset detected by end-of-window audit; not a valid comparison window.'})
+  event('capture_interrupted',segment=name,reason='end-of-window reset audit');raise
  n=max(1,counts['fresh']);bedfraction=counts['bed_present']/n;half=counts['both_halves']/n
  noise=counts['outside_points']/max(1,counts['outside_points']+counts['bed_points'])
  reliability=min(1,counts['fresh']/max(1,elapsed*1000/profile['frame_ms']))
  # This is a repeatability proxy, not person-count accuracy. Static clutter can score well.
  score=100*(.4*bedfraction+.2*half+.2*(1-noise)+.2*reliability)
- result={'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
+ result={'instrumentation_revision':2,'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
  dump('segment-'+name+'.json',result);event('capture_complete',segment=name,score=round(score,2),fps=round(result['fps'],2),bed_fraction=round(bedfraction,3),both_halves=round(half,3));return result
 
 async def main():
@@ -168,6 +194,21 @@ async def main():
    if old not in failures:failures.append(old)
   completed={r['label'] for r in results};excluded={f['label'] for f in failures}
   event('run_resumed',completed=len(results),excluded_profiles=sorted(excluded))
+  if os.environ.get('RADAR_OBSERVE_ONLY')=='1':
+   event('baseline_observation_only',note='No more experimental writes until reset cause is understood.')
+   await apply(client,BASE,'verify-observation-baseline')
+   while time.time()<END-600:
+    try:
+     results.append(await capture(client,BASE,'baseline-overnight-observation',min(1200,END-time.time()-600)))
+     dump('comparison.json',{'updated':stamp(),'results':results,'failures':failures})
+    except DeviceRestart as e:
+     event('baseline_restarted',error=str(e));failures.append({'label':'baseline-observation','error':str(e)})
+     await asyncio.sleep(10);state=await rpc(client)
+     if state.get('active')!=BASE:event('stopped_external_change');return
+     EXPECTED_BOOT=state['boot_id']
+    except ExternalChange:event('stopped_external_change');return
+    except Exception as e:event('observation_retry',error=str(e));await asyncio.sleep(15)
+   state=await rpc(client);dump('complete.json',{'time':stamp(),'results':len(results),'baseline_restored':state.get('active')==BASE,'observation_only':True});event('observation_complete');return
   try:
    suspend=False
    for label,p in profiles:

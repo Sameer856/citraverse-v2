@@ -2,7 +2,7 @@
 """Offline replay of completed overnight segments. No network or credentials."""
 import collections,gzip,json,math,pathlib,struct,statistics
 ROOT=pathlib.Path(__file__).resolve().parents[2];OUT=ROOT/'output/radar_overnight_20261125'
-def frames(data):
+def frames(data,with_meta=False):
  off=0
  while off<len(data):
   magic,ts,age,idx,words,frag=struct.unpack_from('<6I',data,off);end=off+24+4*words
@@ -17,7 +17,7 @@ def frames(data):
      x,y,z=x/100,y/100,z/100;x,z=-x,-z;t=math.radians(10);y,z=y*math.cos(t)+z*math.sin(t),z*math.cos(t)-y*math.sin(t);h=math.radians(135)
      pts.append((x*math.cos(h)+y*math.sin(h)-1.35,-x*math.sin(h)+y*math.cos(h)+2.85,z+2,v/100,snr/100,bool(flags&2)))
    p+=n
-  yield age,pts;off=end
+  yield ((ts,age,idx,pts) if with_meta else (age,pts));off=end
 
 def grouped(points,radius,dimensions=2):
  # Grid-based connected components; same single-link structure as dashboard.

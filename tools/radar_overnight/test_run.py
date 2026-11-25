@@ -13,4 +13,13 @@ class ProtocolTests(unittest.TestCase):
   x,y,z,*_=r.world((0,1,0,0,1,False));self.assertAlmostEqual(x,-.6536357597);self.assertAlmostEqual(y,2.1536357597);self.assertAlmostEqual(z,1.8263518223)
  def test_empty_roi_and_outside_returns(self):
   f=r.features([]);self.assertEqual(f['bed'],0);self.assertIsNone(f['bed_top']);self.assertEqual(r.features([(100,100,100,0,0,False)])['room'],0)
+class AuditTests(unittest.TestCase):
+ def test_missing_health_is_not_a_reboot(self):
+  r.audit_capture({'frames':100},{},{'boot_id':7,'active':{}},{},7,{})
+ def test_actual_reset_is_rejected(self):
+  for health,state,counts in [({'frames':5},{'boot_id':7,'active':{}},{}),({}, {'boot_id':8,'active':{}},{}),({}, {'boot_id':7,'active':{}},{'resets':1})]:
+   with self.assertRaises(r.DeviceRestart):r.audit_capture({'frames':100},health,state,{},7,counts)
+ def test_external_profile_change_is_rejected(self):
+  with self.assertRaises(r.ExternalChange):r.audit_capture({}, {}, {'boot_id':7,'active':{'changed':1}}, {},7,{})
 if __name__=='__main__':unittest.main()
+
