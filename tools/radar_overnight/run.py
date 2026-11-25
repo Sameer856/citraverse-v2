@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bounded radar-only comparison. Never writes NVS or firmware; preserves baseline."""
 import asyncio, collections, datetime as dt, gzip, json, math, pathlib, statistics, struct, time, uuid
+import subprocess,sys
 import httpx
 from websockets.asyncio.client import connect
 ROOT=pathlib.Path(__file__).resolve().parents[2]
@@ -154,6 +155,12 @@ async def main():
    ('legacy-static1-freq57000',{**BASE,'frequency':57000}),
    ('legacy-static1-range3200',{**BASE,'range_mm':3200}),
    ('baseline-final-screen',BASE)]
+  profiles.extend([
+   ('sleep960-period100',{**BASE,'speed_mm_s':960,'speed_step_mm_s':60,'frame_ms':100}),
+   ('sleep800-period100',{**BASE,'speed_mm_s':800,'speed_step_mm_s':50,'frame_ms':100}),
+   ('sleep-static1-dB21-period100',{**BASE,'static_rm':1,'cfar_value':21,'cfar_method':0,'frame_ms':100}),
+   ('sleep-static1-dB17-period100',{**BASE,'static_rm':1,'cfar_value':17,'cfar_method':0,'frame_ms':100}),
+   ('baseline-post-sleep-screen',BASE)])
   results=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];failures=[]
   if (OUT/'comparison.json').exists():failures=json.loads((OUT/'comparison.json').read_text()).get('failures',[])
   if (OUT/'interruption.json').exists():
@@ -181,6 +188,25 @@ async def main():
    for r in sorted(good,key=lambda r:r['proxy_score'],reverse=True):
     if r['profile'] not in [p for _,p in top]:top.append((r['label'],r['profile']))
     if len(top)==3:break
+   # Freeze prospective choices only after completed windows have independent replay.
+   if not suspend:
+    deadline=time.monotonic()+180
+    expected={r['segment'] for r in results}
+    while time.monotonic()<deadline:
+     try:
+      spatial={s['segment'] for s in json.loads((OUT/'replay-analysis.json').read_text())['segments']}
+      temporal={s['segment'] for s in json.loads((OUT/'temporal-analysis.json').read_text())['segments']}
+      if expected<=spatial and expected<=temporal:break
+     except (OSError,ValueError,KeyError):pass
+     await asyncio.sleep(5)
+    selected=OUT/'prospective-shortlist.json'
+    if not selected.exists():
+     subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name('rank.py'))],check=True)
+     ranked=json.loads((OUT/'candidate-ranking.json').read_text())
+     candidates=ranked.get('candidates',[])[:3]
+     dump('prospective-shortlist.json',{'frozen_at':stamp(),'screening_segments':sorted(expected),'candidates':candidates,'note':'Selected before future repeat windows. Range coverage and fresh-rate gates applied. Methods remain frozen for validation.'})
+    frozen=json.loads(selected.read_text()).get('candidates',[])
+    if frozen:top=[(c['label'],c['profile']) for c in frozen]
    if suspend:top=[('baseline-safe-observation',BASE)]
    if not top:top=[('baseline',BASE)]
    dump('shortlist.json',{'candidates':top,'warning':'Ranking uses radar stability/bed-zone proxies, not verified detection of two people.'})
