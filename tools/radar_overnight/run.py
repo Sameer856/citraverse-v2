@@ -18,6 +18,7 @@ EXPECTED_BOOT=None
 RESTORE_ON_EXIT=True
 class DeviceRestart(RuntimeError):pass
 class ExternalChange(RuntimeError):pass
+class RadarStall(RuntimeError):pass
 
 def stamp():return dt.datetime.now(TZ).isoformat()
 def dump(path,value):
@@ -94,6 +95,7 @@ def audit_capture(starthealth,endhealth,endstate,profile,expected_boot,counts):
  if isinstance(first,(int,float)) and isinstance(last,(int,float)) and last<first:
   raise DeviceRestart('Frame counter decreased during capture')
  if endstate.get('active')!=profile:raise ExternalChange('profile changed during capture')
+ if endstate.get('frames_recent') is False:raise RadarStall('Radar no longer reports recent frames')
 
 async def telemetry(client):
  h,s=await asyncio.gather(health(client),rpc(client));return h,s
@@ -159,15 +161,15 @@ async def capture(client,profile,label,seconds):
  except Exception:endhealth={}
  endstate=await rpc(client)
  try:audit_capture(starthealth,endhealth,endstate,profile,EXPECTED_BOOT,counts)
- except DeviceRestart:
-  dump('interrupted-'+name+'.json',{'profile':profile,'counts':dict(counts),'duration_s':elapsed,'start_boot':EXPECTED_BOOT,'end_boot':endstate.get('boot_id'),'reason':'Reset detected by end-of-window audit; not a valid comparison window.'})
-  event('capture_interrupted',segment=name,reason='end-of-window reset audit');raise
+ except (DeviceRestart,RadarStall,ExternalChange) as e:
+  dump('interrupted-'+name+'.json',{'profile':profile,'counts':dict(counts),'duration_s':elapsed,'start_boot':EXPECTED_BOOT,'end_boot':endstate.get('boot_id'),'reason':type(e).__name__+': '+str(e),'valid_comparison':False})
+  event('capture_interrupted',segment=name,reason='end-of-window audit: '+type(e).__name__+': '+str(e));raise
  n=max(1,counts['fresh']);bedfraction=counts['bed_present']/n;half=counts['both_halves']/n
  noise=counts['outside_points']/max(1,counts['outside_points']+counts['bed_points'])
  reliability=min(1,counts['fresh']/max(1,elapsed*1000/profile['frame_ms']))
  # This is a repeatability proxy, not person-count accuracy. Static clutter can score well.
  score=100*(.4*bedfraction+.2*half+.2*(1-noise)+.2*reliability)
- result={'instrumentation_revision':2,'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
+ result={'instrumentation_revision':3,'label':label,'segment':name,'profile':profile,'started_epoch':wall,'ended_epoch':time.time(),'duration_s':elapsed,'counts':dict(counts),'fps':counts['frames']/max(1,elapsed),'fresh_fps':counts['fresh']/max(1,elapsed),'bed_presence_fraction':bedfraction,'both_bed_halves_fraction':half,'outside_point_fraction':noise,'bed_points_median':quant(bedcounts,.5),'bed_points_p90':quant(bedcounts,.9),'age_p50_ms':quant(ages,.5),'age_p95_ms':quant(ages,.95),'outages_over_500ms':len(outages),'longest_outage_s':max(outages,default=0),'proxy_score':score,'health_before':starthealth,'health_after':endhealth}
  dump('segment-'+name+'.json',result);event('capture_complete',segment=name,score=round(score,2),fps=round(result['fps'],2),bed_fraction=round(bedfraction,3),both_halves=round(half,3));return result
 
 async def main():

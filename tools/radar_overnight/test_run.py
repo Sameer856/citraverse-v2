@@ -26,6 +26,8 @@ class AuditTests(unittest.TestCase):
  def test_actual_reset_is_rejected(self):
   for health,state,counts in [({'frames':5},{'boot_id':7,'active':{}},{}),({}, {'boot_id':8,'active':{}},{}),({}, {'boot_id':7,'active':{}},{'resets':1})]:
    with self.assertRaises(r.DeviceRestart):r.audit_capture({'frames':100},health,state,{},7,counts)
+ def test_stalled_radar_is_rejected(self):
+  with self.assertRaises(r.RadarStall):r.audit_capture({}, {}, {'boot_id':7,'active':{},'frames_recent':False}, {},7,{})
  def test_external_profile_change_is_rejected(self):
   with self.assertRaises(r.ExternalChange):r.audit_capture({}, {}, {'boot_id':7,'active':{'changed':1}}, {},7,{})
 if __name__=='__main__':unittest.main()
