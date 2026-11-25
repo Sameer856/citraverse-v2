@@ -61,6 +61,7 @@ h('Profile-level results')
 rows=[]
 for i,p in enumerate(summary.get('profiles',[]),1):rows.append([f"{i}. {p['labels'][0]}",f"{p['duration_minutes']:.1f}",f"{p['fresh_fps']:.2f}",percent(p['bed_presence_fraction']),percent(p['both_halves_fraction']),percent(p['outside_point_fraction']),str(p['age_p95_segment_max'])])
 table(['Profile','Min','Fresh FPS','Bed support','Both halves','Outside points','P95 age ms'],rows,[130,36,49,58,58,64,54])
+para('This ordering follows the descriptive screening score, not the final selection. The 100 ms profiles intentionally run near 10 FPS; a higher bed-return score at that cadence does not establish a better low-latency detector. Natural movement and the nonrandom profile order also prevent a causal ranking from these aggregate rows.','SmallCustom')
 para('Bed support = at least three points in the assumed expanded bed volume. Both halves = at least three points on each side of that footprint. Outside points = fraction of room points outside the bed volume. None of these alone establishes human presence or a correct count.','SmallCustom')
 h('Exact requested profile settings')
 rows=[]
