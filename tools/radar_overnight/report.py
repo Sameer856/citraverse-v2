@@ -13,6 +13,7 @@ segments=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))]
 manifest=read('manifest.json',{});summary=read('profile-summary.json',{});replay=read('replay-analysis.json',{});comparison=read('comparison.json',{});completion=read('complete.json',{});recommendation=read('recommendation.json',{});ranking=read('candidate-ranking.json',{});temporal=read('temporal-analysis.json',{});aim=read('mount-aim-analysis.json',{})
 crossover=read('plan-crossover.json',{});crossover_evaluation=read('crossover-evaluation.json',{});crossover_criteria=read('hardware-crossover-criteria.json',{});density_runtime=read('density-runtime-replay.json',{});density_frozen=read('frozen-bed-density.json',{})
 display_runtime=read('display-runtime-replay.json',{});display_policy=read('frozen-display-policy.json',{});software_evaluation=read('software-selection-evaluation.json',{});final_selection=read('final-method-selection.json',{});holdout=read('final-holdout-analysis.json',{})
+deployment=read('dashboard-deployment.json',{})
 runtime=read('runtime-replay.json',{});frozen=read('frozen-bed-method-v2.json',{});suspension=read('plan-suspension.json',{})
 boot_ids=set()
 def collect_boot_ids(value):
@@ -136,6 +137,11 @@ if holdout:
  para('Holdout status: '+str(holdout.get('status'))+'. '+str(holdout.get('completed_windows',0))+' complete windows, '+f"{holdout.get('minutes',0):.1f}"+' recorded minutes. The detailed results below use the selected method and its actual profile only; any fallback is reported separately.')
  if holdout.get('metrics'):
   m=holdout['metrics'];table(['Recent two groups','Recent zero groups','Recent >2 groups','Fresh FPS','Largest receive gap'],[[percent(m.get('two_recent_fraction',0)),percent(m.get('zero_recent_fraction',0)),percent(m.get('many_recent_fraction',0)),f"{m.get('fresh_fps',0):.2f}",f"{m.get('longest_receive_gap_s',0):.2f} s"]],[90,90,90,80,99])
+  rows=[[w['segment'],f"{w['minutes']:.1f}",f"{w['fresh_fps']:.2f}",w['relay_age_p95_ms'],percent(w['two_recent_fraction']),percent(w['zero_recent_fraction']),percent(w['many_recent_fraction'])] for w in holdout.get('windows',[])]
+  table(['Final holdout window','Min','Fresh FPS','P95 age ms','Two recent','Zero recent','More than two'],rows,[145,36,49,54,55,55,55])
+  para('Holdout behavior gates: '+', '.join(k+': '+('PASS' if v else 'FAIL') for k,v in holdout.get('behavior_gates',{}).items())+'. Minimum duration met: '+str(holdout.get('minimum_met'))+'. Selected configuration live verified: '+str(holdout.get('selected_configuration_live_verified'))+'. Original startup profile unchanged: '+str(holdout.get('startup_profile_unchanged'))+'.','SmallCustom')
+  rows=[[key,value.get('known_delta'),value.get('unknown_windows')] for key,value in m.get('cloud',{}).items()]
+  table(['Final holdout cloud counter','Known within-window change','Windows with unknown change'],rows,[190,130,129])
  if holdout.get('regressions'):para('Regressions / fallbacks: '+json.dumps(holdout['regressions']))
 else:para('Final holdout results are not available yet.')
 h('Merging, disappearance and geometry sensitivity')
@@ -188,7 +194,10 @@ for text in [
 ]:para(text)
 h('Reproducibility and rollback')
 para('Evidence folder: output/radar_overnight_20261125. baseline.json preserves the original active and saved profiles. events.jsonl records all requested profiles and complete command replies. Each completed segment has a JSON summary, compressed processed-point packet archive and per-frame metric archive. replay-analysis.json and profile-summary.json contain independent offline results. No access keys are included in this report.')
-para('Source: Sameer856/citraverse-v2, branch codex/radar-dashboard-room, tools/radar_overnight. Dashboard rollback milestones: dashboard-v1.0.0 (before bed), dashboard-v1.1.0 (bed layout). Restore source with a new revert commit and redeploy; checking out a Git tag alone does not change the live Site.')
+para('Source: Sameer856/citraverse-v2, branch codex/radar-dashboard-room, tools/radar_overnight. Dashboard rollback milestones: dashboard-v1.0.0 (before bed), dashboard-v1.1.0 (bed layout), dashboard-v1.2.0 (experimental bed groups), dashboard-v1.2.1 (bounded display continuity). Restore source with a new revert commit and redeploy; checking out a Git tag alone does not change the live Site.')
+if deployment:
+ para('Dashboard publication: '+str(deployment.get('status','unknown'))+'; version '+str(deployment.get('version','unknown'))+'; source '+str(deployment.get('commit_sha','unknown'))+'. '+str(deployment.get('url','')),'SmallCustom')
+ para('Dashboard verification: '+str(deployment.get('verification','not recorded')),'SmallCustom')
 def footer(c,doc):
  c.setFont('Helvetica',8);c.setFillColor(colors.HexColor('#526857'));c.drawString(42,25,'Citraverse | Overnight field experiment | 25-26 November 2026');c.drawRightString(A4[0]-42,25,str(doc.page))
 path=PDF/('citraverse-overnight-radar-report.pdf' if finished else 'citraverse-overnight-radar-DRAFT.pdf')
