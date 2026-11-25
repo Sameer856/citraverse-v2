@@ -1,5 +1,5 @@
 import unittest,copy
-from select_method import select
+from select_method import select,close_insufficient_selection
 class SelectionTests(unittest.TestCase):
  def fixture(self):
   c={'selection_cutoff_epoch':2000,'minimum_completed_minutes':20,'density_becomes_default_only_if':{'two_recent_fraction_gain_at_least':.02,'many_recent_fraction_increase_at_most':0,'zero_recent_fraction_increase_at_most':.005},'display_policy_acceptance':{'prospective_two_recent_fraction_decrease_at_most':.01,'prospective_many_recent_fraction_increase_at_most':.01,'prospective_zero_recent_fraction_increase_at_most':.005}}
@@ -17,4 +17,9 @@ class SelectionTests(unittest.TestCase):
   a=self.fixture();late=copy.deepcopy(a[2][0]);late.update(segment='future',started_epoch=2500,ended_epoch=3700);a[2].append(late);self.assertEqual(select(*a)['selection_segments'],['A'])
  def test_insufficient_duration_or_missing_replay_stays_pending(self):
   a=self.fixture();a[2][0]['duration_s']=600;self.assertEqual(select(*a)['status'],'pending');a=self.fixture();a[3]['density']['segments']=[];self.assertEqual(select(*a)['status'],'pending')
+ def test_closed_cutoff_is_inconclusive_but_replay_delay_is_not(self):
+  a=self.fixture();a[2][0]['duration_s']=600;r=select(*a)
+  self.assertEqual(close_insufficient_selection(r,a[0],a[1],1999)['status'],'pending')
+  self.assertEqual(close_insufficient_selection(r,a[0],a[1],2000)['status'],'inconclusive')
+  a=self.fixture();a[3]['density']['segments']=[];r=select(*a);self.assertEqual(close_insufficient_selection(r,a[0],a[1],2001)['status'],'pending')
 if __name__=='__main__':unittest.main()

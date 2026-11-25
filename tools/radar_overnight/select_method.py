@@ -2,6 +2,10 @@
 """Read-only choice between frozen methods; never configures the PCB."""
 import json,pathlib,time
 ROOT=pathlib.Path(__file__).resolve().parents[2];OUT=ROOT/'output/radar_overnight_20261125'
+def close_insufficient_selection(result,criteria,hardware,now):
+ if result.get('status')=='pending' and result.get('reason')=='Insufficient completed post-freeze data on selected hardware' and now>=criteria['selection_cutoff_epoch']:
+  return {**result,'status':'inconclusive','selected_profile':hardware.get('selected_profile'),'reason':'Selection cutoff closed without enough eligible completed data. No optimized method is selected; any conservative retention is recorded separately in the final-method selection.'}
+ return result
 def select(criteria,hardware,segments,parents,display,density_freeze,display_freeze,minimum_fps=18):
  if hardware.get('status')!='evaluated':return {'status':'pending','reason':'Hardware crossover is incomplete'}
  profile=hardware['selected_profile'];cutoff=criteria['selection_cutoff_epoch']
@@ -26,5 +30,6 @@ def main():
  if not (OUT/'software-selection-criteria.json').exists():return
  parents={label:{**read(name,{}),'options':read(freeze,{})['options']} for label,name,freeze in [('earlier','runtime-replay.json','frozen-bed-method-v2.json'),('density','density-runtime-replay.json','frozen-bed-density.json')]}
  result=select(read('software-selection-criteria.json',{}),read('crossover-evaluation.json',{}),[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))],parents,read('display-runtime-replay.json',{}),read('frozen-bed-density.json',{})['frozen_epoch'],read('frozen-display-policy.json',{})['frozen_epoch'],read('hardware-crossover-criteria.json',{})['required']['minimum_fresh_fps_each']);result['computed_epoch']=time.time()
+ result=close_insufficient_selection(result,read('software-selection-criteria.json',{}),read('crossover-evaluation.json',{}),time.time())
  target=OUT/'software-selection-evaluation.json';temp=target.with_suffix('.tmp');temp.write_text(json.dumps(result,indent=2));temp.replace(target);print('software selection:',result['status'],flush=True)
 if __name__=='__main__':main()
