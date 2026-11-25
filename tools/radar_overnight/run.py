@@ -13,6 +13,10 @@ END=dt.datetime(2026,11,26,7,0,tzinfo=TZ).timestamp()
 MOUNT={'width':3,'depth':3,'height':2,'roll':180,'tilt':10,'corner':'far-left','inset':.15,'heading':135}
 BED={'width':1,'length':2,'height':.55,'inset':.15,'dimensions_confirmed':False}
 BASE=None
+EXPECTED_BOOT=None
+RESTORE_ON_EXIT=True
+class DeviceRestart(RuntimeError):pass
+class ExternalChange(RuntimeError):pass
 
 def stamp():return dt.datetime.now(TZ).isoformat()
 def dump(path,value):
@@ -60,6 +64,7 @@ async def rpc(client,action='status',**extra):
 async def health(client):
  r=await client.get(PREFIX+'/api/status',headers=HEAD);r.raise_for_status();return r.json()
 async def apply(client,profile,label):
+ global EXPECTED_BOOT
  before=await rpc(client)
  if before['busy']:raise RuntimeError('another tuning operation is active')
  rid=str(uuid.uuid4());event('apply',label=label,request_id=rid,profile=profile)
@@ -70,19 +75,22 @@ async def apply(client,profile,label):
   await asyncio.sleep(2)
   try:s=await rpc(client)
   except (httpx.HTTPError,ValueError):continue
-  if s.get('boot_id')!=before.get('boot_id'):raise RuntimeError('unexpected PCB reboot')
+  if s.get('boot_id')!=before.get('boot_id'):raise DeviceRestart('unexpected PCB reboot during apply')
   if s.get('request_id')==rid and not s.get('busy'):
    dump('last_readback.json',s)
    event('readback',label=label,state=s)
    if s.get('error') or not s.get('frames_verified') or not s.get('frames_recent'):raise RuntimeError(s.get('error') or 'fresh frames not confirmed')
    if s.get('active')!=profile:raise RuntimeError('active profile differs from request')
-   await asyncio.sleep(10);return s
+   EXPECTED_BOOT=s['boot_id'];await asyncio.sleep(10);return s
  raise TimeoutError('profile did not finish in 100 seconds')
 
 async def capture(client,profile,label,seconds):
  start=time.monotonic();wall=time.time();name=f'{len(list(OUT.glob("segment-*.json"))):03d}-{label}'
  counts=collections.Counter();ages=[];bedcounts=[];outside=[];lastidx=None;lastrecv=None;outages=[];last_status=0
  starthealth=await health(client)
+ initial=await rpc(client)
+ if initial.get('boot_id')!=EXPECTED_BOOT:raise DeviceRestart('PCB reboot before capture')
+ if initial.get('active')!=profile:raise ExternalChange('same-boot external profile change')
  raw=gzip.open(OUT/(name+'.rdr.gz'),'wb');metrics=gzip.open(OUT/(name+'.metrics.jsonl.gz'),'wt')
  event('capture_start',segment=name,seconds=seconds)
  while time.monotonic()-start<seconds and time.time()<END:
@@ -110,7 +118,10 @@ async def capture(client,profile,label,seconds):
       h=await health(client);s=await rpc(client);last_status=now
       dump('progress.json',{'time':stamp(),'segment':name,'elapsed_seconds':time.monotonic()-start,'frames':counts['frames'],'fresh':counts['fresh'],'bed_presence_fraction':counts['bed_present']/max(1,counts['fresh']),'both_half_fraction':counts['both_halves']/max(1,counts['fresh']),'active':s.get('active'),'health':h})
       raw.flush();metrics.flush()
-      if s.get('active')!=profile:raise RuntimeError('EXTERNAL_PROFILE_CHANGE')
+      if s.get('boot_id')!=EXPECTED_BOOT:
+       raw.close();metrics.close();event('capture_interrupted',segment=name,reason='PCB reboot',old_boot=EXPECTED_BOOT,new_boot=s.get('boot_id'));raise DeviceRestart('PCB reboot during capture')
+      if s.get('active')!=profile:
+       raw.close();metrics.close();raise ExternalChange('same-boot external profile change')
   except RuntimeError:raise
   except Exception as e:
    counts['connection_errors']+=1;event('capture_connection_error',segment=name,error=str(e)[:160]);await asyncio.sleep(2)
@@ -126,22 +137,32 @@ async def capture(client,profile,label,seconds):
  dump('segment-'+name+'.json',result);event('capture_complete',segment=name,score=round(score,2),fps=round(result['fps'],2),bed_fraction=round(bedfraction,3),both_halves=round(half,3));return result
 
 async def main():
- global BASE
+ global BASE,EXPECTED_BOOT,RESTORE_ON_EXIT
  async with httpx.AsyncClient(base_url=ORIGIN,timeout=20) as client:
-  initial=await rpc(client);BASE=initial['active'];dump('baseline.json',initial)
-  dump('manifest.json',{'start':stamp(),'planned_end':dt.datetime.fromtimestamp(END,TZ).isoformat(),'mount':MOUNT,'bed':BED,'condition':'User says two people remain in bed most of night. No synchronized ground truth or empty-bed control.','raw_format':'gzip records: little-endian double epoch, uint32 payload length, RDR2 payload','safety':'Temporary radar profiles only; no NVS save, no firmware flashing, no automatic noise estimation with occupied bed.'})
+  initial=await rpc(client);EXPECTED_BOOT=initial['boot_id']
+  if (OUT/'baseline.json').exists():BASE=json.loads((OUT/'baseline.json').read_text())['active']
+  else:BASE=initial['active'];dump('baseline.json',initial)
+  dump('run-resume-'+str(int(time.time()))+'.json',{'time':stamp(),'boot_id':EXPECTED_BOOT,'active':initial['active']})
+  if not (OUT/'manifest.json').exists():dump('manifest.json',{'start':stamp(),'planned_end':dt.datetime.fromtimestamp(END,TZ).isoformat(),'mount':MOUNT,'bed':BED,'condition':'User says two people remain in bed most of night. No synchronized ground truth or empty-bed control.','raw_format':'gzip records: little-endian double epoch, uint32 payload length, RDR2 payload','safety':'Temporary radar profiles only; no NVS save, no firmware flashing, no automatic noise estimation with occupied bed.'})
   profiles=[('baseline',BASE),('keep-static-legacy80',{**BASE,'static_rm':0})]
   for db in [18,21,24,27,30]:profiles.append((f'static-dB{db}',{**BASE,'static_rm':0,'cfar_value':db,'cfar_method':0}))
   profiles.extend([('baseline-repeat',BASE),('clutter-control',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'clutter_rm':1}),('slow-speed-fine',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'speed_mm_s':1600,'speed_step_mm_s':100}),('period100',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':0,'frame_ms':100}),('method1-dB24',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':1}),('method2-dB24',{**BASE,'static_rm':0,'cfar_value':24,'cfar_method':2}),('freq57000',{**BASE,'frequency':57000,'static_rm':0,'cfar_value':24,'cfar_method':0}),('range3200',{**BASE,'range_mm':3200,'static_rm':0,'cfar_value':24,'cfar_method':0}),('baseline-final-screen',BASE)])
-  results=[];failures=[]
+  results=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];failures=[]
+  if (OUT/'comparison.json').exists():failures=json.loads((OUT/'comparison.json').read_text()).get('failures',[])
+  if (OUT/'interruption.json').exists():
+   old=json.loads((OUT/'interruption.json').read_text())
+   if old not in failures:failures.append(old)
+  completed={r['label'] for r in results};excluded={f['label'] for f in failures}
+  event('run_resumed',completed=len(results),excluded_profiles=sorted(excluded))
   try:
    for label,p in profiles:
+    if label in completed or label in excluded:continue
     if time.time()>END-1800:break
     try:
      if (await rpc(client)).get('active')!=p:await apply(client,p,label)
      results.append(await capture(client,p,label,480))
     except RuntimeError as e:
-     if str(e)=='EXTERNAL_PROFILE_CHANGE':event('stopped_external_change');return
+     if isinstance(e,ExternalChange):RESTORE_ON_EXIT=False;event('stopped_external_change');return
      failures.append({'label':label,'error':str(e)});event('profile_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
     except Exception as e:
      failures.append({'label':label,'error':str(e)});event('profile_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
@@ -160,12 +181,13 @@ async def main():
      await apply(client,p,'repeat-'+label)
      results.append(await capture(client,p,'repeat-'+label,min(1200,max(60,END-time.time()-600))))
     except Exception as e:
-     if str(e)=='EXTERNAL_PROFILE_CHANGE':event('stopped_external_change');return
+     if isinstance(e,ExternalChange):RESTORE_ON_EXIT=False;event('stopped_external_change');return
      event('repeat_failed',label=label,error=str(e));await apply(client,BASE,'recovery-baseline')
     dump('comparison.json',{'updated':stamp(),'results':results,'failures':failures})
   finally:
    # Restore the known working profile; keep experimental choices unsaved for review.
-   try:await apply(client,BASE,'restore-original-at-end');event('baseline_restored')
+   try:
+    if RESTORE_ON_EXIT:await apply(client,BASE,'restore-original-at-end');event('baseline_restored')
    except Exception as e:event('BASELINE_RESTORE_FAILED',error=str(e))
   dump('complete.json',{'time':stamp(),'results':len(results),'baseline_restored':(await rpc(client)).get('active')==BASE})
 
