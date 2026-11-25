@@ -1,5 +1,13 @@
 # Dashboard versions
 
+## dashboard-v1.2.1 — Bounded display continuity
+
+- Keep display tracks through at most three missing frames within 200 ms of source time and 500 ms of receive time when fresh evidence supports them.
+- Stale data, longer gaps and resets still clear display state. Every original gap remains visible in the continuity counter.
+- Fall-state invalidation remains strict for every original continuity gap; its detector and thresholds are unchanged.
+- Validation includes protocol/clock bounds, supported-box expiry and exact recorded-frame comparisons. Numerical overnight results remain unverified person-count proxies.
+- Rollback: `dashboard-v1.2.0` (experimental bed boxes before this display-only fix).
+
 ## dashboard-v1.2.0 — Experimental bed candidates
 
 - Bed-aligned candidate boxes use separate across-bed and along-bed distances, a short source-frame evidence window, and distinct-position support. They never force two people.

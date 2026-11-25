@@ -10,6 +10,7 @@ import {DEFAULT_MOUNT,normalizeMount,withinRange,insideRoom} from '../lib/radar/
 import RadarTuning from '../components/RadarTuning';
 import RadarScene,{type Mount,type Point,type PersonBox} from '../components/RadarScene';
 import {decodeFrames,continuity} from '../lib/radar/stream.mjs';
+import {displayNeedsReset} from '../lib/radar/display-flow.mjs';
 import {FallDetector,transform,clusters} from '../lib/radar/fall.mjs';
 type Frame={stamp:number;age:number;index:number;points:Point[];polar:number};
 type Event={id:string;time:string;drop:number;speed:number;top:number;acknowledged:boolean};
@@ -39,7 +40,9 @@ export default function RadarRoom(){
    ws.onopen=()=>{connecting=false;openedAt=lastMessage=performance.now();setConnection('Waiting for frames');ws?.send('next3');};
    ws.onmessage=e=>{lastMessage=performance.now();try{
     if(e.data instanceof ArrayBuffer){const frames=decodeFrames(e.data) as Frame[];for(const f of frames){const now=performance.now();if(f.age>350){staleCount.current++;invalidate('Stale frame rejected');continue;}
-     const flow=continuity(last.current,f,now);if(flow==='duplicate'){continue;}if(flow==='gap'||flow==='reset'){gapCount.current++;boxTracker.current.clear();bedTracker.current.clear();detector.current.invalidate('Frame gap: reacquiring');}
+     const flow=continuity(last.current,f,now);if(flow==='duplicate'){continue;}if(flow==='gap'||flow==='reset'){gapCount.current++;detector.current.invalidate('Frame gap: reacquiring');}
+     // Display tolerance never relaxes the strict fall-state invalidation above.
+     if(displayNeedsReset(last.current,f,now)){boxTracker.current.clear();bedTracker.current.clear();}
      last.current={...f,receivedAt:now};lastReceived.current=now;frameCount.current++;ticks=ticks.filter(t=>now-t<1000);ticks.push(now);
      const points=(transform(f.points,settings.current) as Point[]).filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.z)&&withinRange(p,settings.current)&&insideRoom(p,settings.current));
      const s=f.polar?detector.current.invalidate('Polar coordinates: Cartesian frames required'):detector.current.update(f.points,f.stamp);setSnapshot({...s});
