@@ -1,5 +1,13 @@
 # Dashboard versions
 
+## dashboard-v1.2.2 — Retain strict continuity after interrupted field comparison
+
+- Keep the experimental 200 ms bed-candidate view and its adjustable grouping controls.
+- Restore strict tracker clearing on every original continuity gap. The bounded display policy remains an offline-tested variant; the interrupted overnight comparison did not provide enough eligible data to select it on the retained hardware profile.
+- Hardware restarts during field testing do not establish a software or radar-profile cause. No fall-detector thresholds or physical mounting values change.
+- Validation: existing bed, stream and fall tests, TypeScript, production build and live local preview.
+- Rollback: `dashboard-v1.2.0` has the same strict-continuity bed view; `dashboard-v1.1.0` restores the previous bed layout without the new bed-candidate method.
+
 ## dashboard-v1.2.1 — Bounded display continuity
 
 - Keep display tracks through at most three missing frames within 200 ms of source time and 500 ms of receive time when fresh evidence supports them.
