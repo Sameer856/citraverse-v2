@@ -19,18 +19,19 @@ def frames(data):
    p+=n
   yield age,pts;off=end
 
-def grouped(points,radius):
+def grouped(points,radius,dimensions=2):
  # Grid-based connected components; same single-link structure as dashboard.
  n=len(points);parent=list(range(n));grid=collections.defaultdict(list)
  def find(i):
   while parent[i]!=i:parent[i]=parent[parent[i]];i=parent[i]
   return i
  for i,p in enumerate(points):
-  cell=(math.floor(p[0]/radius),math.floor(p[1]/radius))
-  for dx in [-1,0,1]:
-   for dy in [-1,0,1]:
-    for j in grid[(cell[0]+dx,cell[1]+dy)]:
-     if (p[0]-points[j][0])**2+(p[1]-points[j][1])**2<=radius**2:parent[find(i)]=find(j)
+  cell=tuple(math.floor(p[k]/radius) for k in range(dimensions))
+  import itertools
+  for delta in itertools.product([-1,0,1],repeat=dimensions):
+   neighbor=tuple(cell[k]+delta[k] for k in range(dimensions))
+   for j in grid[neighbor]:
+    if sum((p[k]-points[j][k])**2 for k in range(dimensions))<=radius**2:parent[find(i)]=find(j)
   grid[cell].append(i)
  groups=collections.defaultdict(list)
  for i in range(n):groups[find(i)].append(points[i])
@@ -50,6 +51,15 @@ def segment_replay(seg):
     strict=[p for p in pts if .35<=p[0]<=1.35 and .85<=p[1]<=2.85 and .25<=p[2]<=1.65]
     bed=[p for p in pts if .15<=p[0]<=1.5 and .65<=p[1]<=3 and .25<=p[2]<=1.65]
     broad=[p for p in pts if 0<=p[0]<=1.5 and .5<=p[1]<=3 and .2<=p[2]<=1.8]
+    
+    for width in [1,1.5,1.8,2]:
+     left=1.35-width;mid=1.35-width/2
+     zone=[p for p in pts if left-.2<=p[0]<=1.5 and .65<=p[1]<=3 and .25<=p[2]<=1.65]
+     nearbed[f'width_{width}_present']+=len(zone)>=3
+     nearbed[f'width_{width}_both_halves']+=sum(p[0]<mid for p in zone)>=3 and sum(p[0]>=mid for p in zone)>=3
+    room=[p for p in pts if -1.5<=p[0]<=1.5 and 0<=p[1]<=3 and -.15<=p[2]<=3]
+    n3=len([g for g in grouped(room,.65,3) if len(g)>=6])
+    counts['room3d-zero']+=n3==0;counts['room3d-one']+=n3==1;counts['room3d-two']+=n3==2;counts['room3d-many']+=n3>2
     nearbed['strict_present']+=len(strict)>=3;nearbed['expanded_present']+=len(bed)>=3;nearbed['broad_present']+=len(broad)>=3
     for radius in [.2,.3,.4,.5,.65]:
      groups=grouped(bed,radius)
@@ -63,10 +73,10 @@ def segment_replay(seg):
  return {'segment':seg['segment'],'sampled_seconds':sampled,'zone_presence_fractions':{k:v/max(1,sampled) for k,v in nearbed.items()},'cluster_fractions':{k:v/max(1,sampled) for k,v in counts.items()}}
 def main():
  segments=[json.loads(p.read_text()) for p in sorted(OUT.glob('segment-*.json'))];replays=[]
- cachefile=OUT/'replay-analysis.json';cache={r['segment']:r for r in json.loads(cachefile.read_text()).get('segments',[])} if cachefile.exists() else {}
+ cachefile=OUT/'replay-analysis.json';cached=json.loads(cachefile.read_text()) if cachefile.exists() else {};cache={r['segment']:r for r in cached.get('segments',[])} if cached.get('version')==2 else {}
  for seg in segments:
   r=cache.get(seg['segment']) or segment_replay(seg);replays.append(r);print(seg['segment'],r['sampled_seconds'],flush=True)
- cachefile.write_text(json.dumps({'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
+ cachefile.write_text(json.dumps({'version':2,'segments':replays,'warning':'Two spatial clusters are not proof of two people; default bed dimensions unconfirmed.'},indent=2))
  grouped_profiles=collections.defaultdict(list)
  for s in segments:grouped_profiles[json.dumps(s['profile'],sort_keys=True)].append(s)
  summary=[]

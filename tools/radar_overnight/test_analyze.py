@@ -7,6 +7,9 @@ class SpatialTests(unittest.TestCase):
  def test_one_connected_cloud_is_not_forced_into_two(self):
   p=[(.4+i*.02,1,0,0,0) for i in range(20)]
   self.assertEqual(len(a.grouped(p,.2)),1)
+ def test_horizontal_projection_does_not_split_one_body_by_height(self):
+  p=[(.4,1,i*.01,0,0) for i in range(6)]+[(.4,1,1+i*.01,0,0) for i in range(6)]
+  self.assertEqual(len(a.grouped(p,.2)),1);self.assertEqual(len(a.grouped(p,.2,3)),2)
  def test_sparse_noise_remains_small(self):
   p=[(0,0,0,0,0),(1,1,0,0,0),(2,2,0,0,0)];self.assertEqual(list(map(len,a.grouped(p,.2))),[1,1,1])
  def test_3d_projection_math_matches_capture(self):
