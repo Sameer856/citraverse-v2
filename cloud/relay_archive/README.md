@@ -1,15 +1,13 @@
-## Separate audio/radar iteration — 27 November 2026
+## Audio/radar iteration — 27 November 2026
 
-The candidate firmware uses `/audio-link` for microphone upload and keeps `/link`
-for radar and commands. Each link has an independent ownership lease, socket,
-firmware queue and task. Previous combined clients still work. Set
-`GCS_AUDIO_BUCKET=citra-ai-events` to restore 30-second WAV recording without
-changing the radar archive. Tests verify parallel links, cross-instance routing,
-role rejection and simultaneous WAV/radar object generation. Live deployment and
-hardware soak must be recorded separately; these tests do not prove zero loss on
-Wi-Fi. See firmware `CLOUD_AUDIO.md` for format, limitations and rollback.
-
-# Citraverse GCP live radar/audio relay and recording archives
+RC3 uses the existing `/link` with separate bounded queues and radar-first sends.
+The relay supports the combined stream and an optional independently owned,
+authenticated `/audio-link`. The extra connection was tested in RC1/RC2 but removed
+from firmware after hardware stack/memory failures; those candidates rolled back.
+`GCS_AUDIO_BUCKET=citra-ai-events` enables 30-second WAV storage alongside the
+unchanged radar archive. Tests verify routing, authentication and simultaneous
+WAV/radar object generation. Hardware soak evidence is recorded separately.
+See firmware `CLOUD_AUDIO.md` for format, limitations and rollback.
 
 ## Radar-only uplink priority — 24 November 2026
 

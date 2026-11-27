@@ -28,9 +28,7 @@
 #define MAX_COMMAND 7000
 typedef struct {uint32_t kind,seq,stamp,length;uint8_t payload[];} packet_t;
 static QueueHandle_t packets, commands, audio_packets;
-static bool audio_connected;
-static uint32_t audio_sent,audio_dropped,audio_reconnects,audio_failures;
-static char audio_url[336];
+static uint32_t audio_sent,audio_dropped,audio_failures;
 static esp_websocket_client_handle_t cloud_link;
 static bool configured,connected,radar_only=false;
 static uint32_t dropped,sent,boot_id,audio_sequence,radar_sequence;
@@ -79,10 +77,10 @@ void radar_cloud_json(char *out,size_t n) {
     size_t used=strlen(out);
     if(used && out[used-1]=='}')snprintf(out+used-1,n-used+1,
         ",\"audio_connected\":%s,\"audio_sent\":%lu,\"audio_dropped\":%lu,\"audio_reconnects\":%lu,\"audio_send_failures\":%lu}",
-        __atomic_load_n(&audio_connected,__ATOMIC_ACQUIRE)?"true":"false",
+        __atomic_load_n(&connected,__ATOMIC_ACQUIRE)?"true":"false",
         (unsigned long)__atomic_load_n(&audio_sent,__ATOMIC_RELAXED),
         (unsigned long)__atomic_load_n(&audio_dropped,__ATOMIC_RELAXED),
-        (unsigned long)__atomic_load_n(&audio_reconnects,__ATOMIC_RELAXED),
+        (unsigned long)__atomic_load_n(&reconnects,__ATOMIC_RELAXED),
         (unsigned long)__atomic_load_n(&audio_failures,__ATOMIC_RELAXED));
 }
 void radar_cloud_state(bool *is_configured,bool *is_connected) {
@@ -108,12 +106,12 @@ static void enqueue(uint32_t kind,const void *data,uint32_t length) {
     }
 }
 void radar_cloud_radar(const void *data,uint32_t n){enqueue(1,data,n);}
-/* Audio owns a separate TLS socket/task/queue: a slow audio send cannot hold
- * the radar socket's TX lock or evict a radar frame. Never wait in capture. */
+/* Independent bounded queues on the proven single TLS connection. Radar
+ * always wins dequeue priority; audio cannot evict radar. Never wait in capture. */
 void radar_cloud_audio(const int16_t *data,uint32_t n) {
     if(!__atomic_load_n(&configured,__ATOMIC_ACQUIRE)||!data||n!=640)return;
     uint32_t seq=__atomic_add_fetch(&audio_sequence,1,__ATOMIC_RELAXED);
-    if(!__atomic_load_n(&audio_connected,__ATOMIC_ACQUIRE)){
+    if(!__atomic_load_n(&connected,__ATOMIC_ACQUIRE)){
         __atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);return;
     }
     packet_t *p=heap_caps_malloc(sizeof(*p)+20+n,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
@@ -124,37 +122,6 @@ void radar_cloud_audio(const int16_t *data,uint32_t n) {
         packet_t *old=NULL;
         if(xQueueReceive(audio_packets,&old,0)==pdTRUE){free(old);__atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);}
         if(xQueueSend(audio_packets,&p,0)!=pdTRUE){free(p);__atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);}
-    }
-}
-static void audio_event(void *arg,esp_event_base_t base,int32_t event,void *data) {
-    (void)arg;(void)base;(void)data;
-    if(event==WEBSOCKET_EVENT_CONNECTED)__atomic_store_n(&audio_connected,true,__ATOMIC_RELEASE);
-    if(event==WEBSOCKET_EVENT_DISCONNECTED||event==WEBSOCKET_EVENT_CLOSED)
-        if(__atomic_exchange_n(&audio_connected,false,__ATOMIC_ACQ_REL))__atomic_add_fetch(&audio_reconnects,1,__ATOMIC_RELAXED);
-}
-static void audio_worker(void *unused) {
-    (void)unused;
-    while(time(NULL)<1704067200)vTaskDelay(pdMS_TO_TICKS(1000));
-    esp_websocket_client_config_t cfg={.uri=audio_url,.headers=auth,.crt_bundle_attach=esp_crt_bundle_attach,
-        .buffer_size=1024,.task_stack=8192,.task_name="audio_websocket",.reconnect_timeout_ms=1000,.network_timeout_ms=5000,
-        .enable_close_reconnect=true,.ping_interval_sec=15,.pingpong_timeout_sec=10,
-        .keep_alive_enable=true,.keep_alive_idle=10,.keep_alive_interval=5,.keep_alive_count=3};
-    esp_websocket_client_handle_t link=esp_websocket_client_init(&cfg);
-    if(!link){vTaskDelete(NULL);return;}
-    esp_websocket_register_events(link,WEBSOCKET_EVENT_ANY,audio_event,NULL);
-    esp_websocket_client_start(link);
-    while(1){
-        packet_t *p=NULL;if(xQueueReceive(audio_packets,&p,portMAX_DELAY)!=pdTRUE)continue;
-        uint32_t age=(uint32_t)(esp_timer_get_time()/1000)-p->stamp;
-        if(!__atomic_load_n(&audio_connected,__ATOMIC_ACQUIRE)||age>200){free(p);__atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);continue;}
-        uint8_t out[692];struct timeval now;gettimeofday(&now,NULL);
-        uint64_t epoch=(uint64_t)now.tv_sec*1000+now.tv_usec/1000;
-        uint32_t h[6]={0x31505443,2,boot_id,p->seq,p->stamp,p->length};
-        memcpy(out,h,24);memcpy(out+24,&epoch,8);memcpy(out+32,p->payload,p->length);
-        int n=esp_websocket_client_send_bin(link,(const char*)out,sizeof(out),pdMS_TO_TICKS(1000));
-        if(n==sizeof(out))__atomic_add_fetch(&audio_sent,1,__ATOMIC_RELAXED);
-        else{__atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&audio_failures,1,__ATOMIC_RELAXED);}
-        free(p);
     }
 }
 static void on_event(void *arg,esp_event_base_t base,int32_t event,void *data) {
@@ -264,9 +231,13 @@ static void worker(void *unused) {
     esp_websocket_register_events(cloud_link,WEBSOCKET_EVENT_ANY,on_event,NULL);esp_websocket_client_start(cloud_link);
     while(1) {
         packet_t *p=NULL;
-        if(xQueueReceive(packets,&p,pdMS_TO_TICKS(5))!=pdTRUE)continue;
+        if(xQueueReceive(packets,&p,0)!=pdTRUE && xQueueReceive(audio_packets,&p,0)!=pdTRUE){vTaskDelay(1);continue;}
         uint32_t age=(uint32_t)(esp_timer_get_time()/1000)-p->stamp;
-        if(!__atomic_load_n(&connected,__ATOMIC_ACQUIRE) || age>200){free(p);__atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&stale_drops,1,__ATOMIC_RELAXED);continue;}
+        if(!__atomic_load_n(&connected,__ATOMIC_ACQUIRE) || age>200){
+            if(p->kind==1){__atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&stale_drops,1,__ATOMIC_RELAXED);}
+            else __atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);
+            free(p);continue;
+        }
         if(p->kind==1)memcpy(p->payload+8,&age,4);
         uint8_t *out=heap_caps_malloc(32+p->length,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
         if(out) {
@@ -276,9 +247,16 @@ static void worker(void *unused) {
             int n=esp_websocket_client_send_bin(cloud_link,(const char*)out,32+p->length,pdMS_TO_TICKS(1000));
             uint32_t elapsed=(uint32_t)((esp_timer_get_time()-started)/1000);
             if(elapsed>__atomic_load_n(&max_send_ms,__ATOMIC_RELAXED))__atomic_store_n(&max_send_ms,elapsed,__ATOMIC_RELAXED);
-            if(n==(int)(32+p->length))__atomic_add_fetch(&sent,1,__ATOMIC_RELAXED);else {__atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&send_failures,1,__ATOMIC_RELAXED);}
+            if(p->kind==1){
+                if(n==(int)(32+p->length))__atomic_add_fetch(&sent,1,__ATOMIC_RELAXED);
+                else {__atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&send_failures,1,__ATOMIC_RELAXED);}
+            }else{
+                if(n==(int)(32+p->length))__atomic_add_fetch(&audio_sent,1,__ATOMIC_RELAXED);
+                else {__atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);__atomic_add_fetch(&audio_failures,1,__ATOMIC_RELAXED);}
+            }
             free(out);
-        } else __atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);
+        } else if(p->kind==1)__atomic_add_fetch(&dropped,1,__ATOMIC_RELAXED);
+        else __atomic_add_fetch(&audio_dropped,1,__ATOMIC_RELAXED);
         free(p);
     }
 }
@@ -288,13 +266,11 @@ esp_err_t radar_cloud_start(void) {
     e=nvs_get_str(h,"origin",origin,&a);if(e==ESP_OK)e=nvs_get_str(h,"id",id,&b);if(e==ESP_OK)e=nvs_get_str(h,"token",token,&c);nvs_close(h);
     if(e!=ESP_OK || !safe_origin(origin)||!safe_id(id)||!safe_token(token)){memset(token,0,sizeof(token));return ESP_ERR_INVALID_ARG;}
     snprintf(url,sizeof(url),"wss://%s/v1/devices/%s/link",origin+8,id);snprintf(auth,sizeof(auth),"Authorization: Bearer %s\r\n",token);memset(token,0,sizeof(token));
-    snprintf(audio_url,sizeof(audio_url),"wss://%s/v1/devices/%s/audio-link",origin+8,id);
     audio_packets=xQueueCreate(10,sizeof(packet_t*));
     packets=xQueueCreate(4,sizeof(packet_t*));commands=xQueueCreate(16,sizeof(char*));incoming=heap_caps_malloc(MAX_COMMAND+1,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
     if(!packets||!commands||!incoming||!audio_packets)return ESP_ERR_NO_MEM;
     boot_id=esp_random();
     if(xTaskCreate(command_worker,"cloud_commands",8192,NULL,2,NULL)!=pdPASS)return ESP_ERR_NO_MEM;
     if(xTaskCreate(worker,"cloud_route",8192,NULL,2,NULL)!=pdPASS)return ESP_ERR_NO_MEM;
-    if(xTaskCreate(audio_worker,"cloud_audio",4096,NULL,1,NULL)!=pdPASS)return ESP_ERR_NO_MEM;
     __atomic_store_n(&configured,true,__ATOMIC_RELEASE);return ESP_OK;
 }

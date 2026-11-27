@@ -1,54 +1,62 @@
-# Radar and microphone cloud iteration — 1.1.0-audio-rc2
+# Radar and microphone cloud iteration — 1.1.0-audio-rc4
 
 Working v1 is immutable at Git tag `firmware-v1.0.0`. See
 `deliverables/Citraverse_Firmware_v1_20261127/README.md` for application rollback.
-The original v1 binary stays internally labelled `be46cb5-dirty`; it was not rebuilt.
+The original v1 binary stays internally labelled `be46cb5-dirty`; physical flash
+readback was verified byte-for-byte. It was not rebuilt or relabelled.
 
 ## Transport
 
-Radar keeps its existing authenticated TLS WebSocket `/v1/devices/ID/link`, four-frame
-queue, 200 ms age bound, ACKs and command channel. Microphone PCM16 uses a separate
-TLS WebSocket `/v1/devices/ID/audio-link`, separate task at lower priority and a
-10-block queue. An audio send never takes the radar socket's TX lock or replaces a
-queued radar frame. Both still share Wi-Fi, CPU and the GCP broker; this is not a
-zero-loss or fixed-latency guarantee.
+Use the proven authenticated TLS WebSocket `/v1/devices/ID/link`. Radar retains
+its four-frame queue, 200 ms queued-age bound, ACKs and command channel. Audio
+has its own ten-block queue; the sender always checks radar first. An audio
+packet cannot replace a queued radar frame. An audio send already in flight can
+still delay the next radar packet; the one-second socket write deadline is not
+a latency guarantee. Both streams share Wi-Fi, CPU and the broker.
 
 Microphone format remains 16 kHz mono signed PCM16, 320 samples / 20 ms per packet.
-Audio sequence increments before connection/queue admission, so a lost block is
+Audio sequence increments before connection/queue admission, so lost blocks are
 visible in the next sequence gap. Acquisition hooks only allocate/copy/enqueue;
-TLS and storage work never run in the microphone/radar acquisition callbacks.
-Continuous local SD recording and speaker/call paths are preserved.
+TLS and storage waits never run in microphone/radar acquisition callbacks.
+Continuous local SD recording and speaker/call audio logic are preserved.
 
-Relay audio has its own ownership lease and cannot replace the radar command
-connection. The endpoint uses the existing device bearer key; no access changes.
-The old combined link remains compatible with previous firmware.
+Status keeps radar send/drop counters separate from `audio_sent`, `audio_dropped`
+and `audio_send_failures`. `audio_connected` and `audio_reconnects` describe the
+shared socket. Queued audio older than 200 ms is discarded rather than replayed
+late. This release has no SD backfill and does not guarantee zero loss offline.
 
 ## Files
 
-Both archives use `citra-ai-events` in asia-south1 under existing public-access
+Both archives use `citra-ai-events` in asia-south1 under the existing public-access
 policy explicitly requested by the owner. Radar: `radar/DEVICE/...jsonl.gz`.
 Audio: `audio/DEVICE/...wav` with metadata; 30-second complete clips or labelled
-partials. Clip sequence gaps become silence with missing-block counts. A cloud
-commit includes GCS generation/content verification, rather than merely a socket
-send succeeding. This release does not backfill SD during an outage. Offline
-samples may remain only on SD, and SD itself has bounded capacity/queues.
+partials. Sequence gaps become silence with missing-block counts. Cloud commits
+include GCS generation/content verification, rather than only a socket-send result.
+Offline samples may remain only on SD. SD also has bounded capacity/queues.
+
+## Hardware lessons retained in version history
+
+RC1's second TLS connection exceeded its 4 KiB handshake-task stack. RC2 enlarged
+that stack but failed while sending audio with AES allocation/crypto errors. Both
+returned automatically to v1. RC3 removes the extra TLS connection and tasks.
+A separate 3 KiB RGB task stack canary was observed after rollback on original v1;
+RC3 increases the RGB stack to 6 KiB. Certificate verification remains enabled.
+RC3 also failed with a double exception. RC4 tests software AES (TLS still
+encrypted and certificate-verified) to remove internal hardware-DMA bounce-buffer
+allocation, and increases the shared TLS task stack from 6 to 8 KiB.
+The relay's optional `/audio-link` stays compatible/authenticated but RC4 does not
+use it. Failed candidates remain archived and must not be treated as stable.
 
 ## Activation and rollback
 
-Deploy the relay first with `GCS_AUDIO_BUCKET=citra-ai-events`. Install candidate
-only after the PCB has stable Wi-Fi. Preserve active and saved radar profiles
-before installing; application OTA retains NVS. Keep a continuous power supply.
-Check both connection counters, advancing radar ACKs, radar FPS/age/gaps, audio
-sequence/PCM levels, complete GCS objects and zero queue/write failures during a
-powered soak. Do not call the candidate field-verified based on compilation/tests.
+Deploy the relay first with `GCS_AUDIO_BUCKET=citra-ai-events`. Preserve active
+and saved radar profiles before installing; OTA retains NVS. Keep USB power on.
+Run `cloud/relay_archive/validate_dual_stream.py --output OUTPUT_DIRECTORY` for a
+bounded read-only soak. Verify device counters, advancing ACKs, radar FPS/age/gaps,
+audio PCM levels, newly committed/downloaded files and archive missing-block counts.
+A passing short soak does not establish performance through a future Wi-Fi outage.
 
-Application rollback uses the v1 rollback manifest. For relay rollback, restore
-recorded pre-change revision `citraverse-pcb-route-00008-2pn` with Cloud Run traffic
-routing. Restoring an app slot does not revert saved radar tuning or Wi-Fi.
-
-## RC1 hardware failure and RC2 correction
-
-RC1 hit a 4 KiB WebSocket task stack canary during certificate verification and
-automatically returned to v1. RC2 gives the audio WebSocket an 8 KiB stack and
-a distinct task name; TLS certificate validation remains enabled. Source and
-failed candidate are retained for audit; do not install RC1.
+Application rollback uses the v1 rollback manifest. Relay rollback restores
+`citraverse-pcb-route-00008-2pn` with Cloud Run traffic routing. Application rollback
+does not revert saved radar tuning or Wi-Fi; the v1 package includes their radar
+profile checkpoint, while raw per-device NVS backup stays private/local only.

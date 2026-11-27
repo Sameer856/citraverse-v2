@@ -83,7 +83,7 @@ esp_err_t pcb_status_start(void) {
     if(err!=ESP_OK){rmt_del_channel(channel);channel=NULL;return err;}
     err=rmt_enable(channel);
     if(err!=ESP_OK){rmt_del_encoder(encoder);rmt_del_channel(channel);return err;}
-    if(xTaskCreate(status_task,"pcb_rgb",3072,NULL,1,NULL)!=pdPASS){
+    if(xTaskCreate(status_task,"pcb_rgb",6144,NULL,1,NULL)!=pdPASS){
         rmt_disable(channel);rmt_del_encoder(encoder);rmt_del_channel(channel);return ESP_ERR_NO_MEM;
     }
     __atomic_store_n(&active,true,__ATOMIC_RELEASE);return ESP_OK;

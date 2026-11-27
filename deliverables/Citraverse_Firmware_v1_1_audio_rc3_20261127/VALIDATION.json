@@ -1,0 +1,7 @@
+{
+  "release": "1.1.0-audio-rc3",
+  "compiled": true,
+  "hardware_verified": false,
+  "status": "FAILED: double exception while active; automatic rollback to v1 observed",
+  "note": "Shared TLS queues removed second connection but did not alone fix startup. RC4 tests software AES and larger TLS stack."
+}
