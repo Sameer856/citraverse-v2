@@ -76,4 +76,4 @@ async def main(args):
     if not report['transport_verified']:raise SystemExit(1)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--play-tone',action='store_true',required=True);p.add_argument('--duration',type=float,choices=[.5,1.,2.],default=.5);p.add_argument('--peak',type=int,choices=[4000,12000,16000],default=4000);p.add_argument('--pairing',default='.cloud-local/pairing.json');p.add_argument('--origin',default='https://citraverse-pcb-route-avebsk4vna-el.a.run.app');p.add_argument('--output',required=True);asyncio.run(main(p.parse_args()))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--play-tone',action='store_true',required=True);p.add_argument('--duration',type=float,choices=[.5,1.,2.],default=.5);p.add_argument('--peak',type=int,choices=[4000,12000,16000,24000,30000],default=4000);p.add_argument('--pairing',default='.cloud-local/pairing.json');p.add_argument('--origin',default='https://citraverse-pcb-route-avebsk4vna-el.a.run.app');p.add_argument('--output',required=True);asyncio.run(main(p.parse_args()))
