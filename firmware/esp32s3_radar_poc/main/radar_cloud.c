@@ -136,7 +136,7 @@ static void audio_worker(void *unused) {
     (void)unused;
     while(time(NULL)<1704067200)vTaskDelay(pdMS_TO_TICKS(1000));
     esp_websocket_client_config_t cfg={.uri=audio_url,.headers=auth,.crt_bundle_attach=esp_crt_bundle_attach,
-        .buffer_size=1024,.task_stack=4096,.reconnect_timeout_ms=1000,.network_timeout_ms=5000,
+        .buffer_size=1024,.task_stack=8192,.task_name="audio_websocket",.reconnect_timeout_ms=1000,.network_timeout_ms=5000,
         .enable_close_reconnect=true,.ping_interval_sec=15,.pingpong_timeout_sec=10,
         .keep_alive_enable=true,.keep_alive_idle=10,.keep_alive_interval=5,.keep_alive_count=3};
     esp_websocket_client_handle_t link=esp_websocket_client_init(&cfg);

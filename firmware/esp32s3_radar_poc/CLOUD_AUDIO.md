@@ -1,4 +1,4 @@
-# Radar and microphone cloud iteration — 1.1.0-audio-rc1
+# Radar and microphone cloud iteration — 1.1.0-audio-rc2
 
 Working v1 is immutable at Git tag `firmware-v1.0.0`. See
 `deliverables/Citraverse_Firmware_v1_20261127/README.md` for application rollback.
@@ -45,3 +45,10 @@ powered soak. Do not call the candidate field-verified based on compilation/test
 Application rollback uses the v1 rollback manifest. For relay rollback, restore
 recorded pre-change revision `citraverse-pcb-route-00008-2pn` with Cloud Run traffic
 routing. Restoring an app slot does not revert saved radar tuning or Wi-Fi.
+
+## RC1 hardware failure and RC2 correction
+
+RC1 hit a 4 KiB WebSocket task stack canary during certificate verification and
+automatically returned to v1. RC2 gives the audio WebSocket an 8 KiB stack and
+a distinct task name; TLS certificate validation remains enabled. Source and
+failed candidate are retained for audit; do not install RC1.

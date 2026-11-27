@@ -53,6 +53,18 @@ async def main(args):
             url='https://storage.googleapis.com/'+commit['bucket']+'/'+commit['object_name'];r=await c.get(url,headers={'Authorization':''});r.raise_for_status()
             file=out/('verified.wav' if name=='audio' else 'verified.jsonl.gz');file.write_bytes(r.content)
             report['objects'][name]=inspect(file,commit['sha256'])
+            report['objects'][name]['commit']=commit
+        report['counter_deltas']={}
+        for group in ['cloud','storage']:
+            a,b=report['before']['pcb'][group],report['after']['pcb'][group]
+            report['counter_deltas'][group]={k:b[k]-a[k] for k in a if isinstance(a[k],int) and not isinstance(a[k],bool) and isinstance(b.get(k),int)}
+        report['qualified_zero_drop_soak']=bool(
+            report['live']['radar_fps']>=18 and report['live']['radar_index_misses']==0
+            and report['live']['radar_age_p95_ms']<=350
+            and all(report['counter_deltas']['cloud'].get(k,0)==0 for k in ['dropped','reconnects','send_failures','queue_drops','stale_drops','audio_dropped','audio_reconnects','audio_send_failures'])
+            and report['objects']['audio']['duration_seconds']==30
+            and report['objects']['audio']['commit'].get('missing_blocks',-1)==0
+            and not report['objects']['audio']['commit'].get('partial',True))
         report['ended_epoch_ms']=int(time.time()*1000)
         (out/'validation.json').write_text(json.dumps(report,indent=2)+'\n')
         print(json.dumps({'live':report['live'],'objects':report['objects']},indent=2))

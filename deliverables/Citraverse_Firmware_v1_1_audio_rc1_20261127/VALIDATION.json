@@ -12,5 +12,6 @@
   "radar_bucket": "citra-ai-events",
   "endpoint_auth_verified": true,
   "hardware_candidate_verified": false,
-  "status": "OTA requested; candidate activation not yet verified. V1 remains reported by device."
+  "status": "FAILED: audio websocket TLS stack overflow; automatic rollback verified",
+  "diagnosis": "Stack canary watchpoint triggered (websocket_task); backtrace enters esp_crt_verify_callback during TLS handshake. Corrected in rc2."
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT_VER "1.1.0-audio-rc1")
+set(PROJECT_VER "1.1.0-audio-rc2")
 if(NOT DEFINED RADAR_HOST_DRIVER)
     set(RADAR_HOST_DRIVER "$ENV{RADAR_HOST_DRIVER}")
 endif()

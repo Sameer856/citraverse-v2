@@ -1,0 +1,9 @@
+{
+  "release": "1.1.0-audio-rc2",
+  "compiled": true,
+  "relay_tests_passed": 21,
+  "hardware_verified": false,
+  "change": "Increase audio WebSocket TLS task stack to 8192; distinct task name",
+  "previous_failure": "RC1 certificate-verification stack canary; automatic v1 rollback observed",
+  "baseline_tag": "firmware-v1.0.0"
+}
