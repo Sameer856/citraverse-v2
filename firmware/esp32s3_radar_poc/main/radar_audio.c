@@ -228,8 +228,8 @@ static void speaker_play(void *unused) {
             block.generation==__atomic_load_n(&call_generation,__ATOMIC_RELAXED);
         if(audible)__atomic_add_fetch(&tx_audible,1,__ATOMIC_RELAXED);
         for(unsigned i=0;i<SAMPLES;i++) {
-            // Conservative fixed speaker gain. Never loop microphone into speaker.
-            int32_t sample=audible ? ((int32_t)block.pcm[i]*16384) : 0;
+            // Full PCM16-to-I2S32 scale; sender controls volume. Never loop mic into speaker.
+            int32_t sample=audible ? ((int32_t)block.pcm[i]*65536) : 0;
             output[2*i]=sample;output[2*i+1]=sample;
         }
         gpio_set_level(39,call_live()?1:0);

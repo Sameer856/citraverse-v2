@@ -1,0 +1,26 @@
+{
+  "release": "1.1.0-audio-rc6",
+  "application_sha256": "952b0fc3380d2012e11c4c034c3b96a2a2cc756744ddf0ba3f8f606c7faca767",
+  "boot_guard_passed": true,
+  "gain_multiplier": 65536,
+  "previous_gain_multiplier": 16384,
+  "signed_conversion_boundaries": [
+    -2147483648,
+    2147418112
+  ],
+  "tone_pcm_peak": 32767,
+  "tone_seconds": 0.2,
+  "speaker_deltas": {
+    "tx_accepted": 10,
+    "tx_audible": 10,
+    "tx_errors": 0
+  },
+  "amplifier_during": 1,
+  "amplifier_after": 0,
+  "radar_frames": 33,
+  "radar_index_misses": 0,
+  "microphone_valid": true,
+  "physical_result": "Audible, but user still reports insufficient loudness. No claim of achieving 1 W electrical output.",
+  "previous_working_firmware": "firmware-v1.1.0-rc5",
+  "original_rollback": "firmware-v1.0.0"
+}

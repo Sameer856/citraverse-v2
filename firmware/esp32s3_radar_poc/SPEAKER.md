@@ -37,3 +37,19 @@ python3 cloud/relay_archive/probe_speaker.py --play-tone --duration 2 --peak 300
 
 Only the test signal amplitude changed; firmware playback gain and firmware tags
 were not modified. This test does not establish an exact electrical output wattage.
+
+## RC6 full digital gain
+
+The owner subsequently requested maximum volume. RC6 removes the previous 4x
+attenuation in the firmware playback path. The earlier two-second peak-30000
+command above is historical RC5 evidence, not the recommended full-gain test.
+For the current full-gain firmware use a brief burst:
+
+```sh
+python3 cloud/relay_archive/probe_speaker.py --play-tone --duration 0.2 --peak 32767 --output output/speaker-full-scale.json
+```
+
+RC6 boot validation and short full-scale test passed digitally (10 blocks, zero
+I2S errors, 33 observed radar frames with no index misses). The user reported
+that the output remained too low. Full digital scale is not a verified 1 W output;
+actual amplifier supply, gain configuration and output require electrical checks.

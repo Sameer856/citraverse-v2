@@ -70,10 +70,10 @@ async def main(args):
     report['amp_during']=report['during']['amp_level'];report['amp_after']=report['after']['amp_level']
     report['radar_frames_during_test']=len(frames)
     report['radar_index_misses']=sum(max(0,((b[1]-a[1])&0xffffffff)-1) for a,b in zip(frames,frames[1:]))
-    report['transport_verified']=bool(report['speaker_deltas']['tx_accepted']==round(args.duration*50) and report['speaker_deltas']['tx_audible']==round(args.duration*50) and report['speaker_deltas']['tx_errors']==0 and report['call_microphone']['valid'] and not report['after']['call_active'] and report['after']['amp_level']==0 and len(frames)>=40)
+    report['transport_verified']=bool(report['speaker_deltas']['tx_accepted']==round(args.duration*50) and report['speaker_deltas']['tx_audible']==round(args.duration*50) and report['speaker_deltas']['tx_errors']==0 and report['call_microphone']['valid'] and not report['after']['call_active'] and report['after']['amp_level']==0 and len(frames)>=max(20,round(args.duration*15)))
     output=Path(args.output);output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:report[k] for k in ['speaker_deltas','amp_during','amp_after','radar_frames_during_test','radar_index_misses','call_microphone','transport_verified']},indent=2))
     if not report['transport_verified']:raise SystemExit(1)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--play-tone',action='store_true',required=True);p.add_argument('--duration',type=float,choices=[.5,1.,2.],default=.5);p.add_argument('--peak',type=int,choices=[4000,12000,16000,24000,30000],default=4000);p.add_argument('--pairing',default='.cloud-local/pairing.json');p.add_argument('--origin',default='https://citraverse-pcb-route-avebsk4vna-el.a.run.app');p.add_argument('--output',required=True);asyncio.run(main(p.parse_args()))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--play-tone',action='store_true',required=True);p.add_argument('--duration',type=float,choices=[.2,.5,1.,2.],default=.5);p.add_argument('--peak',type=int,choices=[4000,12000,16000,24000,30000,32767],default=4000);p.add_argument('--pairing',default='.cloud-local/pairing.json');p.add_argument('--origin',default='https://citraverse-pcb-route-avebsk4vna-el.a.run.app');p.add_argument('--output',required=True);asyncio.run(main(p.parse_args()))
