@@ -1,0 +1,10 @@
+{
+  "release": "1.1.0-audio-rc4",
+  "compiled": true,
+  "boot_guard_passed": true,
+  "hardware_soak_passed": false,
+  "status": "FAILED live status-query test; rebooted on environmental JSON formatting",
+  "diagnosis": "HTTP status frame was approximately 3840 bytes before nested float formatting in a 6144-byte task. RC5 moves output buffers to PSRAM; compiled status frame becomes 192 bytes.",
+  "v1_recovery": "Exact v1 image restored over USB to ota_1 before rc5 installation",
+  "relay_tests_passed": 26
+}

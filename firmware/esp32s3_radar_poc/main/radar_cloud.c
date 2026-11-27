@@ -224,7 +224,7 @@ static void worker(void *unused) {
         esp_sntp_init();
     }
     while(time(NULL)<1704067200)vTaskDelay(pdMS_TO_TICKS(1000));
-    esp_websocket_client_config_t config={.uri=url,.headers=auth,.crt_bundle_attach=esp_crt_bundle_attach,.buffer_size=MAX_RADAR+64,.task_stack=6144,
+    esp_websocket_client_config_t config={.uri=url,.headers=auth,.crt_bundle_attach=esp_crt_bundle_attach,.buffer_size=MAX_RADAR+64,.task_stack=8192,
         .reconnect_timeout_ms=1000,.network_timeout_ms=5000,.enable_close_reconnect=true,
         .ping_interval_sec=15,.pingpong_timeout_sec=10,.keep_alive_enable=true,.keep_alive_idle=10,.keep_alive_interval=5,.keep_alive_count=3};
     cloud_link=esp_websocket_client_init(&config);if(!cloud_link){vTaskDelete(NULL);return;}
