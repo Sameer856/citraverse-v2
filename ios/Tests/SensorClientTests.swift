@@ -63,6 +63,10 @@ private final class MockProtocol: URLProtocol, @unchecked Sendable {
         precondition(CloudAccess.scope(for: URL(string: "http://relay.example/v1/devices/pcb-01")!) == nil)
         precondition(CloudAccess.scope(for: URL(string: "https://relay.example/elsewhere")!) == nil)
         precondition(CloudAccess.scope(for: URL(string: "https://other.example/v1/devices/pcb-01")!) != cloud)
+        precondition(SensorClient.callReceiveURL(origin: URL(string: cloud)!, after: 7)?.absoluteString == cloud + "/audio/live?after=7")
+        precondition(SensorClient.callReceiveURL(origin: URL(string: "http://192.168.1.10:81/")!, after: 7)?.absoluteString == "http://192.168.1.10:81/call/pcm?after=7")
+        for code in [429, 500, 502, 503, 504] { precondition(SensorClient.transientCallStatus(code)) }
+        for code in [200, 400, 401, 403, 409] { precondition(!SensorClient.transientCallStatus(code)) }
         let json = #"{"frames":91,"viewer_copy_drops":0,"age_ms":25,"free_heap":123456,"buffered_frames":8,"client_overrun_frames":0}"#
         let status = try JSONDecoder().decode(SensorStatus.self, from: Data(json.utf8))
         precondition(status.frames == 91 && status.hasFreshFrames && status.freeHeap == 123456)

@@ -1,0 +1,18 @@
+{
+  "duration_s": 4,
+  "speaker_upload_requests_ok": 13,
+  "microphone_batches_ok": 38,
+  "radar_frames": 84,
+  "hangup_status": 200,
+  "muted_after": true,
+  "call_stopped": true,
+  "microphone_route": "/audio/live",
+  "probe_audio": "silence only",
+  "app_version": "0.1.1",
+  "build": 2,
+  "signed_build_passed": true,
+  "source_tests_passed": true,
+  "wireless_install_passed": true,
+  "app_launched": true,
+  "phone_call_user_confirmation": null
+}

@@ -26,6 +26,8 @@ final class LANCallClient: ObservableObject {
     private var uploading = false
     private var queuedPlayback = 0
     private var microphonePending = Data()
+    private var uploadFailureSince: Date?
+    private var receiveFailureSince: Date?
 
     private func endpoint(_ path: String) -> URL? { origin?.appendingPathComponent(path) }
 
@@ -35,6 +37,7 @@ final class LANCallClient: ObservableObject {
               ["http", "https"].contains(parts.scheme ?? "") else { status = "Enter the sensor or cloud device address first"; return }
         connecting = true
         sentPackets = 0; receivedPackets = 0; microphoneLevel = 0; roomLevel = 0
+        uploadFailureSince = nil; receiveFailureSince = nil
         generation = UUID()
         let run = generation
         let allowed = await withCheckedContinuation { continuation in
@@ -140,25 +143,33 @@ final class LANCallClient: ObservableObject {
                 guard run == generation else { return }
                 let code = (response as? HTTPURLResponse)?.statusCode ?? 0
                 if code == 503 { try await Task.sleep(for: .milliseconds(20)); continue }
-                guard code == 200 else { throw CallError.unavailable }
+                guard code == 200 else { throw CallError.httpStatus(code) }
+                uploadFailureSince = nil
+                if receiveFailureSince == nil { status = "Call connected" }
                 sentPackets += 1
-            } catch { if run == generation { stop(message: "Call interrupted; reconnect to try again") }; return }
+            } catch {
+                if await recover(error, receiving: false, run: run) { continue }
+                return
+            }
         }
     }
 
     private func receive(run: UUID) async {
         var sequence: UInt32 = 0
         while active, run == generation, !Task.isCancelled {
-            guard let base = endpoint("call/pcm"), let token, let session,
-                  var parts = URLComponents(url: base, resolvingAgainstBaseURL: false) else { return }
-            parts.queryItems = [URLQueryItem(name: "after", value: String(sequence))]
-            var request = URLRequest(url: parts.url!)
+            guard let origin, let token, let session,
+                  let url = SensorClient.callReceiveURL(origin: origin, after: sequence) else { return }
+            var request = URLRequest(url: url)
             SensorClient.authorize(&request)
             request.setValue(token, forHTTPHeaderField: "X-Call-Token")
             do {
                 let (data, response) = try await session.data(for: request)
                 guard active, run == generation else { return }
-                guard (response as? HTTPURLResponse)?.statusCode == 200, data.count >= 20 else { throw CallError.invalidReply }
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                guard code == 200 else { throw CallError.httpStatus(code) }
+                guard data.count >= 20 else { throw CallError.invalidReply }
+                receiveFailureSince = nil
+                if uploadFailureSince == nil { status = "Call connected" }
                 func word(_ offset: Int) -> UInt32 {
                     (0..<4).reduce(UInt32(0)) { $0 | UInt32(data[offset + $1]) << ($1 * 8) }
                 }
@@ -186,12 +197,39 @@ final class LANCallClient: ObservableObject {
                         self.queuedPlayback = max(0, self.queuedPlayback - 1)
                     }
                 }
-            } catch { if run == generation { stop(message: "Call interrupted; reconnect to try again") }; return }
+            } catch {
+                if await recover(error, receiving: true, run: run) { continue }
+                return
+            }
         }
+    }
+
+    private func recover(_ error: Error, receiving: Bool, run: UUID) async -> Bool {
+        guard run == generation, active, !Task.isCancelled else { return false }
+        let retryable: Bool
+        if case CallError.httpStatus(let code) = error {
+            retryable = SensorClient.transientCallStatus(code)
+        } else if let network = error as? URLError {
+            retryable = [.timedOut, .networkConnectionLost, .cannotConnectToHost,
+                         .notConnectedToInternet, .cannotFindHost, .dnsLookupFailed].contains(network.code)
+        } else { retryable = false }
+        let now = Date()
+        let first = (receiving ? receiveFailureSince : uploadFailureSince) ?? now
+        if receiving { receiveFailureSince = first } else { uploadFailureSince = first }
+        guard retryable, now.timeIntervalSince(first) < 2 else {
+            stop(message: "Call interrupted; reconnect to try again")
+            return false
+        }
+        // Never resend an uncertain speaker packet: the next attempt uses fresh
+        // capture, while microphone reads retry the same cursor safely.
+        status = "Reconnecting audio…"
+        try? await Task.sleep(for: .milliseconds(80))
+        return run == generation && active && !Task.isCancelled
     }
 
     func stop(message: String = "Call ended") {
         generation = UUID(); active = false; connecting = false
+        uploadFailureSince = nil; receiveFailureSince = nil
         receiveTask?.cancel(); receiveTask = nil
         engine?.inputNode.removeTap(onBus: 0); player?.stop(); engine?.stop()
         engine = nil; player = nil; uploading = false; queuedPlayback = 0; microphonePending.removeAll()
@@ -208,11 +246,13 @@ final class LANCallClient: ObservableObject {
     }
     private enum CallError: LocalizedError {
         case invalidReply, unavailable, audioFormat
+        case httpStatus(Int)
         var errorDescription: String? {
             switch self {
             case .invalidReply: "The sensor returned an invalid audio response"
-            case .unavailable: "The sensor is busy or does not support LAN calls"
+            case .unavailable: "The room is busy or its call service is unavailable"
             case .audioFormat: "The microphone audio format is unavailable"
+            case .httpStatus: "The audio connection is temporarily unavailable"
             }
         }
     }
@@ -249,6 +289,10 @@ struct LANCallView: View {
         }.padding(28).navigationTitle("Call room")
             .onDisappear { call.stop() }
             .onChange(of: scenePhase) { _, phase in if phase != .active { call.stop() } }
-            .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in call.stop(message: "Call stopped by audio interruption") }
+            .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { notification in
+                guard let raw = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+                      AVAudioSession.InterruptionType(rawValue: raw) == .began else { return }
+                call.stop(message: "Call stopped by audio interruption")
+            }
     }
 }

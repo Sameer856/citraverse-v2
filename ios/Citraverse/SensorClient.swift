@@ -175,6 +175,17 @@ final class SensorClient: ObservableObject {
         return c.url
     }
     static func isCloudURL(_ url: URL) -> Bool { CloudAccess.scope(for: url) != nil }
+    /// Cloud microphone audio is already ingested continuously. LAN calls keep
+    /// their direct, lease-protected audio endpoint.
+    static func callReceiveURL(origin: URL, after: UInt32) -> URL? {
+        let path = isCloudURL(origin) ? "audio/live" : "call/pcm"
+        guard var parts = URLComponents(url: origin.appendingPathComponent(path), resolvingAgainstBaseURL: false) else { return nil }
+        parts.queryItems = [URLQueryItem(name: "after", value: String(after))]
+        return parts.url
+    }
+    static func transientCallStatus(_ status: Int) -> Bool {
+        [429, 500, 502, 503, 504].contains(status)
+    }
     static func statusURL(host: String) -> URL? { viewerURL(host: host)?.appendingPathComponent("api/status") }
     static func authorize(_ request: inout URLRequest) {
         if let url = request.url, let token = CloudAccess.load(for: url) {
