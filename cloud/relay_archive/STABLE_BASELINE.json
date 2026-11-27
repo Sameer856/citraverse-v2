@@ -1,0 +1,15 @@
+{
+  "baseline": "Citraverse_LAN_PCB_20261121, user confirmed speaker/mic, lower app gain, SD and BME690",
+  "checks": {
+    "radar_storage.c": true,
+    "radar_storage.h": true,
+    "pcb_environment.c": true,
+    "audio logic unchanged after removing cloud copy hook": true
+  },
+  "sha256": {
+    "radar_storage.c": "4bfc34b3f5a8e089cce4d09b916eb7160c77c09239f710748fcfbf0c04ea1ec3",
+    "radar_storage.h": "b54ccfadc454ea51c40afdc6ac01d077c67a87b8c12c96b12949c4b9f6bb823b",
+    "pcb_environment.c": "fdc1cc56669dc6bf32a0cd6a162cbd150a911c3dcfe03c35b690727e6ea6577c"
+  },
+  "audio_without_cloud_hook_sha256": "a016b920cb9a31e2fe2b1cba82963f47913c858e28fc7ce1fd98912b4103efe3"
+}

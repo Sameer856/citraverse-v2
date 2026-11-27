@@ -23,3 +23,6 @@ hardware/radar_validation/captures/
 node_modules/
 __pycache__/
 .pytest_cache/
+
+# Private flash/NVS diagnostics (may contain credentials)
+/output/firmware_v1_checkpoint_20261127/

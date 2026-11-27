@@ -1,0 +1,10 @@
+{
+  "upstream": "https://github.com/boschsensortec/BME690_SensorAPI",
+  "retrieved": "2026-11-21",
+  "files": {
+    "bme69x.c": "c079186889087f97b04bf4a7cbceb9366b1ba6e1fa5a2818a24196717fc46faf",
+    "bme69x.h": "f8decb821d5bcfd4877e6bfe1e6ff94980055aa6b28aef5a81d8e288cbdb1e60",
+    "bme69x_defs.h": "8e0ed7bf0b1f91a5e16012daf99676d1a6ea2d88e6dbd7825be1ae3c45772d49",
+    "LICENSE": "179c8853c3312def03362077b40d2beeb2f951730622e64987c4d5eef243fef4"
+  }
+}

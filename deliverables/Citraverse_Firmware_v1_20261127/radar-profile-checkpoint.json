@@ -1,0 +1,31 @@
+{
+  "active": {
+    "frequency": 58000,
+    "range_mm": 6400,
+    "resolution_mm": 25,
+    "speed_mm_s": 3200,
+    "speed_step_mm_s": 200,
+    "frame_ms": 50,
+    "static_rm": 1,
+    "cfar_value": 80,
+    "cfar_method": -1,
+    "clutter_rm": 0
+  },
+  "saved": {
+    "frequency": 58000,
+    "range_mm": 6400,
+    "resolution_mm": 25,
+    "speed_mm_s": 3200,
+    "speed_step_mm_s": 200,
+    "frame_ms": 50,
+    "static_rm": 1,
+    "cfar_value": 80,
+    "cfar_method": -1,
+    "clutter_rm": 0
+  },
+  "boot_id": 3032660055,
+  "frames_verified": true,
+  "frames_recent": true,
+  "has_saved": true,
+  "note": "Captured over authenticated GCP after VEPL password correction, before audio OTA."
+}

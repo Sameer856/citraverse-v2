@@ -1,0 +1,10 @@
+{
+  "verified_utc": "2026-11-27T09:47:29.900706+00:00",
+  "mac": "68:ee:8f:58:85:98",
+  "running_partition": "ota_1",
+  "offset": "0x720000",
+  "application_bytes": 1185680,
+  "application_sha256": "7d0c48ba42711b5c4d323af2acba2d37f8f52771c8361dddd9ca95cd3915cb13",
+  "flash_prefix_exact_match": true,
+  "remaining_slot_erased": true
+}

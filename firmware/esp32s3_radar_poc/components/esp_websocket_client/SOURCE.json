@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/espressif/esp-protocols",
+  "commit": "08d93b7a5cecd89645283a73de4491c6bbea415a",
+  "files": {
+    "CMakeLists.txt": "2d26aec8d9f48972e451b7d74c4f2295cd8acd8494e4a33219af6325daf81399",
+    "Kconfig": "336dc4fd94d4ee9786c81ad08f32ddb0271ed16c1f79c282e1d8e13ca86af8c3",
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "esp_websocket_client.c": "7dd85e0b6fd809956fe6e9d81948440a3d373d4c545b81b27fd1bdf01c84baf0",
+    "include/esp_websocket_client.h": "382fdce725ff80c15172e2850dcb41702a655857bed76fff7ac4e9c811311cfa",
+    "idf_component.yml": "0d557ddf7854668dbce7e349de51bc17c31465dd8f40d6269e0cecfc5ccef48e"
+  }
+}

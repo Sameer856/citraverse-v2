@@ -1,0 +1,7 @@
+.env*
+.cloud-local
+__pycache__
+.pytest_cache
+*.pem
+*.key
+*pairing*.json

@@ -1,0 +1,14 @@
+.git
+.env*
+.cloud-local
+__pycache__/
+.pytest_cache/
+*.pem
+*.key
+*pairing*.json
+test_*.py
+flash_validate.py
+configure_pcb.py
+create_pairing.py
+validate_live.py
+inspect_audio.py

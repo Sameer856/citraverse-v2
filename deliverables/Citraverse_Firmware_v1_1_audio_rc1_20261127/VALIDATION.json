@@ -1,0 +1,16 @@
+{
+  "firmware_version": "1.1.0-audio-rc1",
+  "application_sha256": "edeb284d1ec62e9c720607e12dbd29ef7d60de67288781a6d5b4e1b73fb1cf88",
+  "compiled": true,
+  "idf_sdk": "5.5.4",
+  "compiler": "GCC 14.2.0",
+  "sdk_enabled_settings_unchanged_from_v1": true,
+  "relay_tests_passed": 21,
+  "relay_revision": "citraverse-pcb-route-00009-mzs",
+  "relay_rollback_revision": "citraverse-pcb-route-00008-2pn",
+  "audio_bucket": "citra-ai-events",
+  "radar_bucket": "citra-ai-events",
+  "endpoint_auth_verified": true,
+  "hardware_candidate_verified": false,
+  "status": "OTA requested; candidate activation not yet verified. V1 remains reported by device."
+}
