@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-07T06:58:23.444257+00:00",
+  "target": "esp32s3",
+  "idf": "5.5.5",
+  "compiler": "xtensa-esp-elf GCC 14.2.0 esp-14.2.0_20260121",
+  "flash_mb": 4,
+  "psram_enabled": false,
+  "main_task_stack_bytes": 8192,
+  "spi_hz_requested": 8000000,
+  "frame_period_ms_requested": 50,
+  "hardware_tested": false,
+  "artifacts": [
+    {
+      "file": "build/citraverse_radar_poc.bin",
+      "bytes": 272416,
+      "sha256": "5be47c49504d3f395520e02765a5968bd70e86ea1b77707ec98ce40dd0dd2096"
+    },
+    {
+      "file": "build/bootloader/bootloader.bin",
+      "bytes": 20848,
+      "sha256": "f1a14a68a281e3386c2b0bd040090f72dead65124532052a6564d2eb757558e8"
+    },
+    {
+      "file": "build/partition_table/partition-table.bin",
+      "bytes": 3072,
+      "sha256": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820"
+    }
+  ]
+}

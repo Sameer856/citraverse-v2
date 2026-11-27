@@ -1,0 +1,182 @@
+{
+  "reference": "HostSample_V1.0.1/HostSample_V1.0.1/ESP32/ESP32S3Host/host_driver",
+  "integration": "external, unchanged; source not redistributed",
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "310f6ad99cf5bb0237e08b34a59ab7ea938a708e11dfd4beca034ea7c7888804"
+    },
+    {
+      "path": "cmd_api/host_driver.c",
+      "sha256": "312cbbe0a2b7cdc455d25f5414fcf1d3407a97710f54001f08a30693efcaba89"
+    },
+    {
+      "path": "cmd_api/host_driver.h",
+      "sha256": "9ab837380b3a197896d342c9877a134fa72ca0b5748cfe7188bdc41265b7092d"
+    },
+    {
+      "path": "cmd_api/rs6x_7x/host_mmw_api.h",
+      "sha256": "25cc8d1f2cbddc2219d8b78a0a4a7f7fb7af78b0e2f591d957d87bc9697c7e73"
+    },
+    {
+      "path": "cmd_api/rs6x_7x/host_mmw_cmd_api.c",
+      "sha256": "019eb526b82ad71fd596cb022fb4923856a9006ce362069063aadc231a9b4550"
+    },
+    {
+      "path": "cmd_api/rs6x_7x/host_mmw_report_api.c",
+      "sha256": "66c14a84bd25ca927bc5ad431c7f074d938e114f88dc3851da8d21cdcfbfbe9b"
+    },
+    {
+      "path": "host_config.h",
+      "sha256": "e22635b3e7eb2b15e15c81b32a875456e5954008edce008b2d7ce751fb84ad2e"
+    },
+    {
+      "path": "idf_component.yml",
+      "sha256": "636c96971de1907c723e14193848aa29a45256b1f0b7a60b95d779c226b834c2"
+    },
+    {
+      "path": "porting/esp32/hal_com_i2c.c",
+      "sha256": "28f8c8a8d29e0d377fca2da66c91c49e8866cff0e6ba94174e9917417c365d40"
+    },
+    {
+      "path": "porting/esp32/hal_com_spi.c",
+      "sha256": "d045e810dbeec4fc60ac68a8ae6967ca4d573b7fd38cb031bf14e6b37a117cba"
+    },
+    {
+      "path": "porting/esp32/hal_com_uart.c",
+      "sha256": "3986b95ac6e65a50e07f8084055838d2dbb9cafe0ad23b53139fa91c8f371ce9"
+    },
+    {
+      "path": "porting/esp32/hal_io.c",
+      "sha256": "066fd30cc1e3389c0a17fe9faf889f4bff4c5cbfb0f7992b9fd3ee372587da82"
+    },
+    {
+      "path": "porting/esp32/hal_os.c",
+      "sha256": "880846bb28b2dc8ed91b94025cac76dcd29388305377211262c636470b19a96d"
+    },
+    {
+      "path": "porting/esp32/hal_store.c",
+      "sha256": "e68fe88e12cda9e29e7729078d729ec963ef3c481f852dd58a61d602eef4ac36"
+    },
+    {
+      "path": "porting/esp32/port_log.h",
+      "sha256": "1d86cbd67d99a86d01874e409f9854849994d00bcdf981d5b6f456a6c9ae1991"
+    },
+    {
+      "path": "porting/host_port.h",
+      "sha256": "2170d519caf10899ec3c0cacfb0a1a9789c9ed8f2fdd84abf4f16fc2bdf45d97"
+    },
+    {
+      "path": "porting/include/hal_com.h",
+      "sha256": "c3bea5851783ae05a2b382e138bbe3bec3c3d469ca41368a4e7a35bf85d6bd57"
+    },
+    {
+      "path": "porting/include/hal_io.h",
+      "sha256": "54c31617267a9991476b193551e1c45762a92af4e2e39e22207cd27500baabb4"
+    },
+    {
+      "path": "porting/include/hal_log.h",
+      "sha256": "f02a41f7e83c97a850af4becb224d73ede7a23835b6294f97d377b6728129563"
+    },
+    {
+      "path": "porting/include/hal_os.c",
+      "sha256": "891d48bf0072a976b16ec05cb623d675cfef79f121e129b3fd0cff1fe21f5c2f"
+    },
+    {
+      "path": "porting/include/hal_os.h",
+      "sha256": "becf38696db440109c88743dc927208ef104f4af6b5ea08cb76e24d319356c44"
+    },
+    {
+      "path": "porting/include/hal_store.h",
+      "sha256": "2992f9fd3a25baca8645654fc62726f41b48426be060b84bf4972620d47dcf69"
+    },
+    {
+      "path": "porting/port.c",
+      "sha256": "ebd72a17d1036faa9ca7c92d58276ced119c7dcee00f95a0965edc3e9db2cb67"
+    },
+    {
+      "path": "protocol/burn/host_brom.c",
+      "sha256": "cc7b4435c10a459123b8f91672463d0c1776ea42f35bee9325ceaa007c747bc5"
+    },
+    {
+      "path": "protocol/burn/host_brom.h",
+      "sha256": "bfe1113081cfcbeab5bd85ceaa6cde24af0bedc854486c38c447a4b2e60a50a9"
+    },
+    {
+      "path": "protocol/burn/host_brom_comm_struct.h",
+      "sha256": "9d27a756db5f5af1163dfd23178967eb5dc6360b9b0d0e7893c689e59a5fa2f7"
+    },
+    {
+      "path": "protocol/burn/host_burn.c",
+      "sha256": "55c837af9439c16d66b12ca10a39073d9f4631fa817b51450ab889485f212e6f"
+    },
+    {
+      "path": "protocol/burn/host_burn.h",
+      "sha256": "8ecfad94d46de6cdbae29012ff6ac795a60949f6f3e363efa95420e2d65ecfc0"
+    },
+    {
+      "path": "protocol/burn/host_img_struct.h",
+      "sha256": "a07169cce4da0cbc4d93167ed0533cd0d575a0ae02e25301e2a30c5f58d9dc91"
+    },
+    {
+      "path": "protocol/hif/hif_type.h",
+      "sha256": "f1d77ef23bc5b8e5490e7cb5c6d3c4285f2f04a4187f8296f16cb098bd758496"
+    },
+    {
+      "path": "protocol/hif/host_hif.c",
+      "sha256": "c718de102961fc83c452a2678a451e0899c73b22d70bec44b4f47739d329ee8f"
+    },
+    {
+      "path": "protocol/hif/host_hif.h",
+      "sha256": "371d9b8c046be01c0969ee4d0d2ea384c5490571e921c91a1f8c386fc8482fd2"
+    },
+    {
+      "path": "protocol/hif/host_hif_tl.c",
+      "sha256": "520c6696b1f0eeb312271cef54da9949ced1a28f0c5fc7454a62f7bce12d4a2a"
+    },
+    {
+      "path": "protocol/hif/host_hif_tl.h",
+      "sha256": "03e7593978cf65dc23d722493b768a2cfb54052f380214e4a9f5d150a9f6d52b"
+    },
+    {
+      "path": "protocol/llc/host_llc.c",
+      "sha256": "ee8e0c995456dc9c0145c4886408f6be0ed435e5e2efcbf511e9a5fca1e1c33d"
+    },
+    {
+      "path": "protocol/llc/host_llc.h",
+      "sha256": "f1561de3d6121f3de02076e71d27389f07fdcba2ae3aaf2563c5e6ba55f818bf"
+    },
+    {
+      "path": "protocol/llc/host_llc_com_bus.c",
+      "sha256": "648a55f288bc8317403985a424c2836a5b996235bca0ddef212b34e7a780015a"
+    },
+    {
+      "path": "protocol/llc/host_llc_com_bus.h",
+      "sha256": "b854c1c53986b3e1c3027749def0e873faa054b7065380946d2f1e8d7703bcc2"
+    },
+    {
+      "path": "protocol/llc/host_llc_com_device.c",
+      "sha256": "1a6e408e11ed580d88706b7c5bc464ecef382e5d8e9f2fa63d30b325f83f95ff"
+    },
+    {
+      "path": "protocol/llc/host_llc_com_device.h",
+      "sha256": "918b0a68fe88eb4b8fec6ec6cf463ba296ce5ccb91d7d75e4b3911d7ec06f7f4"
+    },
+    {
+      "path": "protocol/utils/host_slist.h",
+      "sha256": "e9ce722b652e66b7e37b623da0004bcf1fa9c1b777604c9c308d560414ee1a9d"
+    },
+    {
+      "path": "protocol/utils/host_std_includes.h",
+      "sha256": "90161557a53738bf411fb4f40e21c74f7847d0f98f834a9d1dfa697c6baef737"
+    },
+    {
+      "path": "protocol/utils/host_types.h",
+      "sha256": "b6749d2524dcbb50e8f8050381b15f03608ded9f1a6de9efa8c23339b5b5106f"
+    },
+    {
+      "path": "user_config.h",
+      "sha256": "622879d958f807b0c9f0ab0599a13019273becce79dfd99d7ccae30d3f8ba2e9"
+    }
+  ]
+}
