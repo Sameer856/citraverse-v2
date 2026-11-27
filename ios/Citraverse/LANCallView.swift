@@ -7,6 +7,7 @@ import Combine
 final class LANCallClient: ObservableObject {
     @Published private(set) var active = false
     @Published private(set) var connecting = false
+    @Published private(set) var talking = false
     @Published private(set) var sentPackets = 0
     @Published private(set) var receivedPackets = 0
     @Published private(set) var microphoneLevel = 0
@@ -20,6 +21,9 @@ final class LANCallClient: ObservableObject {
     private var player: AVAudioPlayerNode?
     private var session: URLSession?
     private var receiveTask: Task<Void, Never>?
+    private var keepAliveTask: Task<Void, Never>?
+    private var talkTurn = UUID()
+    private var listenAfter = Date.distantPast
     private var token: String?
     private var origin: URL?
     private var generation = UUID()
@@ -67,9 +71,10 @@ final class LANCallClient: ObservableObject {
                   let lease = reply["token"] as? String, lease.count == 32 else { throw CallError.unavailable }
             token = lease
             try prepareAudio(run: run)
-            active = true; connecting = false; status = "Call connected"
+            active = true; connecting = false; talking = false; status = "Listening to room"
             recordCallEvent("connected", message: status)
             receiveTask = Task { [weak self] in await self?.receive(run: run) }
+            keepAliveTask = Task { [weak self] in await self?.keepAlive(run: run) }
         } catch {
             if run == generation { stop(message: "Call failed: \(error.localizedDescription)") }
         }
@@ -85,7 +90,7 @@ final class LANCallClient: ObservableObject {
         let engine = AVAudioEngine()
         let input = engine.inputNode
         let source = input.outputFormat(forBus: 0)
-        audioDiagnostic = "Use headphones or keep the phone away from the room speaker"
+        audioDiagnostic = "Hold to speak. Release to hear the room."
         guard source.sampleRate > 0,
               let pcm = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 16000, channels: 1, interleaved: false),
               let converter = AVAudioConverter(from: source, to: pcm) else { throw CallError.audioFormat }
@@ -118,16 +123,17 @@ final class LANCallClient: ObservableObject {
     }
 
     private func upload(_ data: Data, run: UUID) async {
-        guard active, run == generation else { return }
+        guard active, talking, run == generation else { return }
+        let turn = talkTurn
         microphoneLevel = data.withUnsafeBytes { bytes in bytes.bindMemory(to: Int16.self).reduce(0) { max($0, abs(Int($1))) } }
         microphonePending.append(data)
-        // Bound capture latency to 200 ms, always preserving PCM sample alignment.
-        if microphonePending.count > 6400 { microphonePending.removeFirst(microphonePending.count - 6400) }
+        // Bound capture latency to 240 ms; batch 100–120 ms to reduce cloud RPC overhead.
+        if microphonePending.count > 7680 { microphonePending.removeFirst(microphonePending.count - 7680) }
         guard !uploading, let url = endpoint("call/pcm"), let token, let session else { return }
         uploading = true
-        defer { if run == generation { uploading = false } }
-        while active, run == generation, microphonePending.count >= 640 {
-            let count = min(3200, microphonePending.count / 640 * 640)
+        defer { if run == generation { uploading = false; if !talking { listenAfter = Date().addingTimeInterval(0.3) } } }
+        while active, talking, turn == talkTurn, run == generation, microphonePending.count >= 3200 {
+            let count = min(3840, microphonePending.count / 640 * 640)
             let packet = microphonePending.prefix(count)
             microphonePending.removeFirst(count)
             var request = URLRequest(url: url)
@@ -143,9 +149,10 @@ final class LANCallClient: ObservableObject {
                 if code == 503 { try await Task.sleep(for: .milliseconds(20)); continue }
                 guard code == 200 else { throw CallError.httpStatus(code) }
                 uploadFailureSince = nil
-                if receiveFailureSince == nil { status = "Call connected" }
+                if receiveFailureSince == nil { status = talking ? "Talking to room" : "Listening to room" }
                 sentPackets += 1
             } catch {
+                guard turn == talkTurn else { return }
                 if await recover(error, receiving: false, run: run) { continue }
                 return
             }
@@ -155,6 +162,12 @@ final class LANCallClient: ObservableObject {
     private func receive(run: UUID) async {
         var sequence: UInt32 = 0
         while active, run == generation, !Task.isCancelled {
+            if talking || uploading || Date() < listenAfter {
+                sequence = 0
+                try? await Task.sleep(for: .milliseconds(40))
+                continue
+            }
+            let turn = talkTurn
             guard let origin, let token, let session,
                   let url = SensorClient.callReceiveURL(origin: origin, after: sequence) else { return }
             var request = URLRequest(url: url)
@@ -163,11 +176,12 @@ final class LANCallClient: ObservableObject {
             do {
                 let (data, response) = try await session.data(for: request)
                 guard active, run == generation else { return }
+                guard !talking, turn == talkTurn else { sequence = 0; continue }
                 let code = (response as? HTTPURLResponse)?.statusCode ?? 0
                 guard code == 200 else { throw CallError.httpStatus(code) }
                 guard data.count >= 20 else { throw CallError.invalidReply }
                 receiveFailureSince = nil
-                if uploadFailureSince == nil { status = "Call connected" }
+                if uploadFailureSince == nil { status = "Listening to room" }
                 func word(_ offset: Int) -> UInt32 {
                     (0..<4).reduce(UInt32(0)) { $0 | UInt32(data[offset + $1]) << ($1 * 8) }
                 }
@@ -191,13 +205,44 @@ final class LANCallClient: ObservableObject {
                 queuedPlayback += 1
                 player.scheduleBuffer(buffer, completionCallbackType: .dataPlayedBack) { [weak self] _ in
                     Task { @MainActor [weak self] in
-                        guard let self, self.generation == run else { return }
+                        guard let self, self.generation == run, self.talkTurn == turn else { return }
                         self.queuedPlayback = max(0, self.queuedPlayback - 1)
                     }
                 }
             } catch {
+                guard turn == talkTurn else { sequence = 0; continue }
                 if await recover(error, receiving: true, run: run) { continue }
                 return
+            }
+        }
+    }
+
+    func setTalking(_ pressed: Bool) {
+        guard active, talking != pressed else { return }
+        talking = pressed; talkTurn = UUID(); microphonePending.removeAll()
+        microphoneLevel = 0; queuedPlayback = 0
+        player?.stop()
+        if !pressed { player?.play(); listenAfter = Date().addingTimeInterval(0.3) }
+        status = pressed ? "Talking to room" : "Listening to room"
+    }
+
+    // Cached GCP microphone reads do not renew the PCB call lease. Refresh it
+    // through the existing authenticated microphone RPC without playing its data.
+    private func keepAlive(run: UUID) async {
+        while active, run == generation, !Task.isCancelled {
+            try? await Task.sleep(for: .seconds(5))
+            guard active, run == generation, !Task.isCancelled,
+                  let url = endpoint("call/pcm"), let token, let session else { return }
+            var request = URLRequest(url: url)
+            SensorClient.authorize(&request)
+            request.setValue(token, forHTTPHeaderField: "X-Call-Token")
+            do {
+                let (_, response) = try await session.data(for: request)
+                guard run == generation, active else { return }
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                guard code == 200 else { throw CallError.httpStatus(code) }
+            } catch {
+                if !(await recover(error, receiving: true, run: run)) { return }
             }
         }
     }
@@ -244,9 +289,10 @@ final class LANCallClient: ObservableObject {
 
     func stop(message: String = "Call ended") {
         if active || connecting { recordCallEvent("stop", message: message) }
-        generation = UUID(); active = false; connecting = false
+        generation = UUID(); active = false; connecting = false; talking = false; talkTurn = UUID()
         uploadFailureSince = nil; receiveFailureSince = nil
         receiveTask?.cancel(); receiveTask = nil
+        keepAliveTask?.cancel(); keepAliveTask = nil
         engine?.inputNode.removeTap(onBus: 0); player?.stop(); engine?.stop()
         engine = nil; player = nil; uploading = false; queuedPlayback = 0; microphonePending.removeAll()
         if let url = endpoint("call/stop"), let token {
@@ -279,6 +325,7 @@ struct LANCallView: View {
     @StateObject private var call = LANCallClient()
     @Environment(\.scenePhase) private var scenePhase
     var body: some View {
+        ScrollView {
         VStack(spacing: 24) {
             Image(systemName: call.active ? "waveform.circle.fill" : "phone.circle").font(.system(size: 76)).foregroundStyle(CitraverseTheme.accent)
             Text(call.status).multilineTextAlignment(.center)
@@ -294,7 +341,20 @@ struct LANCallView: View {
                     }.accessibilityLabel("Room listening volume")
                 }.font(.caption).monospacedDigit()
             }
-            Text("Talk to the room and hear its microphone over your configured device connection. Keep the device speaker away from its microphone while testing.").font(.footnote).foregroundStyle(.secondary)
+            if call.active {
+                Text(call.talking ? "Release to listen" : "Hold to talk")
+                    .font(.headline).padding(24).frame(maxWidth: .infinity)
+                    .background(call.talking ? Color.orange : CitraverseTheme.accent)
+                    .foregroundStyle(.white).clipShape(RoundedRectangle(cornerRadius: 16))
+                    .contentShape(Rectangle())
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged { _ in call.setTalking(true) }
+                        .onEnded { _ in call.setTalking(false) })
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityAction(named: Text("Start talking")) { call.setTalking(true) }
+                    .accessibilityAction(named: Text("Stop talking")) { call.setTalking(false) }
+            }
+            Text("Walkie-talkie mode: hold the button to speak through the PCB speaker. Release it to hear the room. Only one direction plays at a time.").font(.footnote).foregroundStyle(.secondary)
             if call.active || call.connecting {
                 Button("End call", role: .destructive) { call.stop() }.buttonStyle(.borderedProminent)
             } else {
@@ -302,7 +362,8 @@ struct LANCallView: View {
             }
             Text("The room microphone is recorded continuously to the device SD card when storage is available, including outside calls.").font(.caption).foregroundStyle(.secondary)
             Text("Calls stop when you leave this screen or the app leaves the foreground. Audio is not saved on this iPhone.").font(.caption).foregroundStyle(.secondary)
-        }.padding(28).navigationTitle("Call room")
+        }.padding(28)
+        }.navigationTitle("Call room")
             .onDisappear { call.stop() }
             .onChange(of: scenePhase) { _, phase in if phase != .active { call.stop() } }
             .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { notification in
