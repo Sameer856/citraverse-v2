@@ -12,9 +12,10 @@ class StatusMemoryTest(unittest.TestCase):
         if not shutil.which('clang'):
             self.skipTest('host clang required')
         source=(Path(__file__).parents[1]/'main/radar_wifi.c').read_text()
-        handler=source[source.index('static esp_err_t status('):source.index('static esp_err_t ws(')]
+        handler=source[source.index('bool radar_wifi_status_json('):source.index('static esp_err_t ws(')]
         fixture=r'''
 #include <assert.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

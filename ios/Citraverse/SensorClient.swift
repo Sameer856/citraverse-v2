@@ -183,6 +183,20 @@ final class SensorClient: ObservableObject {
         parts.queryItems = [URLQueryItem(name: "after", value: String(after))]
         return parts.url
     }
+    static func callSpeakerStreamURL(origin: URL) -> URL? {
+        guard isCloudURL(origin), var parts = URLComponents(url: origin.appendingPathComponent("call/stream"), resolvingAgainstBaseURL: false) else { return nil }
+        parts.scheme = "wss"
+        return parts.url
+    }
+    static func callSpeakerPacket(sequence: UInt32, pcm: Data) -> Data? {
+        guard !pcm.isEmpty, pcm.count <= 3840, pcm.count % 2 == 0 else { return nil }
+        var packet = Data()
+        for word: UInt32 in [0x31545450, sequence] {
+            for shift in stride(from: 0, to: 32, by: 8) { packet.append(UInt8(truncatingIfNeeded: word >> shift)) }
+        }
+        packet.append(pcm)
+        return packet
+    }
     static func transientCallStatus(_ status: Int) -> Bool {
         [429, 500, 502, 503, 504].contains(status)
     }

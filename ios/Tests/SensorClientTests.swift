@@ -65,6 +65,12 @@ private final class MockProtocol: URLProtocol, @unchecked Sendable {
         precondition(CloudAccess.scope(for: URL(string: "https://other.example/v1/devices/pcb-01")!) != cloud)
         precondition(SensorClient.callReceiveURL(origin: URL(string: cloud)!, after: 7)?.absoluteString == cloud + "/audio/live?after=7")
         precondition(SensorClient.callReceiveURL(origin: URL(string: "http://192.168.1.10:81/")!, after: 7)?.absoluteString == "http://192.168.1.10:81/call/pcm?after=7")
+        precondition(SensorClient.callSpeakerStreamURL(origin: URL(string: cloud)!)?.absoluteString == cloud.replacingOccurrences(of: "https://", with: "wss://") + "/call/stream")
+        precondition(SensorClient.callSpeakerStreamURL(origin: URL(string: "http://192.168.1.10:81/")!) == nil)
+        let signedSamples = Data([0,128,255,255,0,0,255,127])
+        precondition(SensorClient.callSpeakerPacket(sequence: 0x12345678, pcm: signedSamples) == Data([0x50,0x54,0x54,0x31,0x78,0x56,0x34,0x12]) + signedSamples)
+        precondition(SensorClient.callSpeakerPacket(sequence: 1, pcm: Data([1])) == nil)
+        precondition(SensorClient.callSpeakerPacket(sequence: 1, pcm: Data(count: 3842)) == nil)
         for code in [429, 500, 502, 503, 504] { precondition(SensorClient.transientCallStatus(code)) }
         for code in [200, 400, 401, 403, 409] { precondition(!SensorClient.transientCallStatus(code)) }
         let json = #"{"frames":91,"viewer_copy_drops":0,"age_ms":25,"free_heap":123456,"buffered_frames":8,"client_overrun_frames":0}"#

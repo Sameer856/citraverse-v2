@@ -22,6 +22,12 @@ final class LANCallClient: ObservableObject {
     private var session: URLSession?
     private var receiveTask: Task<Void, Never>?
     private var keepAliveTask: Task<Void, Never>?
+    private var speakerTask: Task<Void, Never>?
+    private var speakerSocket: URLSessionWebSocketTask?
+    private var speakerSequence: UInt32 = 0
+    private var speakerPending: [UInt32: (turn: UUID, samples: Int)] = [:]
+    private var cloudSpeaker = false
+    private var finishingTalk = false
     private var talkTurn = UUID()
     private var listenAfter = Date.distantPast
     private var token: String?
@@ -70,11 +76,14 @@ final class LANCallClient: ObservableObject {
                   let reply = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let lease = reply["token"] as? String, lease.count == 32 else { throw CallError.unavailable }
             token = lease
+            cloudSpeaker = SensorClient.isCloudURL(url)
+            if cloudSpeaker { try await openSpeakerStream(run: run) }
             try prepareAudio(run: run)
             active = true; connecting = false; talking = false; status = "Listening to room"
             recordCallEvent("connected", message: status)
             receiveTask = Task { [weak self] in await self?.receive(run: run) }
             keepAliveTask = Task { [weak self] in await self?.keepAlive(run: run) }
+            if cloudSpeaker { speakerTask = Task { [weak self] in await self?.receiveSpeakerAcks(run: run) } }
         } catch {
             if run == generation { stop(message: "Call failed: \(error.localizedDescription)") }
         }
@@ -131,11 +140,26 @@ final class LANCallClient: ObservableObject {
         if microphonePending.count > 7680 { microphonePending.removeFirst(microphonePending.count - 7680) }
         guard !uploading, let url = endpoint("call/pcm"), let token, let session else { return }
         uploading = true
-        defer { if run == generation { uploading = false; if !talking { listenAfter = Date().addingTimeInterval(0.3) } } }
-        while active, talking, turn == talkTurn, run == generation, microphonePending.count >= 3200 {
+        defer { if run == generation { uploading = false; if !talking { listenAfter = Date().addingTimeInterval(0.8) } } }
+        while active, talking, turn == talkTurn, run == generation, microphonePending.count >= (cloudSpeaker ? 3840 : 3200) {
+            if cloudSpeaker && (speakerSocket == nil || speakerPending.count >= 4) { break }
             let count = min(3840, microphonePending.count / 640 * 640)
-            let packet = microphonePending.prefix(count)
+            let packet = Data(microphonePending.prefix(count))
             microphonePending.removeFirst(count)
+            if cloudSpeaker {
+                guard let socket = speakerSocket else { break }
+                speakerSequence &+= 1
+                let sequence = speakerSequence
+                guard let frame = SensorClient.callSpeakerPacket(sequence: sequence, pcm: packet) else { return }
+                speakerPending[sequence] = (turn, packet.count / 2)
+                do { try await socket.send(.data(frame)) }
+                catch {
+                    speakerPending.removeValue(forKey: sequence)
+                    if speakerSocket === socket { socket.cancel(with: .goingAway, reason: nil); speakerSocket = nil }
+                    // Uncertain packets are never resent; the ACK reader reconnects.
+                }
+                continue
+            }
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             SensorClient.authorize(&request)
@@ -162,7 +186,7 @@ final class LANCallClient: ObservableObject {
     private func receive(run: UUID) async {
         var sequence: UInt32 = 0
         while active, run == generation, !Task.isCancelled {
-            if talking || uploading || Date() < listenAfter {
+            if talking || uploading || finishingTalk || !speakerPending.isEmpty || Date() < listenAfter {
                 sequence = 0
                 try? await Task.sleep(for: .milliseconds(40))
                 continue
@@ -217,12 +241,89 @@ final class LANCallClient: ObservableObject {
         }
     }
 
+    private func openSpeakerStream(run: UUID) async throws {
+        guard let origin, let url = SensorClient.callSpeakerStreamURL(origin: origin),
+              let token, let session else { throw CallError.invalidReply }
+        var request = URLRequest(url: url)
+        SensorClient.authorize(&request)
+        request.setValue(token, forHTTPHeaderField: "X-Call-Token")
+        let socket = session.webSocketTask(with: request)
+        socket.maximumMessageSize = 4096
+        socket.resume()
+        do {
+            let message = try await socket.receive()
+            let data: Data
+            switch message { case .string(let text): data = Data(text.utf8); case .data(let bytes): data = bytes; @unknown default: throw CallError.invalidReply }
+            guard let reply = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { throw CallError.invalidReply }
+            if reply["kind"] as? String == "error" { throw CallError.httpStatus(reply["status"] as? Int ?? 503) }
+            guard reply["kind"] as? String == "ready", reply["max_inflight"] as? Int == 4,
+                  reply["packet_samples"] as? Int == 1920, reply["sample_rate"] as? Int == 16000, run == generation else { throw CallError.invalidReply }
+            speakerSequence = 0; speakerPending.removeAll(); speakerSocket = socket
+        } catch { socket.cancel(with: .goingAway, reason: nil); throw error }
+    }
+
+    private func receiveSpeakerAcks(run: UUID) async {
+        while active, run == generation, !Task.isCancelled {
+            do {
+                if speakerSocket == nil { try await openSpeakerStream(run: run) }
+                guard let socket = speakerSocket else { continue }
+                let message = try await socket.receive()
+                guard active, run == generation, speakerSocket === socket else { continue }
+                let data: Data
+                switch message { case .string(let text): data = Data(text.utf8); case .data(let bytes): data = bytes; @unknown default: throw CallError.invalidReply }
+                guard let ack = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                      ack["kind"] as? String == "ack", let number = ack["sequence"] as? UInt32,
+                      let code = ack["status"] as? Int,
+                      let entry = speakerPending.removeValue(forKey: number) else { throw CallError.invalidReply }
+                if speakerPending.isEmpty && !talking { listenAfter = Date().addingTimeInterval(0.8) }
+                if code == 200 {
+                    guard ack["accepted_samples"] as? Int == entry.samples else { throw CallError.invalidReply }
+                    sentPackets += 1; uploadFailureSince = nil
+                    if receiveFailureSince == nil { status = talking ? "Talking to room" : "Listening to room" }
+                } else if entry.turn == talkTurn {
+                    if !(await recover(CallError.httpStatus(code), receiving: false, run: run)) { return }
+                }
+            } catch {
+                guard active, run == generation, !Task.isCancelled else { return }
+                speakerSocket?.cancel(with: .goingAway, reason: nil); speakerSocket = nil
+                speakerPending.removeAll(); microphonePending.removeAll()
+                let failure: Error = error is CallError ? error : URLError(.networkConnectionLost)
+                if !(await recover(failure, receiving: false, run: run)) { return }
+            }
+        }
+    }
+
+    private func finishSpeakerTail(_ pcm: Data, turn: UUID, run: UUID) async {
+        defer { if turn == talkTurn && run == generation { finishingTalk = false; listenAfter = Date().addingTimeInterval(0.8) } }
+        let deadline = Date().addingTimeInterval(0.3)
+        while speakerPending.count >= 4 && Date() < deadline && turn == talkTurn && active {
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+        guard active, !talking, turn == talkTurn, run == generation,
+              speakerPending.count < 4, let socket = speakerSocket else { return }
+        speakerSequence &+= 1
+        let sequence = speakerSequence
+        guard let frame = SensorClient.callSpeakerPacket(sequence: sequence, pcm: pcm) else { return }
+        speakerPending[sequence] = (turn, pcm.count / 2)
+        do { try await socket.send(.data(frame)) }
+        catch {
+            speakerPending.removeValue(forKey: sequence)
+            if speakerSocket === socket { socket.cancel(with: .goingAway, reason: nil); speakerSocket = nil }
+        }
+    }
+
     func setTalking(_ pressed: Bool) {
         guard active, talking != pressed else { return }
-        talking = pressed; talkTurn = UUID(); microphonePending.removeAll()
+        let tail = Data(microphonePending.prefix(min(3840, microphonePending.count / 640 * 640)))
+        talking = pressed; talkTurn = UUID(); microphonePending.removeAll(); finishingTalk = false
+        if !pressed && cloudSpeaker && !tail.isEmpty {
+            finishingTalk = true
+            let turn = talkTurn, run = generation
+            Task { [weak self] in await self?.finishSpeakerTail(tail, turn: turn, run: run) }
+        }
         microphoneLevel = 0; queuedPlayback = 0
         player?.stop()
-        if !pressed { player?.play(); listenAfter = Date().addingTimeInterval(0.3) }
+        if !pressed { player?.play(); listenAfter = Date().addingTimeInterval(0.8) }
         status = pressed ? "Talking to room" : "Listening to room"
     }
 
@@ -233,6 +334,7 @@ final class LANCallClient: ObservableObject {
             try? await Task.sleep(for: .seconds(5))
             guard active, run == generation, !Task.isCancelled,
                   let url = endpoint("call/pcm"), let token, let session else { return }
+            speakerSocket?.sendPing { _ in }
             var request = URLRequest(url: url)
             SensorClient.authorize(&request)
             request.setValue(token, forHTTPHeaderField: "X-Call-Token")
@@ -289,10 +391,12 @@ final class LANCallClient: ObservableObject {
 
     func stop(message: String = "Call ended") {
         if active || connecting { recordCallEvent("stop", message: message) }
-        generation = UUID(); active = false; connecting = false; talking = false; talkTurn = UUID()
+        generation = UUID(); active = false; connecting = false; talking = false; talkTurn = UUID(); finishingTalk = false
         uploadFailureSince = nil; receiveFailureSince = nil
         receiveTask?.cancel(); receiveTask = nil
         keepAliveTask?.cancel(); keepAliveTask = nil
+        speakerTask?.cancel(); speakerTask = nil
+        speakerSocket?.cancel(with: .normalClosure, reason: nil); speakerSocket = nil; speakerPending.removeAll()
         engine?.inputNode.removeTap(onBus: 0); player?.stop(); engine?.stop()
         engine = nil; player = nil; uploading = false; queuedPlayback = 0; microphonePending.removeAll()
         if let url = endpoint("call/stop"), let token {

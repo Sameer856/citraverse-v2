@@ -2,9 +2,11 @@
 /* Cloud routing is copy-only at acquisition hooks. Audio/I2S and SD acquisition remain independent.
  * No TLS, HTTP or cloud waits occur in radar or microphone callbacks. */
 #include "radar_cloud.h"
+#include "radar_wifi.h"
+#include "radar_power.h"
 #include "radar_ota.h"
 #include "esp_websocket_client.h"
-#include "esp_http_client.h"
+#include "radar_audio.h"
 #include "esp_crt_bundle.h"
 #include "esp_timer.h"
 #include "esp_random.h"
@@ -160,18 +162,6 @@ static bool command_allowed(const char *method,const char *path) {
     for(;*n;n++)if(!isdigit((unsigned char)*n))return false;
     return true;
 }
-/* fetch_headers may have buffered the entire body already. Completion means
- * network receipt, not that the caller has consumed those buffered bytes. */
-static int read_rpc_body(esp_http_client_handle_t h,uint8_t *response,int capacity) {
-    int used=0;
-    while(used<capacity) {
-        int n=esp_http_client_read(h,(char*)response+used,capacity-used);
-        if(n<0)return -1;
-        if(!n)return esp_http_client_is_complete_data_received(h)?used:-1;
-        used+=n;
-    }
-    return -1;
-}
 static void execute(char *text) {
     cJSON *j=cJSON_Parse(text);free(text);if(!j)return;
     const cJSON *kind=cJSON_GetObjectItemCaseSensitive(j,"kind");
@@ -199,23 +189,16 @@ static void execute(char *text) {
         }
         used=strlen((const char*)response);goto done;
     }
-    char target[128];snprintf(target,sizeof(target),"http://127.0.0.1:%d%s",!strncmp(path->valuestring,"/api/",5)?80:81,path->valuestring);
-    esp_http_client_config_t cfg={.url=target,.timeout_ms=1500,.buffer_size=1024,.disable_auto_redirect=true};
-    esp_http_client_handle_t h=esp_http_client_init(&cfg);if(!h)goto done;
-    bool post=!strcmp(method->valuestring,"POST");esp_http_client_set_method(h,post?HTTP_METHOD_POST:HTTP_METHOD_GET);
-    esp_http_client_set_header(h,"Content-Type","application/octet-stream");
-    if(cJSON_IsString(token) && strlen(token->valuestring)==32)esp_http_client_set_header(h,"X-Call-Token",token->valuestring);
-    if(esp_http_client_open(h,(int)length)==ESP_OK) {
-        size_t offset=0;
-        while(offset<length){int n=esp_http_client_write(h,(const char*)request+offset,length-offset);if(n<=0)break;offset+=n;}
-        if(offset==length && esp_http_client_fetch_headers(h)>=0) {
-            status=esp_http_client_get_status_code(h);
-            used=read_rpc_body(h,response,8192);
-            if(used<0){status=502;used=0;}
-        }
-        esp_http_client_close(h);
+    /* Read telemetry directly: a slow LAN preview socket must not block the
+       single cloud command worker and starve speaker traffic behind it. */
+    if(!strcmp(method->valuestring,"GET") && (!strcmp(path->valuestring,"/api/status") || !strcmp(path->valuestring,"/api/power"))) {
+        bool ok=!strcmp(path->valuestring,"/api/status")?radar_wifi_status_json((char*)response,8192):radar_power_json((char*)response,8192);
+        status=ok?200:503;used=ok?strlen((char*)response):0;goto done;
     }
-    esp_http_client_cleanup(h);
+    size_t response_length=0;
+    status=radar_audio_call_rpc(method->valuestring,path->valuestring,cJSON_IsString(token)?token->valuestring:"",request,length,response,8192,&response_length);
+    used=(int)response_length;
+
 done:
     if(response) {
         size_t cap=4*((used+2)/3)+1,encoded=0;char *b64=malloc(cap);

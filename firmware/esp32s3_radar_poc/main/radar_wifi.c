@@ -100,11 +100,11 @@ static esp_err_t page(httpd_req_t *req) {
     httpd_resp_set_hdr(req,"Cache-Control","no-store");
     return httpd_resp_send(req,(const char*)page_start,page_end-page_start-1);
 }
-static esp_err_t status(httpd_req_t *req) {
+bool radar_wifi_status_json(char *output,size_t capacity) {
     /* Large JSON buffers belong in PSRAM, not on the HTTP task stack. */
     typedef struct {char body[2048],environment[320],storage[192],cloud[960],rgb[128];} buffers_t;
     buffers_t *buffers=heap_caps_malloc(sizeof(*buffers),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
-    if(!buffers)return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Status memory unavailable");
+    if(!buffers)return false;
     uint32_t count,kept,overruns;int64_t age;
     wifi_ap_record_t ap={0};int rssi=esp_wifi_sta_get_ap_info(&ap)==ESP_OK?ap.rssi:0;
     pcb_status_json(buffers->rgb,sizeof(buffers->rgb));
@@ -114,7 +114,16 @@ static esp_err_t status(httpd_req_t *req) {
              (unsigned long)count,(unsigned long)__atomic_load_n(&skipped,__ATOMIC_RELAXED),(long long)age,(unsigned long)esp_get_free_heap_size(),(unsigned long)kept,(unsigned long)overruns,rssi);
     size_t used=strlen(buffers->body);
     if(used && buffers->body[used-1]=='}')snprintf(buffers->body+used-1,sizeof(buffers->body)-used+1,",\"environment\":%s,\"storage\":%s,\"lan_calls\":%s,\"cloud\":%s,\"rgb\":%s}",buffers->environment,buffers->storage,radar_audio_call_ready()?"true":"false",buffers->cloud,buffers->rgb);
-    httpd_resp_set_type(req,"application/json");esp_err_t result=httpd_resp_sendstr(req,buffers->body);free(buffers);return result;
+    size_t length=strlen(buffers->body);
+    bool fits=length+1<=capacity;
+    if(fits)memcpy(output,buffers->body,length+1);
+    free(buffers);return fits;
+}
+static esp_err_t status(httpd_req_t *req) {
+    char *body=heap_caps_malloc(2048,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!body)return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Status memory unavailable");
+    if(!radar_wifi_status_json(body,2048)){free(body);return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Status memory unavailable");}
+    httpd_resp_set_type(req,"application/json");esp_err_t result=httpd_resp_sendstr(req,body);free(body);return result;
 }
 static esp_err_t ws(httpd_req_t *req) {
     if(req->method==HTTP_GET) return ESP_OK;

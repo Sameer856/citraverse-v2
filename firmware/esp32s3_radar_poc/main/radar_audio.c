@@ -2,6 +2,7 @@
 #include "radar_storage.h"
 #include "radar_cloud.h"
 #include "speaker_gain.h"
+#include "speaker_buffer.h"
 #include "driver/i2s_std.h"
 #include "driver/gpio.h"
 #include "esp_random.h"
@@ -28,6 +29,8 @@
 #define BATCH 5
 static i2s_chan_handle_t rx, tx;
 static QueueHandle_t speaker_queue;
+static StaticQueue_t speaker_queue_control;
+static uint8_t *speaker_queue_memory;
 static char call_token[33];
 static uint32_t call_generation, call_last_ms, speaker_last_ms;
 static bool call_active;
@@ -39,10 +42,10 @@ typedef struct { uint32_t generation; int16_t pcm[SAMPLES]; } speaker_block_t;
 static uint32_t audio_now_ms(void) { return (uint32_t)(esp_timer_get_time()/1000); }
 static bool call_live(void) { return __atomic_load_n(&call_active,__ATOMIC_ACQUIRE) &&
     (uint32_t)(audio_now_ms()-__atomic_load_n(&call_last_ms,__ATOMIC_RELAXED))<20000; }
-static SemaphoreHandle_t mutex;
+static SemaphoreHandle_t mutex,call_guard;
 static uint32_t sequence, errors, retained;
 static uint32_t tx_blocks,tx_errors,tx_audible,tx_accepted;
-static uint32_t tx_input_peak,tx_output_peak,tx_gain_q16;
+static uint32_t tx_input_peak,tx_output_peak,tx_gain_q16,tx_starvations;
 static uint32_t requests,send_errors,max_send_ms,last_request_ms;
 void radar_audio_stats(radar_audio_stats_t *out) {
     memset(out,0,sizeof(*out));
@@ -54,6 +57,8 @@ void radar_audio_stats(radar_audio_stats_t *out) {
     out->tx_input_peak=__atomic_load_n(&tx_input_peak,__ATOMIC_RELAXED);
     out->tx_output_peak=__atomic_load_n(&tx_output_peak,__ATOMIC_RELAXED);
     out->tx_gain_q16=__atomic_load_n(&tx_gain_q16,__ATOMIC_RELAXED);
+    out->tx_starvations=__atomic_load_n(&tx_starvations,__ATOMIC_RELAXED);
+    out->tx_queue_depth=speaker_queue?uxQueueMessagesWaiting(speaker_queue):0;
     out->call_active=call_live();out->amp_level=gpio_get_level(39);
     out->requests=__atomic_load_n(&requests,__ATOMIC_RELAXED);
     out->send_errors=__atomic_load_n(&send_errors,__ATOMIC_RELAXED);
@@ -161,77 +166,102 @@ static esp_err_t socket_open(httpd_handle_t server,int fd) {
     (void)server;int enabled=1;
     return setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,&enabled,sizeof(enabled))==0?ESP_OK:ESP_FAIL;
 }
-/* One foreground LAN caller. A short lease mutes speaker after disconnect. */
-static bool call_authorized(httpd_req_t *r) {
-    char supplied[40]={0};
-    if(!call_live() || httpd_req_get_hdr_value_str(r,"X-Call-Token",supplied,sizeof(supplied))!=ESP_OK || strcmp(supplied,call_token)) {
-        httpd_resp_set_status(r,"403 Forbidden"); httpd_resp_sendstr(r,"Call expired"); return false;
+/* LAN and cloud use this same lease/PCM engine. No loopback TCP in cloud
+ * audio. Only short state/queue operations hold call_guard, never network I/O. */
+static int call_reply(void *output,size_t capacity,size_t *length,int status,const char *text) {
+    size_t n=strlen(text);*length=0;
+    if(n>capacity)return 503;
+    memcpy(output,text,n);*length=n;return status;
+}
+int radar_audio_call_rpc(const char *method,const char *path,const char *supplied,
+        const void *input,size_t input_length,void *output,size_t capacity,size_t *length) {
+    if(!length || !output)return 503;
+    *length=0;if(!call_guard)return 503;
+    xSemaphoreTake(call_guard,portMAX_DELAY);
+    int status=404;
+    if(!strcmp(method,"POST") && !strcmp(path,"/call/start")) {
+        if(capacity<80){status=503;goto done;}
+        if(call_live()){status=call_reply(output,capacity,length,409,"Room already in a call");goto done;}
+        __atomic_store_n(&call_active,false,__ATOMIC_RELEASE);
+        __atomic_add_fetch(&call_generation,1,__ATOMIC_RELAXED);
+        xQueueReset(speaker_queue);partial_samples=0;
+        uint8_t random[16];esp_fill_random(random,sizeof(random));
+        for(unsigned i=0;i<16;i++)snprintf(call_token+2*i,3,"%02x",random[i]);
+        __atomic_store_n(&call_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
+        __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
+        __atomic_store_n(&call_active,true,__ATOMIC_RELEASE);
+        int n=snprintf(output,capacity,"{\"token\":\"%s\",\"sample_rate\":16000}",call_token);
+        *length=n;status=200;goto done;
+    }
+    if(!call_live() || !supplied || strcmp(supplied,call_token)) {
+        status=call_reply(output,capacity,length,403,"Call expired");goto done;
     }
     __atomic_store_n(&call_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
-    return true;
-}
-static esp_err_t call_start(httpd_req_t *r) {
-    if(call_live()) { httpd_resp_set_status(r,"409 Conflict"); return httpd_resp_sendstr(r,"Room already in a call"); }
-    __atomic_store_n(&call_active,false,__ATOMIC_RELEASE);
-    __atomic_add_fetch(&call_generation,1,__ATOMIC_RELAXED);
-    xQueueReset(speaker_queue);partial_samples=0;
-    uint8_t random[16];esp_fill_random(random,sizeof(random));
-    for(unsigned i=0;i<16;i++)snprintf(call_token+2*i,3,"%02x",random[i]);
-    __atomic_store_n(&call_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
-    __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
-    __atomic_store_n(&call_active,true,__ATOMIC_RELEASE);
-    char body[80];snprintf(body,sizeof(body),"{\"token\":\"%s\",\"sample_rate\":16000}",call_token);
-    httpd_resp_set_type(r,"application/json");httpd_resp_set_hdr(r,"Cache-Control","no-store");
-    return httpd_resp_sendstr(r,body);
-}
-static esp_err_t call_stop(httpd_req_t *r) {
-    if(!call_authorized(r))return ESP_OK;
-    __atomic_store_n(&call_active,false,__ATOMIC_RELEASE);
-    __atomic_add_fetch(&call_generation,1,__ATOMIC_RELAXED);
-    xQueueReset(speaker_queue);partial_samples=0;gpio_set_level(39,0);
-    return httpd_resp_sendstr(r,"Stopped");
-}
-static esp_err_t call_receive(httpd_req_t *r) {
-    if(!call_authorized(r))return ESP_OK;
-    char query[64]={0},value[24]={0};uint32_t after=0;
-    if(httpd_req_get_url_query_str(r,query,sizeof(query))==ESP_OK &&
-       httpd_query_key_value(query,"after",value,sizeof(value))==ESP_OK)after=strtoul(value,NULL,10);
-    static uint8_t output[20+BATCH*SAMPLES*2];
-    size_t count=pack_audio(after,0,output,20);
-    httpd_resp_set_type(r,"application/octet-stream");httpd_resp_set_hdr(r,"Cache-Control","no-store");
-    return httpd_resp_send(r,(const char*)output,count);
-}
-static esp_err_t call_transmit(httpd_req_t *r) {
-    if(!call_authorized(r))return ESP_OK;
-    if(r->content_len<2 || r->content_len>4096 || (r->content_len&1))
-        return httpd_resp_send_err(r,HTTPD_400_BAD_REQUEST,"PCM16 mono only; maximum 4096 bytes");
-    unsigned needed=(partial_samples+r->content_len/2)/SAMPLES;
-    if(uxQueueSpacesAvailable(speaker_queue)<needed) {
-        httpd_resp_set_status(r,"503 Service Unavailable");return httpd_resp_sendstr(r,"Speaker queue full");
+    if(!strcmp(method,"POST") && !strcmp(path,"/call/stop")) {
+        __atomic_store_n(&call_active,false,__ATOMIC_RELEASE);
+        __atomic_add_fetch(&call_generation,1,__ATOMIC_RELAXED);
+        xQueueReset(speaker_queue);partial_samples=0;gpio_set_level(39,0);
+        status=call_reply(output,capacity,length,200,"Stopped");goto done;
     }
-    uint8_t bytes[4096];int used=0;
-    while(used<r->content_len) {
-        int n=httpd_req_recv(r,(char*)bytes+used,r->content_len-used);
-        if(n<=0)return ESP_FAIL;
-        used+=n;
-    }
-    for(int offset=0;offset<used;offset+=2) {
-        partial_pcm[partial_samples++]=(int16_t)((uint16_t)bytes[offset]|((uint16_t)bytes[offset+1]<<8));
-        if(partial_samples==SAMPLES) {
-            speaker_block_t block={.generation=__atomic_load_n(&call_generation,__ATOMIC_RELAXED)};
-            memcpy(block.pcm,partial_pcm,sizeof(partial_pcm));partial_samples=0;
-            if(xQueueSend(speaker_queue,&block,0)!=pdTRUE)return ESP_FAIL;
-            __atomic_add_fetch(&tx_accepted,1,__ATOMIC_RELAXED);
+    if(!strcmp(method,"GET") && (!strcmp(path,"/call/pcm") || !strncmp(path,"/call/pcm?after=",16))) {
+        const char *cursor=path+9;uint32_t after=0;
+        if(*cursor){
+            cursor=path+16;
+            if(!*cursor || strlen(cursor)>10){status=400;goto done;}
+            for(const char *c=cursor;*c;c++)if(*c<'0'||*c>'9'){status=400;goto done;}
+            unsigned long long value=strtoull(cursor,NULL,10);
+            if(value>UINT32_MAX){status=400;goto done;}after=(uint32_t)value;
         }
+        if(capacity<20+BATCH*SAMPLES*2){status=503;goto done;}
+        *length=pack_audio(after,0,output,0);status=200;goto done;
     }
-    __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
-    return httpd_resp_sendstr(r,"OK");
+    if(!strcmp(method,"POST") && !strcmp(path,"/call/pcm")) {
+        if(!input || input_length<2 || input_length>4096 || (input_length&1)) {
+            status=call_reply(output,capacity,length,400,"PCM16 mono only; maximum 4096 bytes");goto done;
+        }
+        unsigned needed=(partial_samples+input_length/2)/SAMPLES;
+        if(uxQueueSpacesAvailable(speaker_queue)<needed){status=call_reply(output,capacity,length,503,"Speaker queue full");goto done;}
+        const uint8_t *bytes=input;
+        for(size_t offset=0;offset<input_length;offset+=2) {
+            partial_pcm[partial_samples++]=(int16_t)((uint16_t)bytes[offset]|((uint16_t)bytes[offset+1]<<8));
+            if(partial_samples==SAMPLES) {
+                speaker_block_t block={.generation=__atomic_load_n(&call_generation,__ATOMIC_RELAXED)};
+                memcpy(block.pcm,partial_pcm,sizeof(partial_pcm));partial_samples=0;
+                if(xQueueSend(speaker_queue,&block,0)!=pdTRUE){status=503;goto done;}
+                __atomic_add_fetch(&tx_accepted,1,__ATOMIC_RELAXED);
+            }
+        }
+        __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
+        status=call_reply(output,capacity,length,200,"OK");
+    }
+done:
+    xSemaphoreGive(call_guard);return status;
+}
+static esp_err_t call_http(httpd_req_t *r) {
+    if(r->content_len>4096)return httpd_resp_send_err(r,HTTPD_400_BAD_REQUEST,"Packet too large");
+    uint8_t *input=heap_caps_malloc(4096,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    uint8_t *output=heap_caps_malloc(4096,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!input || !output){free(input);free(output);return httpd_resp_send_err(r,HTTPD_500_INTERNAL_SERVER_ERROR,"Call memory unavailable");}
+    size_t used=0;
+    while(used<r->content_len){int n=httpd_req_recv(r,(char*)input+used,r->content_len-used);if(n<=0){free(input);free(output);return ESP_FAIL;}used+=n;}
+    char supplied[40]={0};httpd_req_get_hdr_value_str(r,"X-Call-Token",supplied,sizeof(supplied));
+    size_t length=0;int status=radar_audio_call_rpc(r->method==HTTP_POST?"POST":"GET",r->uri,supplied,input,used,output,4096,&length);
+    const char *line=status==200?"200 OK":status==400?"400 Bad Request":status==403?"403 Forbidden":status==409?"409 Conflict":status==404?"404 Not Found":"503 Service Unavailable";
+    httpd_resp_set_status(r,line);httpd_resp_set_hdr(r,"Cache-Control","no-store");
+    httpd_resp_set_type(r,!strcmp(r->uri,"/call/start")?"application/json":"application/octet-stream");
+    esp_err_t result=httpd_resp_send(r,(const char*)output,length);free(input);free(output);return result;
 }
 static void speaker_play(void *unused) {
     (void)unused;
-    speaker_block_t block;int32_t output[SAMPLES*2];uint32_t gain_q8=256;
+    speaker_block_t block;int32_t output[SAMPLES*2];uint32_t gain_q8=256,play_generation=0;
+    speaker_buffer_t buffering={0};
     while(1) {
-        bool audible=xQueueReceive(speaker_queue,&block,0)==pdTRUE && call_live() &&
+        uint32_t current_generation=__atomic_load_n(&call_generation,__ATOMIC_RELAXED);
+        if(current_generation!=play_generation){buffering=(speaker_buffer_t){0};play_generation=current_generation;}
+        uint32_t queued=uxQueueMessagesWaiting(speaker_queue);
+        if(buffering.primed && !queued && call_live())__atomic_add_fetch(&tx_starvations,1,__ATOMIC_RELAXED);
+        bool ready=speaker_buffer_ready(&buffering,queued,audio_now_ms());
+        bool audible=ready && xQueueReceive(speaker_queue,&block,0)==pdTRUE && call_live() &&
             block.generation==__atomic_load_n(&call_generation,__ATOMIC_RELAXED);
         if(audible)__atomic_add_fetch(&tx_audible,1,__ATOMIC_RELAXED);
         uint32_t peak=0;
@@ -264,10 +294,13 @@ static void speaker_play(void *unused) {
 }
 esp_err_t radar_audio_start(void) {
     gpio_set_direction(39,GPIO_MODE_INPUT_OUTPUT);gpio_set_level(39,0);
-    speaker_queue=xQueueCreate(12,sizeof(speaker_block_t));if(!speaker_queue)return ESP_ERR_NO_MEM;
+    speaker_queue_memory=heap_caps_malloc(32*sizeof(speaker_block_t),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!speaker_queue_memory)return ESP_ERR_NO_MEM;
+    speaker_queue=xQueueCreateStatic(32,sizeof(speaker_block_t),speaker_queue_memory,&speaker_queue_control);
+    if(!speaker_queue)return ESP_ERR_NO_MEM;
     ring=heap_caps_calloc(DEPTH,sizeof(*ring),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
     if(!ring)return ESP_ERR_NO_MEM;
-    mutex=xSemaphoreCreateMutex();if(!mutex) return ESP_ERR_NO_MEM;
+    mutex=xSemaphoreCreateMutex();call_guard=xSemaphoreCreateMutex();if(!mutex || !call_guard) return ESP_ERR_NO_MEM;
     i2s_chan_config_t channel=I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO,I2S_ROLE_MASTER);
     channel.dma_desc_num=8;channel.dma_frame_num=SAMPLES;
     esp_err_t err=i2s_new_channel(&channel,&tx,&rx);if(err!=ESP_OK) return err;
@@ -291,10 +324,10 @@ esp_err_t radar_audio_start(void) {
     httpd_uri_t stream={.uri="/pcm",.method=HTTP_GET,.handler=chunk};
     err=httpd_register_uri_handler(server,&home);if(err!=ESP_OK)return err;
     err=httpd_register_uri_handler(server,&stream);if(err!=ESP_OK)return err;
-    httpd_uri_t begin_call={.uri="/call/start",.method=HTTP_POST,.handler=call_start};
-    httpd_uri_t end_call={.uri="/call/stop",.method=HTTP_POST,.handler=call_stop};
-    httpd_uri_t mic_call={.uri="/call/pcm",.method=HTTP_GET,.handler=call_receive};
-    httpd_uri_t speaker_call={.uri="/call/pcm",.method=HTTP_POST,.handler=call_transmit};
+    httpd_uri_t begin_call={.uri="/call/start",.method=HTTP_POST,.handler=call_http};
+    httpd_uri_t end_call={.uri="/call/stop",.method=HTTP_POST,.handler=call_http};
+    httpd_uri_t mic_call={.uri="/call/pcm",.method=HTTP_GET,.handler=call_http};
+    httpd_uri_t speaker_call={.uri="/call/pcm",.method=HTTP_POST,.handler=call_http};
     err=httpd_register_uri_handler(server,&begin_call);if(err!=ESP_OK)return err;
     err=httpd_register_uri_handler(server,&end_call);if(err!=ESP_OK)return err;
     err=httpd_register_uri_handler(server,&mic_call);if(err!=ESP_OK)return err;

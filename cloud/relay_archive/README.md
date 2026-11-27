@@ -1,3 +1,27 @@
+## Persistent walkie-talkie speaker stream — 27 November 2026
+
+`wss://SERVICE/v1/devices/ID/call/stream` uses the existing app bearer key and
+`X-Call-Token` from `/call/start`. It validates the actual PCB lease before sending
+`ready` (16 kHz, 1920 samples maximum, four in-flight packets). Each binary message
+is little-endian `PTT1`, uint32 sequence (starting at 1), then PCM16 mono bytes
+(maximum 3840). The server publishes requests in order and acknowledges sequence,
+HTTP status and accepted sample count after the PCB accepts the packet. Unknown,
+repeated, odd or oversized frames are rejected; excess in-flight packets receive
+429. Uncertain/timed-out speaker packets are never automatically replayed.
+
+This removes the phone's per-packet HTTP round-trip wait. The PCB retains one TLS
+link, dispatches calls directly into its shared token/lease/PCM engine, and renders
+status directly rather than doing loopback HTTP. LAN HTTP wrappers use that same
+engine. A 32-block queue in PSRAM has 240 ms priming and a 640 ms capacity. Gain
+remains fixed 1×. The app still uses hold-to-talk/release-to-listen, bounded capture
+backlog, a short tail flush, and five-second lease renewals plus WebSocket pings.
+Radar/microphone capture, SD recording and GCS archives remain independent.
+
+The previous HTTP call API remains supported. Keep Cloud Run revision
+`citraverse-pcb-route-00009-mzs` and Git tag `firmware-v1.1.0-rc9` for the previous
+HTTP-only app/firmware baseline. Do not roll the backend back alone while leaving
+the streaming-only cloud speaker client installed.
+
 ## Audio/radar iteration — 27 November 2026
 
 RC5 uses the existing `/link` with separate bounded queues and radar-first sends.

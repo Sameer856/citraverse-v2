@@ -437,6 +437,90 @@ def create_app(settings=None, bus=None, archive=None, audio_archive=None):
         require_http(request, device)
         return audio_archive.status(device)
 
+    async def device_request(device, method, path, body, call_token, publication_lock=None):
+        if len(pending) >= 128 or sum(1 for d, _ in pending if d == device) >= 16:
+            raise HTTPException(503, "Device route busy")
+        key = (device, uuid.uuid4().hex)
+        future = asyncio.get_running_loop().create_future()
+        pending[key] = future
+        try:
+            event = {"kind": "request", "device": device, "id": key[1], "method": method,
+                               "path": path,
+                               "call_token": call_token, "body": base64.b64encode(body).decode()}
+            if publication_lock is None:
+                await bus.publish(event)
+            else:
+                async with publication_lock:
+                    await bus.publish(event)
+            reply = await asyncio.wait_for(future, settings.rpc_timeout)
+            status = reply["status"]
+            if not 200 <= status <= 599:
+                raise HTTPException(502, "Invalid device response")
+            data = base64.b64decode(reply["body"], validate=True)
+            return status, data
+        except asyncio.TimeoutError:
+            raise HTTPException(504, "PCB offline or cloud route timed out")
+        except (RuntimeError, ValueError):
+            raise HTTPException(503, "Cloud route unavailable")
+        finally:
+            pending.pop(key, None)
+
+    @app.websocket("/v1/devices/{device}/call/stream")
+    async def call_stream(ws: WebSocket, device: str):
+        call_token = ws.headers.get("x-call-token", "")
+        if not ready or not settings.valid_token(device, "app", ws.headers.get("authorization", "")) or not HEX32.fullmatch(call_token):
+            await ws.close(code=1008); return
+        await ws.accept()
+        tasks = set()
+        publication_lock = asyncio.Lock()
+        send_lock = asyncio.Lock()
+        async def send(value):
+            async with send_lock:
+                await asyncio.wait_for(ws.send_json(value), 2)
+        async def deliver(sequence, pcm):
+            try:
+                status, _ = await device_request(device, "POST", "/call/pcm", pcm, call_token, publication_lock)
+            except HTTPException as error:
+                status = error.status_code
+            await send({"kind": "ack", "sequence": sequence, "status": status,
+                        "accepted_samples": len(pcm)//2 if status == 200 else 0})
+        try:
+            # Validate the actual exclusive PCB call lease, not only key syntax.
+            status, _ = await device_request(device, "GET", "/call/pcm?after=0", b"", call_token)
+            if status != 200:
+                await send({"kind": "error", "status": status}); return
+            await send({"kind": "ready", "max_inflight": 4, "packet_samples": 1920, "sample_rate": 16000})
+            previous = 0
+            while True:
+                message = await ws.receive()
+                if message["type"] == "websocket.disconnect": break
+                frame = message.get("bytes")
+                if frame is None or not 10 <= len(frame) <= 3848 or (len(frame)-8)%2:
+                    await ws.close(code=1008); break
+                magic, sequence = struct.unpack_from("<2I", frame)
+                if magic != 0x31545450 or sequence != ((previous+1)&0xffffffff):
+                    await ws.close(code=1008); break
+                previous = sequence
+                if len(tasks) >= 4:
+                    await send({"kind":"ack", "sequence":sequence,"status":429,"accepted_samples":0})
+                    continue
+                task = asyncio.create_task(deliver(sequence, bytes(frame[8:])))
+                tasks.add(task)
+                def finished(done):
+                    tasks.discard(done)
+                    # Consume send errors; closing the socket cancels the peer loop.
+                    if not done.cancelled() and done.exception():
+                        asyncio.create_task(ws.close(code=1011))
+                task.add_done_callback(finished)
+        except HTTPException as error:
+            with suppress(Exception): await send({"kind":"error", "status":error.status_code})
+        except (WebSocketDisconnect, RuntimeError, asyncio.TimeoutError):
+            pass
+        finally:
+            for task in tasks: task.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+            with suppress(Exception): await ws.close()
+
     @app.api_route("/v1/devices/{device}/{path:path}", methods=["GET", "POST"])
     async def route(device: str, path: str, request: Request):
         require_http(request, device)
@@ -464,28 +548,10 @@ def create_app(settings=None, bus=None, archive=None, audio_archive=None):
         call_token = request.headers.get("x-call-token", "")
         if path.startswith("call/") and path != "call/start" and not HEX32.fullmatch(call_token):
             raise HTTPException(403, "Call token required")
-        if len(pending) >= 128 or sum(1 for d, _ in pending if d == device) >= 16:
-            raise HTTPException(503, "Device route busy")
-        key = (device, uuid.uuid4().hex)
-        future = asyncio.get_running_loop().create_future()
-        pending[key] = future
-        try:
-            await bus.publish({"kind": "request", "device": device, "id": key[1], "method": method,
-                               "path": "/" + path + ("?after=" + after if method == "GET" and path == "call/pcm" else ""),
-                               "call_token": call_token, "body": base64.b64encode(body).decode()})
-            reply = await asyncio.wait_for(future, settings.rpc_timeout)
-            status = reply["status"]
-            if not 200 <= status <= 599:
-                raise HTTPException(502, "Invalid device response")
-            data = base64.b64decode(reply["body"], validate=True)
-            content_type = "application/json" if path in ("api/status", "api/power", "api/ota", "call/start") else "application/octet-stream"
-            return Response(data, status_code=status, media_type=content_type, headers={"Cache-Control": "no-store"})
-        except asyncio.TimeoutError:
-            raise HTTPException(504, "PCB offline or cloud route timed out")
-        except (RuntimeError, ValueError):
-            raise HTTPException(503, "Cloud route unavailable")
-        finally:
-            pending.pop(key, None)
+        target = "/" + path + ("?after=" + after if method == "GET" and path == "call/pcm" else "")
+        status, data = await device_request(device, method, target, body, call_token)
+        content_type = "application/json" if path in ("api/status", "api/power", "api/ota", "call/start") else "application/octet-stream"
+        return Response(data, status_code=status, media_type=content_type, headers={"Cache-Control": "no-store"})
 
     return app
 

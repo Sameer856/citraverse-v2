@@ -23,24 +23,31 @@ static esp_err_t apply(unsigned mhz) {
     return mhz==CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ?ESP_OK:ESP_ERR_NOT_SUPPORTED;
 #endif
 }
-static esp_err_t status(httpd_req_t *r) {
-    float temperature=0;char value[24]="null",body[1024];
+bool radar_power_json(char *body,size_t capacity) {
+    float temperature=0;char value[24]="null";
     if(sensor && temperature_sensor_get_celsius(sensor,&temperature)==ESP_OK)
         snprintf(value,sizeof(value),"%.2f",(double)temperature);
     wifi_ps_type_t ps=WIFI_PS_NONE;esp_wifi_get_ps(&ps);
     radar_audio_stats_t audio;radar_audio_stats(&audio);
-    snprintf(body,sizeof(body),"{\"cpu_mhz\":%u,\"chip_temperature_c\":%s,\"wifi_sleep\":%s,\"free_heap\":%lu,\"internal_free\":%u,\"internal_min\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"uptime_ms\":%lld}",cpu_mhz,value,ps==WIFI_PS_NONE?"false":"true",(unsigned long)esp_get_free_heap_size(),
+    snprintf(body,capacity,"{\"cpu_mhz\":%u,\"chip_temperature_c\":%s,\"wifi_sleep\":%s,\"free_heap\":%lu,\"internal_free\":%u,\"internal_min\":%u,\"internal_largest\":%u,\"psram_free\":%u,\"uptime_ms\":%lld}",cpu_mhz,value,ps==WIFI_PS_NONE?"false":"true",(unsigned long)esp_get_free_heap_size(),
         (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
         (unsigned)heap_caps_get_minimum_free_size(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
         (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT),
         (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),(long long)(esp_timer_get_time()/1000));
     size_t used=strlen(body);
-    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"audio_blocks\":%u,\"audio_read_errors\":%u,\"audio_requests\":%u,\"audio_send_errors\":%u,\"audio_max_send_ms\":%u,\"audio_request_age_ms\":%u}",
+    if(used && body[used-1]=='}')snprintf(body+used-1,capacity-used+1,",\"audio_blocks\":%u,\"audio_read_errors\":%u,\"audio_requests\":%u,\"audio_send_errors\":%u,\"audio_max_send_ms\":%u,\"audio_request_age_ms\":%u}",
         (unsigned)audio.blocks,(unsigned)audio.read_errors,(unsigned)audio.requests,(unsigned)audio.send_errors,(unsigned)audio.max_send_ms,(unsigned)((uint32_t)(esp_timer_get_time()/1000)-audio.last_request_ms));
     used=strlen(body);
-    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"tx_blocks\":%u,\"tx_errors\":%u,\"tx_audible\":%u,\"tx_accepted\":%u,\"call_active\":%u,\"amp_level\":%u}",(unsigned)audio.tx_blocks,(unsigned)audio.tx_errors,(unsigned)audio.tx_audible,(unsigned)audio.tx_accepted,(unsigned)audio.call_active,(unsigned)audio.amp_level);
+    if(used && body[used-1]=='}')snprintf(body+used-1,capacity-used+1,",\"tx_blocks\":%u,\"tx_errors\":%u,\"tx_audible\":%u,\"tx_accepted\":%u,\"call_active\":%u,\"amp_level\":%u}",(unsigned)audio.tx_blocks,(unsigned)audio.tx_errors,(unsigned)audio.tx_audible,(unsigned)audio.tx_accepted,(unsigned)audio.call_active,(unsigned)audio.amp_level);
     used=strlen(body);
-    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"tx_input_peak\":%u,\"tx_output_peak\":%u,\"tx_gain_q16\":%u}",(unsigned)audio.tx_input_peak,(unsigned)audio.tx_output_peak,(unsigned)audio.tx_gain_q16);
+    if(used && body[used-1]=='}')snprintf(body+used-1,capacity-used+1,",\"tx_input_peak\":%u,\"tx_output_peak\":%u,\"tx_gain_q16\":%u}",(unsigned)audio.tx_input_peak,(unsigned)audio.tx_output_peak,(unsigned)audio.tx_gain_q16);
+    used=strlen(body);
+    if(used && body[used-1]=='}')snprintf(body+used-1,capacity-used+1,",\"tx_starvations\":%u,\"tx_queue_depth\":%u}",(unsigned)audio.tx_starvations,(unsigned)audio.tx_queue_depth);
+    size_t length=strlen(body);return length && length<capacity-1 && body[length-1]=='}';
+}
+static esp_err_t status(httpd_req_t *r) {
+    char body[1024];
+    if(!radar_power_json(body,sizeof(body)))return httpd_resp_send_err(r,HTTPD_500_INTERNAL_SERVER_ERROR,"Status memory unavailable");
     httpd_resp_set_type(r,"application/json");httpd_resp_set_hdr(r,"Cache-Control","no-store");
     return httpd_resp_sendstr(r,body);
 }
