@@ -1,6 +1,6 @@
 ## Audio/radar iteration — 27 November 2026
 
-RC3 uses the existing `/link` with separate bounded queues and radar-first sends.
+RC5 uses the existing `/link` with separate bounded queues and radar-first sends.
 The relay supports the combined stream and an optional independently owned,
 authenticated `/audio-link`. The extra connection was tested in RC1/RC2 but removed
 from firmware after hardware stack/memory failures; those candidates rolled back.

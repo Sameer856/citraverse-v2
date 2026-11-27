@@ -101,16 +101,20 @@ static esp_err_t page(httpd_req_t *req) {
     return httpd_resp_send(req,(const char*)page_start,page_end-page_start-1);
 }
 static esp_err_t status(httpd_req_t *req) {
-    char body[2048],environment[320],storage[192],cloud[960],rgb[128];uint32_t count,kept,overruns;int64_t age;
+    /* Large JSON buffers belong in PSRAM, not on the HTTP task stack. */
+    typedef struct {char body[2048],environment[320],storage[192],cloud[960],rgb[128];} buffers_t;
+    buffers_t *buffers=heap_caps_malloc(sizeof(*buffers),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+    if(!buffers)return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Status memory unavailable");
+    uint32_t count,kept,overruns;int64_t age;
     wifi_ap_record_t ap={0};int rssi=esp_wifi_sta_get_ap_info(&ap)==ESP_OK?ap.rssi:0;
-    pcb_status_json(rgb,sizeof(rgb));
-    pcb_environment_json(environment,sizeof(environment));radar_storage_json(storage,sizeof(storage));radar_cloud_json(cloud,sizeof(cloud));
+    pcb_status_json(buffers->rgb,sizeof(buffers->rgb));
+    pcb_environment_json(buffers->environment,sizeof(buffers->environment));radar_storage_json(buffers->storage,sizeof(buffers->storage));radar_cloud_json(buffers->cloud,sizeof(buffers->cloud));
     xSemaphoreTake(guard,portMAX_DELAY);count=received;kept=retained;overruns=client_overruns;age=latest_len?(esp_timer_get_time()-last_frame_us)/1000:-1;xSemaphoreGive(guard);
-    snprintf(body,sizeof(body),"{\"frames\":%lu,\"viewer_copy_drops\":%lu,\"age_ms\":%lld,\"free_heap\":%lu,\"buffered_frames\":%lu,\"client_overrun_frames\":%lu,\"wifi_rssi_dbm\":%d}",
+    snprintf(buffers->body,sizeof(buffers->body),"{\"frames\":%lu,\"viewer_copy_drops\":%lu,\"age_ms\":%lld,\"free_heap\":%lu,\"buffered_frames\":%lu,\"client_overrun_frames\":%lu,\"wifi_rssi_dbm\":%d}",
              (unsigned long)count,(unsigned long)__atomic_load_n(&skipped,__ATOMIC_RELAXED),(long long)age,(unsigned long)esp_get_free_heap_size(),(unsigned long)kept,(unsigned long)overruns,rssi);
-    size_t used=strlen(body);
-    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"environment\":%s,\"storage\":%s,\"lan_calls\":%s,\"cloud\":%s,\"rgb\":%s}",environment,storage,radar_audio_call_ready()?"true":"false",cloud,rgb);
-    httpd_resp_set_type(req,"application/json");return httpd_resp_sendstr(req,body);
+    size_t used=strlen(buffers->body);
+    if(used && buffers->body[used-1]=='}')snprintf(buffers->body+used-1,sizeof(buffers->body)-used+1,",\"environment\":%s,\"storage\":%s,\"lan_calls\":%s,\"cloud\":%s,\"rgb\":%s}",buffers->environment,buffers->storage,radar_audio_call_ready()?"true":"false",buffers->cloud,buffers->rgb);
+    httpd_resp_set_type(req,"application/json");esp_err_t result=httpd_resp_sendstr(req,buffers->body);free(buffers);return result;
 }
 static esp_err_t ws(httpd_req_t *req) {
     if(req->method==HTTP_GET) return ESP_OK;

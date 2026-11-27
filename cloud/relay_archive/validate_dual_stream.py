@@ -6,6 +6,13 @@ from websockets.asyncio.client import connect
 from inspect_archive import inspect as inspect_radar
 from inspect_audio import inspect as inspect_audio
 
+async def download_public_object(url, transport=None):
+    # Never reuse the authenticated relay client for a public GCS download.
+    async with httpx.AsyncClient(timeout=20, transport=transport) as public:
+        response=await public.get(url)
+        response.raise_for_status()
+        return response.content
+
 async def main(args):
     pair=json.loads(pathlib.Path(args.pairing).read_text())
     prefix='/v1/devices/'+pair['device_id'];headers={'Authorization':'Bearer '+pair['app_token']}
@@ -18,6 +25,7 @@ async def main(args):
                 r=await c.get(prefix+path);r.raise_for_status();result[name]=r.json()
             return result
         report['before']=await snapshot()
+        (out/'before.json').write_text(json.dumps(report['before'],indent=2)+'\n')
         end=time.monotonic()+args.seconds;ages=[];frames=0;missing=0;last=None;times=[];audio_blocks=0;audio_missing=0;audio_last=None;audio_peaks=[]
         async def radar():
             nonlocal frames,missing,last
@@ -46,12 +54,13 @@ async def main(args):
         await asyncio.gather(radar(),audio())
         report['after']=await snapshot()
         report['live']={'radar_frames':frames,'radar_fps':(frames-1)/(times[-1]-times[0]) if len(times)>1 else 0,'radar_index_misses':missing,'radar_age_p95_ms':sorted(ages)[int((len(ages)-1)*.95)] if ages else None,'radar_max_receive_gap_ms':max((b-a)*1000 for a,b in zip(times,times[1:])) if len(times)>1 else None,'audio_blocks_received':audio_blocks,'audio_live_cursor_misses':audio_missing,'audio_peak_max':max(audio_peaks,default=0),'note':'HTTP live cursor misses may be viewer-side; compare archive missing_blocks separately.'}
+        (out/'measurements.json').write_text(json.dumps(report,indent=2)+'\n')
         report['objects']={}
         for name,inspect in [('radar',inspect_radar),('audio',inspect_audio)]:
             commit=report['after'][name]['latest_commit']
             if not commit or commit['committed_epoch_ms']<report['started_epoch_ms']:raise ValueError('No new '+name+' GCS commit')
-            url='https://storage.googleapis.com/'+commit['bucket']+'/'+commit['object_name'];r=await c.get(url,headers={'Authorization':''});r.raise_for_status()
-            file=out/('verified.wav' if name=='audio' else 'verified.jsonl.gz');file.write_bytes(r.content)
+            url='https://storage.googleapis.com/'+commit['bucket']+'/'+commit['object_name'];content=await download_public_object(url)
+            file=out/('verified.wav' if name=='audio' else 'verified.jsonl.gz');file.write_bytes(content)
             report['objects'][name]=inspect(file,commit['sha256'])
             report['objects'][name]['commit']=commit
         report['counter_deltas']={}

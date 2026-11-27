@@ -1,0 +1,65 @@
+{
+  "release": "1.1.0-audio-rc5",
+  "application_sha256": "6e7ba1a130e032d24be225018ec022acf425e12b56d2f61517296cc7a76c1c0a",
+  "boot_guard_passed": true,
+  "status_query_passed": true,
+  "active_and_saved_radar_unchanged": true,
+  "relay_revision": "citraverse-pcb-route-00009-mzs",
+  "test_seconds": 120,
+  "radar_frames_observed": 2418,
+  "radar_fps": 20.162937760999807,
+  "radar_index_misses": 0,
+  "client_receive_age_p95_ms": 146,
+  "client_receive_max_gap_ms": 197.61549995746464,
+  "recent_gcp_uplink_p95_ms_at_end": 65,
+  "audio_blocks_observed": 6003,
+  "audio_cursor_misses": 0,
+  "cloud_counter_deltas": {
+    "sent": 2425,
+    "dropped": 0,
+    "reconnects": 0,
+    "send_failures": 0,
+    "stale_drops": 0,
+    "queue_drops": 0,
+    "audio_sent": 6027,
+    "audio_dropped": 0,
+    "audio_reconnects": 0,
+    "audio_send_failures": 0
+  },
+  "sd_counter_deltas": {
+    "written": 8516,
+    "dropped": 0,
+    "bytes": 4974611
+  },
+  "new_audio_clips_committed": 4,
+  "audio_archive_missing_block_delta": 0,
+  "verified_wav": {
+    "sha256": "5aaaf0d18e8a1255ee86fe42d15af95bd5f0e5c4ff4d14a79d6469bbe6377811",
+    "sample_rate": 16000,
+    "channels": 1,
+    "sample_bits": 16,
+    "samples": 480000,
+    "duration_seconds": 30.0,
+    "bytes": 960044
+  },
+  "verified_wav_missing_blocks": 0,
+  "verified_radar_object": {
+    "sha256": "b6e135f163c3fb28bc6833caa1e76521ceb302b99f38a7779b526b71a0db7d57",
+    "frames": 21,
+    "nonconsecutive_transitions": 0
+  },
+  "test_qualified_zero_new_drops": true,
+  "regression_checks": {
+    "relay_updater_download": 28,
+    "actual_status_handler_asan_ubsan": 1
+  },
+  "limits": [
+    "Results apply to this two-minute settled window, not startup or future Wi-Fi outages.",
+    "No SD-to-cloud backfill; live stale/overflow policy intentionally drops rather than increases delay.",
+    "Original waveform/speaker call logic retained, but acoustic speaker playback was not re-tested."
+  ],
+  "before_soak_cloud_drop_totals": {
+    "dropped": 197,
+    "audio_dropped": 631
+  }
+}

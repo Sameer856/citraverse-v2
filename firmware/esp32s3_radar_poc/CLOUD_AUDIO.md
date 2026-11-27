@@ -1,4 +1,4 @@
-# Radar and microphone cloud iteration — 1.1.0-audio-rc4
+# Radar and microphone cloud iteration — 1.1.0-audio-rc5
 
 Working v1 is immutable at Git tag `firmware-v1.0.0`. See
 `deliverables/Citraverse_Firmware_v1_20261127/README.md` for application rollback.
@@ -46,6 +46,12 @@ encrypted and certificate-verified) to remove internal hardware-DMA bounce-buffe
 allocation, and increases the shared TLS task stack from 6 to 8 KiB.
 The relay's optional `/audio-link` stays compatible/authenticated but RC4 does not
 use it. Failed candidates remain archived and must not be treated as stable.
+
+RC4 passed its radar boot check but a later trace identified an HTTP status-task
+stack overflow in environmental float formatting. RC5 moves the expanded JSON
+buffers into PSRAM; the actual handler is executed under host ASan/UBSan with
+large subsystem payloads and allocation failure. This does not substitute for
+a powered live test. Software AES and additional task stack headroom are retained.
 
 ## Activation and rollback
 
