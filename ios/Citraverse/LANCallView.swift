@@ -28,6 +28,8 @@ final class LANCallClient: ObservableObject {
     private var microphonePending = Data()
     private var uploadFailureSince: Date?
     private var receiveFailureSince: Date?
+    private var lastFailureDirection: String?
+    private var lastFailureCode: Int?
 
     private func endpoint(_ path: String) -> URL? { origin?.appendingPathComponent(path) }
 
@@ -38,6 +40,7 @@ final class LANCallClient: ObservableObject {
         connecting = true
         sentPackets = 0; receivedPackets = 0; microphoneLevel = 0; roomLevel = 0
         uploadFailureSince = nil; receiveFailureSince = nil
+        lastFailureDirection = nil; lastFailureCode = nil
         generation = UUID()
         let run = generation
         let allowed = await withCheckedContinuation { continuation in
@@ -65,6 +68,7 @@ final class LANCallClient: ObservableObject {
             token = lease
             try prepareAudio(run: run)
             active = true; connecting = false; status = "Call connected"
+            recordCallEvent("connected", message: status)
             receiveTask = Task { [weak self] in await self?.receive(run: run) }
         } catch {
             if run == generation { stop(message: "Call failed: \(error.localizedDescription)") }
@@ -131,13 +135,7 @@ final class LANCallClient: ObservableObject {
             SensorClient.authorize(&request)
             request.setValue(token, forHTTPHeaderField: "X-Call-Token")
             request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-            // Leave headroom and reduce the acoustic loop through both speakers.
-            var attenuated = Data(packet)
-            attenuated.withUnsafeMutableBytes { bytes in
-                let samples = bytes.bindMemory(to: Int16.self)
-                for i in samples.indices { samples[i] = Int16(Int32(samples[i]) / 2) }
-            }
-            request.httpBody = attenuated
+            request.httpBody = Data(packet)
             do {
                 let (_, response) = try await session.data(for: request)
                 guard run == generation else { return }
@@ -213,10 +211,15 @@ final class LANCallClient: ObservableObject {
             retryable = [.timedOut, .networkConnectionLost, .cannotConnectToHost,
                          .notConnectedToInternet, .cannotFindHost, .dnsLookupFailed].contains(network.code)
         } else { retryable = false }
+        let code = (error as? URLError)?.errorCode ?? { if case CallError.httpStatus(let status) = error { return status }; return 0 }()
+        NSLog("Citraverse call failure direction=%@ code=%d", receiving ? "receive" : "upload", code)
+        lastFailureDirection = receiving ? "receive" : "upload"; lastFailureCode = code
+        recordCallEvent("request_failure", message: error.localizedDescription)
+
         let now = Date()
         let first = (receiving ? receiveFailureSince : uploadFailureSince) ?? now
         if receiving { receiveFailureSince = first } else { uploadFailureSince = first }
-        guard retryable, now.timeIntervalSince(first) < 2 else {
+        guard retryable, now.timeIntervalSince(first) < 12 else {
             stop(message: "Call interrupted; reconnect to try again")
             return false
         }
@@ -227,7 +230,20 @@ final class LANCallClient: ObservableObject {
         return run == generation && active && !Task.isCancelled
     }
 
+    private func recordCallEvent(_ event: String, message: String) {
+        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        var record: [String: Any] = ["event": event, "message": message,
+            "time": Date().timeIntervalSince1970, "sent": sentPackets,
+            "received": receivedPackets, "active": active,
+            "build": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown"]
+        if let lastFailureDirection { record["failure_direction"] = lastFailureDirection }
+        if let lastFailureCode { record["failure_code"] = lastFailureCode }
+        guard let data = try? JSONSerialization.data(withJSONObject: record) else { return }
+        try? data.write(to: documents.appendingPathComponent("call-diagnostics.json"), options: .atomic)
+    }
+
     func stop(message: String = "Call ended") {
+        if active || connecting { recordCallEvent("stop", message: message) }
         generation = UUID(); active = false; connecting = false
         uploadFailureSince = nil; receiveFailureSince = nil
         receiveTask?.cancel(); receiveTask = nil

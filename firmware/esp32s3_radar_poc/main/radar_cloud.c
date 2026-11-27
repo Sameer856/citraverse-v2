@@ -27,7 +27,8 @@
 #define MAX_RADAR 8192
 #define MAX_COMMAND 7000
 typedef struct {uint32_t kind,seq,stamp,length;uint8_t payload[];} packet_t;
-static QueueHandle_t packets, commands, audio_packets;
+static QueueHandle_t packets, commands, audio_packets, replies;
+static uint32_t rpc_replies_sent,rpc_reply_drops;
 static uint32_t audio_sent,audio_dropped,audio_failures;
 static esp_websocket_client_handle_t cloud_link;
 static bool configured,connected,radar_only=false;
@@ -82,6 +83,10 @@ void radar_cloud_json(char *out,size_t n) {
         (unsigned long)__atomic_load_n(&audio_dropped,__ATOMIC_RELAXED),
         (unsigned long)__atomic_load_n(&reconnects,__ATOMIC_RELAXED),
         (unsigned long)__atomic_load_n(&audio_failures,__ATOMIC_RELAXED));
+    used=strlen(out);
+    if(used && out[used-1]=='}')snprintf(out+used-1,n-used+1,",\"rpc_replies_sent\":%lu,\"rpc_reply_drops\":%lu}",
+        (unsigned long)__atomic_load_n(&rpc_replies_sent,__ATOMIC_RELAXED),
+        (unsigned long)__atomic_load_n(&rpc_reply_drops,__ATOMIC_RELAXED));
 }
 void radar_cloud_state(bool *is_configured,bool *is_connected) {
     *is_configured=__atomic_load_n(&configured,__ATOMIC_ACQUIRE);
@@ -155,6 +160,18 @@ static bool command_allowed(const char *method,const char *path) {
     for(;*n;n++)if(!isdigit((unsigned char)*n))return false;
     return true;
 }
+/* fetch_headers may have buffered the entire body already. Completion means
+ * network receipt, not that the caller has consumed those buffered bytes. */
+static int read_rpc_body(esp_http_client_handle_t h,uint8_t *response,int capacity) {
+    int used=0;
+    while(used<capacity) {
+        int n=esp_http_client_read(h,(char*)response+used,capacity-used);
+        if(n<0)return -1;
+        if(!n)return esp_http_client_is_complete_data_received(h)?used:-1;
+        used+=n;
+    }
+    return -1;
+}
 static void execute(char *text) {
     cJSON *j=cJSON_Parse(text);free(text);if(!j)return;
     const cJSON *kind=cJSON_GetObjectItemCaseSensitive(j,"kind");
@@ -183,7 +200,7 @@ static void execute(char *text) {
         used=strlen((const char*)response);goto done;
     }
     char target[128];snprintf(target,sizeof(target),"http://127.0.0.1:%d%s",!strncmp(path->valuestring,"/api/",5)?80:81,path->valuestring);
-    esp_http_client_config_t cfg={.url=target,.timeout_ms=750,.buffer_size=1024,.disable_auto_redirect=true};
+    esp_http_client_config_t cfg={.url=target,.timeout_ms=1500,.buffer_size=1024,.disable_auto_redirect=true};
     esp_http_client_handle_t h=esp_http_client_init(&cfg);if(!h)goto done;
     bool post=!strcmp(method->valuestring,"POST");esp_http_client_set_method(h,post?HTTP_METHOD_POST:HTTP_METHOD_GET);
     esp_http_client_set_header(h,"Content-Type","application/octet-stream");
@@ -193,8 +210,8 @@ static void execute(char *text) {
         while(offset<length){int n=esp_http_client_write(h,(const char*)request+offset,length-offset);if(n<=0)break;offset+=n;}
         if(offset==length && esp_http_client_fetch_headers(h)>=0) {
             status=esp_http_client_get_status_code(h);
-            while(used<8192){int n=esp_http_client_read(h,(char*)response+used,8192-used);if(n<0){status=502;used=0;break;}if(!n)break;used+=n;}
-            if(used==8192){status=502;used=0;}
+            used=read_rpc_body(h,response,8192);
+            if(used<0){status=502;used=0;}
         }
         esp_http_client_close(h);
     }
@@ -204,7 +221,9 @@ done:
         size_t cap=4*((used+2)/3)+1,encoded=0;char *b64=malloc(cap);
         if(b64 && !mbedtls_base64_encode((uint8_t*)b64,cap,&encoded,response,used)) {
             b64[encoded]=0;cJSON *out=cJSON_CreateObject();cJSON_AddStringToObject(out,"kind","response");cJSON_AddStringToObject(out,"id",id->valuestring);cJSON_AddNumberToObject(out,"status",status);cJSON_AddStringToObject(out,"body",b64);
-            char *reply=cJSON_PrintUnformatted(out);if(reply){esp_websocket_client_send_text(cloud_link,reply,strlen(reply),pdMS_TO_TICKS(250));free(reply);}cJSON_Delete(out);
+            char *reply=cJSON_PrintUnformatted(out);
+            if(reply && xQueueSend(replies,&reply,0)!=pdTRUE){free(reply);__atomic_add_fetch(&rpc_reply_drops,1,__ATOMIC_RELAXED);}
+            cJSON_Delete(out);
         }
         free(b64);
     }
@@ -230,6 +249,14 @@ static void worker(void *unused) {
     cloud_link=esp_websocket_client_init(&config);if(!cloud_link){vTaskDelete(NULL);return;}
     esp_websocket_register_events(cloud_link,WEBSOCKET_EVENT_ANY,on_event,NULL);esp_websocket_client_start(cloud_link);
     while(1) {
+        char *reply=NULL;
+        if(xQueueReceive(replies,&reply,0)==pdTRUE) {
+            size_t length=strlen(reply);
+            int n=__atomic_load_n(&connected,__ATOMIC_ACQUIRE)?esp_websocket_client_send_text(cloud_link,reply,length,pdMS_TO_TICKS(1000)):-1;
+            if(n==(int)length)__atomic_add_fetch(&rpc_replies_sent,1,__ATOMIC_RELAXED);
+            else __atomic_add_fetch(&rpc_reply_drops,1,__ATOMIC_RELAXED);
+            free(reply);continue;
+        }
         packet_t *p=NULL;
         if(xQueueReceive(packets,&p,0)!=pdTRUE && xQueueReceive(audio_packets,&p,0)!=pdTRUE){vTaskDelay(1);continue;}
         uint32_t age=(uint32_t)(esp_timer_get_time()/1000)-p->stamp;
@@ -266,9 +293,10 @@ esp_err_t radar_cloud_start(void) {
     e=nvs_get_str(h,"origin",origin,&a);if(e==ESP_OK)e=nvs_get_str(h,"id",id,&b);if(e==ESP_OK)e=nvs_get_str(h,"token",token,&c);nvs_close(h);
     if(e!=ESP_OK || !safe_origin(origin)||!safe_id(id)||!safe_token(token)){memset(token,0,sizeof(token));return ESP_ERR_INVALID_ARG;}
     snprintf(url,sizeof(url),"wss://%s/v1/devices/%s/link",origin+8,id);snprintf(auth,sizeof(auth),"Authorization: Bearer %s\r\n",token);memset(token,0,sizeof(token));
+    replies=xQueueCreate(8,sizeof(char*));
     audio_packets=xQueueCreate(10,sizeof(packet_t*));
     packets=xQueueCreate(4,sizeof(packet_t*));commands=xQueueCreate(16,sizeof(char*));incoming=heap_caps_malloc(MAX_COMMAND+1,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
-    if(!packets||!commands||!incoming||!audio_packets)return ESP_ERR_NO_MEM;
+    if(!packets||!commands||!incoming||!audio_packets||!replies)return ESP_ERR_NO_MEM;
     boot_id=esp_random();
     if(xTaskCreate(command_worker,"cloud_commands",8192,NULL,2,NULL)!=pdPASS)return ESP_ERR_NO_MEM;
     if(xTaskCreate(worker,"cloud_route",8192,NULL,2,NULL)!=pdPASS)return ESP_ERR_NO_MEM;

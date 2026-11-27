@@ -1,6 +1,7 @@
 #include "radar_audio.h"
 #include "radar_storage.h"
 #include "radar_cloud.h"
+#include "speaker_gain.h"
 #include "driver/i2s_std.h"
 #include "driver/gpio.h"
 #include "esp_random.h"
@@ -28,7 +29,7 @@
 static i2s_chan_handle_t rx, tx;
 static QueueHandle_t speaker_queue;
 static char call_token[33];
-static uint32_t call_generation, call_last_ms;
+static uint32_t call_generation, call_last_ms, speaker_last_ms;
 static bool call_active;
 static bool call_service_ready;
 bool radar_audio_call_ready(void) { return call_service_ready; }
@@ -37,10 +38,11 @@ static unsigned partial_samples;
 typedef struct { uint32_t generation; int16_t pcm[SAMPLES]; } speaker_block_t;
 static uint32_t audio_now_ms(void) { return (uint32_t)(esp_timer_get_time()/1000); }
 static bool call_live(void) { return __atomic_load_n(&call_active,__ATOMIC_ACQUIRE) &&
-    (uint32_t)(audio_now_ms()-__atomic_load_n(&call_last_ms,__ATOMIC_RELAXED))<3000; }
+    (uint32_t)(audio_now_ms()-__atomic_load_n(&call_last_ms,__ATOMIC_RELAXED))<20000; }
 static SemaphoreHandle_t mutex;
 static uint32_t sequence, errors, retained;
 static uint32_t tx_blocks,tx_errors,tx_audible,tx_accepted;
+static uint32_t tx_input_peak,tx_output_peak,tx_gain_q16;
 static uint32_t requests,send_errors,max_send_ms,last_request_ms;
 void radar_audio_stats(radar_audio_stats_t *out) {
     memset(out,0,sizeof(*out));
@@ -49,6 +51,9 @@ void radar_audio_stats(radar_audio_stats_t *out) {
     out->tx_errors=__atomic_load_n(&tx_errors,__ATOMIC_RELAXED);
     out->tx_audible=__atomic_load_n(&tx_audible,__ATOMIC_RELAXED);
     out->tx_accepted=__atomic_load_n(&tx_accepted,__ATOMIC_RELAXED);
+    out->tx_input_peak=__atomic_load_n(&tx_input_peak,__ATOMIC_RELAXED);
+    out->tx_output_peak=__atomic_load_n(&tx_output_peak,__ATOMIC_RELAXED);
+    out->tx_gain_q16=__atomic_load_n(&tx_gain_q16,__ATOMIC_RELAXED);
     out->call_active=call_live();out->amp_level=gpio_get_level(39);
     out->requests=__atomic_load_n(&requests,__ATOMIC_RELAXED);
     out->send_errors=__atomic_load_n(&send_errors,__ATOMIC_RELAXED);
@@ -173,6 +178,7 @@ static esp_err_t call_start(httpd_req_t *r) {
     uint8_t random[16];esp_fill_random(random,sizeof(random));
     for(unsigned i=0;i<16;i++)snprintf(call_token+2*i,3,"%02x",random[i]);
     __atomic_store_n(&call_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
+    __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
     __atomic_store_n(&call_active,true,__ATOMIC_RELEASE);
     char body[80];snprintf(body,sizeof(body),"{\"token\":\"%s\",\"sample_rate\":16000}",call_token);
     httpd_resp_set_type(r,"application/json");httpd_resp_set_hdr(r,"Cache-Control","no-store");
@@ -218,21 +224,35 @@ static esp_err_t call_transmit(httpd_req_t *r) {
             __atomic_add_fetch(&tx_accepted,1,__ATOMIC_RELAXED);
         }
     }
+    __atomic_store_n(&speaker_last_ms,audio_now_ms(),__ATOMIC_RELAXED);
     return httpd_resp_sendstr(r,"OK");
 }
 static void speaker_play(void *unused) {
     (void)unused;
-    speaker_block_t block;int32_t output[SAMPLES*2];
+    speaker_block_t block;int32_t output[SAMPLES*2];uint32_t gain_q8=256;
     while(1) {
         bool audible=xQueueReceive(speaker_queue,&block,0)==pdTRUE && call_live() &&
             block.generation==__atomic_load_n(&call_generation,__ATOMIC_RELAXED);
         if(audible)__atomic_add_fetch(&tx_audible,1,__ATOMIC_RELAXED);
+        uint32_t peak=0;
+        if(audible){
+            for(unsigned i=0;i<SAMPLES;i++){int32_t v=block.pcm[i];uint32_t a=v<0?(uint32_t)-v:(uint32_t)v;if(a>peak)peak=a;}
+            gain_q8=speaker_next_gain_q8(gain_q8,peak);
+        }else if(!call_live())gain_q8=256;
+        uint32_t output_peak=0;
         for(unsigned i=0;i<SAMPLES;i++) {
-            // Full PCM16-to-I2S32 scale; sender controls volume. Never loop mic into speaker.
-            int32_t sample=audible ? ((int32_t)block.pcm[i]*65536) : 0;
+            int32_t sample=audible?speaker_sample_i2s(block.pcm[i],gain_q8):0;
             output[2*i]=sample;output[2*i+1]=sample;
+            uint32_t magnitude=(uint32_t)((sample<0?-(int64_t)sample:(int64_t)sample)/65536);
+            if(magnitude>output_peak)output_peak=magnitude;
         }
-        gpio_set_level(39,call_live()?1:0);
+        if(audible) {
+            __atomic_store_n(&tx_input_peak,peak,__ATOMIC_RELAXED);
+            __atomic_store_n(&tx_output_peak,output_peak,__ATOMIC_RELAXED);
+            __atomic_store_n(&tx_gain_q16,gain_q8*256,__ATOMIC_RELAXED);
+        }
+        bool speaker_recent=(uint32_t)(audio_now_ms()-__atomic_load_n(&speaker_last_ms,__ATOMIC_RELAXED))<3000;
+        gpio_set_level(39,call_live()&&speaker_recent?1:0);
         size_t total=0;
         while(total<sizeof(output)) {
             size_t n=0;esp_err_t err=i2s_channel_write(tx,(uint8_t*)output+total,sizeof(output)-total,&n,1000);

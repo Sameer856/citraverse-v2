@@ -39,6 +39,8 @@ static esp_err_t status(httpd_req_t *r) {
         (unsigned)audio.blocks,(unsigned)audio.read_errors,(unsigned)audio.requests,(unsigned)audio.send_errors,(unsigned)audio.max_send_ms,(unsigned)((uint32_t)(esp_timer_get_time()/1000)-audio.last_request_ms));
     used=strlen(body);
     if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"tx_blocks\":%u,\"tx_errors\":%u,\"tx_audible\":%u,\"tx_accepted\":%u,\"call_active\":%u,\"amp_level\":%u}",(unsigned)audio.tx_blocks,(unsigned)audio.tx_errors,(unsigned)audio.tx_audible,(unsigned)audio.tx_accepted,(unsigned)audio.call_active,(unsigned)audio.amp_level);
+    used=strlen(body);
+    if(used && body[used-1]=='}')snprintf(body+used-1,sizeof(body)-used+1,",\"tx_input_peak\":%u,\"tx_output_peak\":%u,\"tx_gain_q16\":%u}",(unsigned)audio.tx_input_peak,(unsigned)audio.tx_output_peak,(unsigned)audio.tx_gain_q16);
     httpd_resp_set_type(r,"application/json");httpd_resp_set_hdr(r,"Cache-Control","no-store");
     return httpd_resp_sendstr(r,body);
 }
