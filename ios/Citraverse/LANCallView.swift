@@ -1,0 +1,254 @@
+import SwiftUI
+import AVFoundation
+import Combine
+
+/// One foreground-only LAN or authenticated cloud call. PCM16 mono at 16 kHz; no audio is stored by this client.
+@MainActor
+final class LANCallClient: ObservableObject {
+    @Published private(set) var active = false
+    @Published private(set) var connecting = false
+    @Published private(set) var sentPackets = 0
+    @Published private(set) var receivedPackets = 0
+    @Published private(set) var microphoneLevel = 0
+    @Published private(set) var roomLevel = 0
+    @Published private(set) var audioDiagnostic = ""
+    @Published var listeningVolume: Float = 0.5 {
+        didSet { player?.volume = listeningVolume }
+    }
+    @Published private(set) var status = "Ready to call your room"
+    private var engine: AVAudioEngine?
+    private var player: AVAudioPlayerNode?
+    private var session: URLSession?
+    private var receiveTask: Task<Void, Never>?
+    private var token: String?
+    private var origin: URL?
+    private var generation = UUID()
+    private var uploading = false
+    private var queuedPlayback = 0
+    private var microphonePending = Data()
+
+    private func endpoint(_ path: String) -> URL? { origin?.appendingPathComponent(path) }
+
+    func start(host: String) async {
+        guard !active, !connecting, let url = SensorClient.viewerURL(host: host),
+              var parts = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              ["http", "https"].contains(parts.scheme ?? "") else { status = "Enter the sensor or cloud device address first"; return }
+        connecting = true
+        sentPackets = 0; receivedPackets = 0; microphoneLevel = 0; roomLevel = 0
+        generation = UUID()
+        let run = generation
+        let allowed = await withCheckedContinuation { continuation in
+            AVAudioSession.sharedInstance().requestRecordPermission { continuation.resume(returning: $0) }
+        }
+        guard run == generation else { return }
+        guard allowed else { connecting = false; status = "Allow microphone access in iPhone Settings"; return }
+        // Audio service is separate from the radar HTTP server.
+        if !SensorClient.isCloudURL(url) { parts.port = 81; parts.path = "/" }
+        origin = parts.url
+        let config = URLSessionConfiguration.ephemeral
+        config.timeoutIntervalForRequest = SensorClient.isCloudURL(url) ? 8 : 3
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        session = URLSession(configuration: config)
+        do {
+            guard let startURL = endpoint("call/start"), let session else { throw CallError.invalidReply }
+            var request = URLRequest(url: startURL)
+            request.httpMethod = "POST"
+            SensorClient.authorize(&request)
+            let (data, response) = try await session.data(for: request)
+            guard run == generation else { return }
+            guard (response as? HTTPURLResponse)?.statusCode == 200,
+                  let reply = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let lease = reply["token"] as? String, lease.count == 32 else { throw CallError.unavailable }
+            token = lease
+            try prepareAudio(run: run)
+            active = true; connecting = false; status = "Call connected"
+            receiveTask = Task { [weak self] in await self?.receive(run: run) }
+        } catch {
+            if run == generation { stop(message: "Call failed: \(error.localizedDescription)") }
+        }
+    }
+
+    private func prepareAudio(run: UUID) throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
+        try audioSession.setPreferredSampleRate(48000)
+        try audioSession.setPreferredIOBufferDuration(0.02)
+        try audioSession.setActive(true)
+        try audioSession.overrideOutputAudioPort(.none)
+        let engine = AVAudioEngine()
+        let input = engine.inputNode
+        let source = input.outputFormat(forBus: 0)
+        audioDiagnostic = "Use headphones or keep the phone away from the room speaker"
+        guard source.sampleRate > 0,
+              let pcm = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 16000, channels: 1, interleaved: false),
+              let converter = AVAudioConverter(from: source, to: pcm) else { throw CallError.audioFormat }
+        let player = AVAudioPlayerNode()
+        player.volume = listeningVolume
+        engine.attach(player)
+        let playback = AVAudioFormat(standardFormatWithSampleRate: 16000, channels: 1)!
+        engine.connect(player, to: engine.mainMixerNode, format: playback)
+        // Convert each native input block; at most one network upload may be pending.
+        input.installTap(onBus: 0, bufferSize: 1024, format: source) { [weak self] buffer, _ in
+            let capacity = AVAudioFrameCount(ceil(Double(buffer.frameLength) * 16000 / source.sampleRate) + 16)
+            guard let converted = AVAudioPCMBuffer(pcmFormat: pcm, frameCapacity: capacity) else { return }
+            var supplied = false
+            var failure: NSError?
+            let result = converter.convert(to: converted, error: &failure) { _, state in
+                if supplied { state.pointee = .noDataNow; return nil }
+                supplied = true; state.pointee = .haveData; return buffer
+            }
+            if result == .error || failure != nil {
+                let message = failure?.localizedDescription ?? "conversion failed"
+                Task { @MainActor [weak self] in self?.audioDiagnostic = "Microphone: " + message }
+                return
+            }
+            guard let samples = converted.int16ChannelData?[0], converted.frameLength > 0 else { return }
+            let data = Data(bytes: samples, count: Int(converted.frameLength) * 2)
+            Task { @MainActor [weak self] in await self?.upload(data, run: run) }
+        }
+        self.engine = engine; self.player = player
+        engine.prepare(); try engine.start(); player.play()
+    }
+
+    private func upload(_ data: Data, run: UUID) async {
+        guard active, run == generation else { return }
+        microphoneLevel = data.withUnsafeBytes { bytes in bytes.bindMemory(to: Int16.self).reduce(0) { max($0, abs(Int($1))) } }
+        microphonePending.append(data)
+        // Bound capture latency to 200 ms, always preserving PCM sample alignment.
+        if microphonePending.count > 6400 { microphonePending.removeFirst(microphonePending.count - 6400) }
+        guard !uploading, let url = endpoint("call/pcm"), let token, let session else { return }
+        uploading = true
+        defer { if run == generation { uploading = false } }
+        while active, run == generation, microphonePending.count >= 640 {
+            let count = min(3200, microphonePending.count / 640 * 640)
+            let packet = microphonePending.prefix(count)
+            microphonePending.removeFirst(count)
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            SensorClient.authorize(&request)
+            request.setValue(token, forHTTPHeaderField: "X-Call-Token")
+            request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+            // Leave headroom and reduce the acoustic loop through both speakers.
+            var attenuated = Data(packet)
+            attenuated.withUnsafeMutableBytes { bytes in
+                let samples = bytes.bindMemory(to: Int16.self)
+                for i in samples.indices { samples[i] = Int16(Int32(samples[i]) / 2) }
+            }
+            request.httpBody = attenuated
+            do {
+                let (_, response) = try await session.data(for: request)
+                guard run == generation else { return }
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if code == 503 { try await Task.sleep(for: .milliseconds(20)); continue }
+                guard code == 200 else { throw CallError.unavailable }
+                sentPackets += 1
+            } catch { if run == generation { stop(message: "Call interrupted; reconnect to try again") }; return }
+        }
+    }
+
+    private func receive(run: UUID) async {
+        var sequence: UInt32 = 0
+        while active, run == generation, !Task.isCancelled {
+            guard let base = endpoint("call/pcm"), let token, let session,
+                  var parts = URLComponents(url: base, resolvingAgainstBaseURL: false) else { return }
+            parts.queryItems = [URLQueryItem(name: "after", value: String(sequence))]
+            var request = URLRequest(url: parts.url!)
+            SensorClient.authorize(&request)
+            request.setValue(token, forHTTPHeaderField: "X-Call-Token")
+            do {
+                let (data, response) = try await session.data(for: request)
+                guard active, run == generation else { return }
+                guard (response as? HTTPURLResponse)?.statusCode == 200, data.count >= 20 else { throw CallError.invalidReply }
+                func word(_ offset: Int) -> UInt32 {
+                    (0..<4).reduce(UInt32(0)) { $0 | UInt32(data[offset + $1]) << ($1 * 8) }
+                }
+                let first = word(4), samples = Int(word(12))
+                guard word(0) == 0x32445541, word(8) == 16000,
+                      samples <= 1600, samples % 320 == 0, data.count == 20 + samples * 2 else { throw CallError.invalidReply }
+                if samples == 0 { try await Task.sleep(for: .milliseconds(20)); continue }
+                sequence = first &+ UInt32(samples / 320) &- 1
+                // Bound latency: drop a batch rather than queue unlimited playback.
+                guard queuedPlayback < 3, let player,
+                      let format = AVAudioFormat(standardFormatWithSampleRate: 16000, channels: 1),
+                      let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(samples)),
+                      let output = buffer.floatChannelData?[0] else { continue }
+                buffer.frameLength = AVAudioFrameCount(samples)
+                for i in 0..<samples {
+                    let bits = UInt16(data[20 + 2*i]) | UInt16(data[21 + 2*i]) << 8
+                    output[i] = Float(Int16(bitPattern: bits)) / 32768
+                }
+                receivedPackets += 1
+                roomLevel = (0..<samples).reduce(0) { max($0, Int(abs(output[$1]) * 32768)) }
+                queuedPlayback += 1
+                player.scheduleBuffer(buffer, completionCallbackType: .dataPlayedBack) { [weak self] _ in
+                    Task { @MainActor [weak self] in
+                        guard let self, self.generation == run else { return }
+                        self.queuedPlayback = max(0, self.queuedPlayback - 1)
+                    }
+                }
+            } catch { if run == generation { stop(message: "Call interrupted; reconnect to try again") }; return }
+        }
+    }
+
+    func stop(message: String = "Call ended") {
+        generation = UUID(); active = false; connecting = false
+        receiveTask?.cancel(); receiveTask = nil
+        engine?.inputNode.removeTap(onBus: 0); player?.stop(); engine?.stop()
+        engine = nil; player = nil; uploading = false; queuedPlayback = 0; microphonePending.removeAll()
+        if let url = endpoint("call/stop"), let token {
+            var request = URLRequest(url: url); request.httpMethod = "POST"
+            SensorClient.authorize(&request)
+            request.setValue(token, forHTTPHeaderField: "X-Call-Token")
+            let cleanup = URLSession(configuration: .ephemeral)
+            cleanup.dataTask(with: request) { _, _, _ in cleanup.finishTasksAndInvalidate() }.resume()
+        }
+        session?.invalidateAndCancel(); session = nil; token = nil; origin = nil
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        status = message
+    }
+    private enum CallError: LocalizedError {
+        case invalidReply, unavailable, audioFormat
+        var errorDescription: String? {
+            switch self {
+            case .invalidReply: "The sensor returned an invalid audio response"
+            case .unavailable: "The sensor is busy or does not support LAN calls"
+            case .audioFormat: "The microphone audio format is unavailable"
+            }
+        }
+    }
+}
+
+struct LANCallView: View {
+    let host: String
+    @StateObject private var call = LANCallClient()
+    @Environment(\.scenePhase) private var scenePhase
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: call.active ? "waveform.circle.fill" : "phone.circle").font(.system(size: 76)).foregroundStyle(CitraverseTheme.accent)
+            Text(call.status).multilineTextAlignment(.center)
+            if call.active {
+                VStack(spacing: 6) {
+                    Text("Phone mic: \(call.microphoneLevel) · Sent: \(call.sentPackets)")
+                    Text("Room mic: \(call.roomLevel) · Received: \(call.receivedPackets)")
+                    Text(call.audioDiagnostic)
+                    HStack {
+                        Image(systemName: "speaker.fill")
+                        Slider(value: $call.listeningVolume, in: 0...1)
+                        Image(systemName: "speaker.wave.3.fill")
+                    }.accessibilityLabel("Room listening volume")
+                }.font(.caption).monospacedDigit()
+            }
+            Text("Talk to the room and hear its microphone over your configured device connection. Keep the device speaker away from its microphone while testing.").font(.footnote).foregroundStyle(.secondary)
+            if call.active || call.connecting {
+                Button("End call", role: .destructive) { call.stop() }.buttonStyle(.borderedProminent)
+            } else {
+                Button("Call room") { Task { await call.start(host: host) } }.buttonStyle(.borderedProminent).disabled(host.isEmpty)
+            }
+            Text("The room microphone is recorded continuously to the device SD card when storage is available, including outside calls.").font(.caption).foregroundStyle(.secondary)
+            Text("Calls stop when you leave this screen or the app leaves the foreground. Audio is not saved on this iPhone.").font(.caption).foregroundStyle(.secondary)
+        }.padding(28).navigationTitle("Call room")
+            .onDisappear { call.stop() }
+            .onChange(of: scenePhase) { _, phase in if phase != .active { call.stop() } }
+            .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in call.stop(message: "Call stopped by audio interruption") }
+    }
+}
